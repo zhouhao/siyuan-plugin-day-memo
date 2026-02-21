@@ -1,6 +1,6 @@
 {
   "name": "siyuan-plugin-day-memo",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Memos-like quick note-taking plugin for SiYuan",
   "main": "./src/index.ts",
   "scripts": {
@@ -14,7 +14,7 @@
     "daylog",
     "note-taking"
   ],
-  "author": "",
+  "author": "Hao Zhou",
   "license": "MIT",
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",
