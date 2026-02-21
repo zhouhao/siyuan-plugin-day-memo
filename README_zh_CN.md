@@ -75,10 +75,10 @@
 pnpm i
 
 # 开发构建（监听模式）
-pnpm run dev
+pnpm dev
 
 # 生产构建（生成 package.zip）
-pnpm run build
+pnpm build
 ```
 
 ### 项目结构

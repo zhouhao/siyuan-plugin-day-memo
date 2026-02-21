@@ -76,10 +76,10 @@ Memos are stored in `data/storage/petal/siyuan-plugin-day-memo/memos-data.json`,
 pnpm i
 
 # Development build (watch mode)
-pnpm run dev
+pnpm dev
 
 # Production build (generates package.zip)
-pnpm run build
+pnpm build
 ```
 
 ### Project Structure
