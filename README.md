@@ -7,7 +7,6 @@ A lightweight, [Memos](https://github.com/usememos/memos)-inspired quick note-ta
 ## Features
 
 - **Main Tab View** — Opens as a full tab in SiYuan's main content area (not a dock panel), with a two-column Memos-style layout
-- **Quick Capture** — Jot down thoughts instantly via keyboard shortcut (`Alt+Cmd+N`) without leaving your current document
 - **Markdown Support** — Bold, italic, code, links, images, and more — rendered inline
 - **Interactive Checklist** — Use `- [ ]` and `- [x]` syntax for task lists; checkboxes are clickable and toggle state is saved automatically
 - **Mermaid Diagrams** — Fenced code blocks with ` ```mermaid ` are rendered as diagrams (flowcharts, sequence diagrams, etc.) using SiYuan's built-in Mermaid — zero extra dependencies
