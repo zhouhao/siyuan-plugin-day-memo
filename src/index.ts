@@ -21,9 +21,8 @@ export default class DayMemoPlugin extends Plugin {
         this.isMobile = frontEnd === "mobile" || frontEnd === "browser-mobile";
 
         this.addIcons(`<symbol id="iconDayMemo" viewBox="0 0 1024 1024">
-<path d="M896 128H128c-35.3 0-64 28.7-64 64v640c0 35.3 28.7 64 64 64h768c35.3 0 64-28.7 64-64V192c0-35.3-28.7-64-64-64zM128 192h768v640H128V192z"/>
-<path d="M256 384h512v64H256zM256 512h512v64H256zM256 640h320v64H256z"/>
-<path d="M192 128h64v64H192zM768 128h64v64H768z"/>
+<path d="M192 64h480l192 192v640c0 35.3-28.7 64-64 64H192c-35.3 0-64-28.7-64-64V128c0-35.3 28.7-64 64-64zm480 32v160h160"/>
+<path d="M256 400h400v48H256zm0 128h336v48H256zm0 128h368v48H256z"/>
 </symbol>`);
 
         this.store = new MemoDataStore(this);
