@@ -55,14 +55,6 @@ A lightweight, [Memos](https://github.com/usememos/memos)-inspired quick note-ta
 6. Click tags in the sidebar to filter by tag
 7. Hover over a memo to see edit / pin / archive / delete actions
 
-## Keyboard Shortcuts
-
-| Shortcut | Action |
-|----------|--------|
-| `Alt+Cmd+N` | Quick capture dialog |
-| `Ctrl+Enter` | Save memo (in editor) |
-| `Escape` | Cancel editing |
-
 ## Data Storage & Sync
 
 Memos are stored in `data/storage/petal/siyuan-plugin-day-memo/memos-data.json`, which is automatically included in SiYuan's cloud sync.
