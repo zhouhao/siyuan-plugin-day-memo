@@ -20,7 +20,7 @@ export class MemoList {
         this.store = store;
         this.i18n = i18n;
         this.callbacks = callbacks;
-        this.container.className = "day-memo__list";
+        this.container.classList.add("day-memo__list");
         this.unsubscribe = this.store.subscribe(() => this.render());
         this.render();
     }
