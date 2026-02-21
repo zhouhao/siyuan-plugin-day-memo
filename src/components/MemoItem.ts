@@ -1,5 +1,5 @@
 import { Memo } from "../types";
-import { renderMarkdown, formatTime } from "../utils";
+import { renderMarkdown, formatTime, renderMermaidBlocks } from "../utils";
 
 export interface MemoItemCallbacks {
     onEdit: (memo: Memo) => void;
@@ -113,6 +113,8 @@ export class MemoItem {
         el.appendChild(header);
         el.appendChild(content);
         el.appendChild(footer);
+
+        renderMermaidBlocks(el);
 
         return el;
     }

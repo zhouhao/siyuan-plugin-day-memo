@@ -615,6 +615,28 @@
     }
 }
 
+.day-memo__mermaid {
+    margin: 6px 0;
+    overflow-x: auto;
+
+    svg {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+.day-memo__mermaid-error {
+    background: rgba(var(--b3-theme-error-rgb, 244, 67, 54), 0.08);
+    border: 1px solid rgba(var(--b3-theme-error-rgb, 244, 67, 54), 0.3);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-family: var(--b3-font-family-code);
+    color: var(--b3-theme-error);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
 .day-memo__inline-code {
     background: var(--b3-theme-surface);
     border: 1px solid var(--b3-border-color);

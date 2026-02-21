@@ -92,23 +92,23 @@ export function groupByDate<T extends { createdAt: number }>(items: T[]): Map<nu
  * Supports: bold, italic, strikethrough, inline code, code blocks, links, tags, line breaks.
  */
 export function renderMarkdown(content: string): string {
-    let html = escapeHtml(content);
-
-    // Code blocks (``` ... ```)
-    html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (_match, lang, code) => {
-        return `<pre class="day-memo__code-block"><code class="language-${lang}">${code.trim()}</code></pre>`;
+    // Extract code blocks BEFORE escaping — preserves raw content for mermaid, prevents <br> injection
+    const codeBlocks: string[] = [];
+    let stripped = content.replace(/```(\w*)\n([\s\S]*?)```/g, (_match, lang, code) => {
+        const idx = codeBlocks.length;
+        if (lang === "mermaid") {
+            codeBlocks.push(`<div class="day-memo__mermaid">${escapeHtml(code.trim())}</div>`);
+        } else {
+            codeBlocks.push(`<pre class="day-memo__code-block"><code class="language-${lang}">${escapeHtml(code.trim())}</code></pre>`);
+        }
+        return `%%CBLK_${idx}%%`;
     });
 
-    // Inline code
+    let html = escapeHtml(stripped);
+
     html = html.replace(/`([^`]+)`/g, '<code class="day-memo__inline-code">$1</code>');
-
-    // Bold
     html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-
-    // Italic
     html = html.replace(/\*(.+?)\*/g, "<em>$1</em>");
-
-    // Strikethrough
     html = html.replace(/~~(.+?)~~/g, "<del>$1</del>");
 
     // Images ![alt](url) — must be before link processing
@@ -123,19 +123,16 @@ export function renderMarkdown(content: string): string {
         '<a href="$2" class="day-memo__attachment" target="_blank">$1</a>'
     );
 
-    // Links [text](url)
     html = html.replace(
         /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
         '<a href="$2" target="_blank" rel="noopener noreferrer" class="day-memo__link">$1</a>'
     );
 
-    // Bare URLs
     html = html.replace(
         /(?<!")(?<!=)(https?:\/\/[^\s<]+)/g,
         '<a href="$1" target="_blank" rel="noopener noreferrer" class="day-memo__link">$1</a>'
     );
 
-    // Tags #tag → clickable tag
     html = html.replace(
         /#([\w\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff-]+)/g,
         '<span class="day-memo__tag" data-tag="$1">#$1</span>'
@@ -151,8 +148,12 @@ export function renderMarkdown(content: string): string {
         return `<label class="day-memo__checklist-item"><input type="checkbox" class="day-memo__checkbox" data-check-index="${idx}"${checkedAttr}><span class="day-memo__checklist-text${doneClass}">${text}</span></label>`;
     });
 
-    // Line breaks
     html = html.replace(/\n/g, "<br>");
+
+    // Restore code blocks after all inline processing
+    for (let i = 0; i < codeBlocks.length; i++) {
+        html = html.replace(`%%CBLK_${i}%%`, codeBlocks[i]);
+    }
 
     return html;
 }
@@ -202,4 +203,69 @@ export function getHeatmapLevel(count: number): number {
     if (count <= 3) return 2;
     if (count <= 5) return 3;
     return 4;
+}
+
+declare global {
+    interface Window {
+        mermaid?: {
+            initialize(config: Record<string, unknown>): void;
+            render(id: string, text: string): Promise<{ svg: string }>;
+        };
+    }
+}
+
+const MERMAID_SCRIPT = "/stage/protyle/js/mermaid/mermaid.min.js";
+let mermaidReady: Promise<void> | null = null;
+
+function ensureMermaid(): Promise<void> {
+    if (window.mermaid) return Promise.resolve();
+    if (mermaidReady) return mermaidReady;
+
+    mermaidReady = new Promise<void>((resolve, reject) => {
+        const existing = document.getElementById("protyleMermaidScript") as HTMLScriptElement;
+        if (existing) {
+            const check = () => {
+                if (window.mermaid) { resolve(); return; }
+                setTimeout(check, 50);
+            };
+            check();
+            return;
+        }
+
+        const script = document.createElement("script");
+        script.id = "dayMemoMermaidScript";
+        script.src = MERMAID_SCRIPT;
+        script.onload = () => {
+            const isDark = document.body.classList.contains("body--dark") ||
+                getComputedStyle(document.documentElement).getPropertyValue("--b3-theme-background").trim().startsWith("#1") ||
+                getComputedStyle(document.documentElement).getPropertyValue("--b3-theme-background").trim().startsWith("#2");
+            window.mermaid?.initialize({ startOnLoad: false, theme: isDark ? "dark" : "default" });
+            resolve();
+        };
+        script.onerror = () => reject(new Error("Failed to load mermaid"));
+        document.head.appendChild(script);
+    });
+    return mermaidReady;
+}
+
+export async function renderMermaidBlocks(container: HTMLElement): Promise<void> {
+    const blocks = container.querySelectorAll(".day-memo__mermaid:not([data-rendered])");
+    if (blocks.length === 0) return;
+
+    await ensureMermaid();
+
+    for (const block of Array.from(blocks) as HTMLElement[]) {
+        const source = block.textContent || "";
+        if (!source.trim()) continue;
+
+        const id = `mermaid-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+        try {
+            const { svg } = await window.mermaid!.render(id, source);
+            block.innerHTML = svg;
+            block.setAttribute("data-rendered", "true");
+        } catch {
+            block.innerHTML = `<pre class="day-memo__mermaid-error">${escapeHtml(source)}</pre>`;
+            block.setAttribute("data-rendered", "true");
+        }
+    }
 }
