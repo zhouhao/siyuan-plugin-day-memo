@@ -93,6 +93,25 @@ export class FilterBar {
         });
     }
 
+    updateDateFilter(date: string | null): void {
+        const existing = this.container.querySelector(".day-memo__active-date");
+        if (existing) existing.remove();
+
+        if (date) {
+            const dateBadge = document.createElement("div");
+            dateBadge.className = "day-memo__active-date";
+            dateBadge.innerHTML = `<span>📅 ${date}</span><button class="day-memo__active-date-clear">✕</button>`;
+            dateBadge.querySelector(".day-memo__active-date-clear")!.addEventListener(
+                "click",
+                () => {
+                    this.store.setSelectedDate(null);
+                    dateBadge.remove();
+                },
+            );
+            this.container.appendChild(dateBadge);
+        }
+    }
+
     updateTagFilter(tag: string | null): void {
         const existing = this.container.querySelector(".day-memo__active-tag");
         if (existing) existing.remove();

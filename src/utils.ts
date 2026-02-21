@@ -161,30 +161,6 @@ export function debounce<T extends (...args: unknown[]) => void>(fn: T, delay: n
 }
 
 /**
- * Get an array of dates for the heatmap grid.
- * Returns the last `weeks` weeks of dates, starting from Monday.
- * Each entry is a YYYY-MM-DD string.
- */
-export function getHeatmapDateRange(weeks: number = 15): string[] {
-    const dates: string[] = [];
-    const today = new Date();
-    // Find next Sunday (end of current week row)
-    const endDay = new Date(today);
-    endDay.setDate(endDay.getDate() + (6 - endDay.getDay()));
-
-    const totalDays = weeks * 7;
-    const startDay = new Date(endDay);
-    startDay.setDate(startDay.getDate() - totalDays + 1);
-
-    for (let i = 0; i < totalDays; i++) {
-        const d = new Date(startDay);
-        d.setDate(d.getDate() + i);
-        dates.push(formatDate(d.getTime()));
-    }
-    return dates;
-}
-
-/**
  * Determine heatmap intensity level (0-4) from a memo count.
  */
 export function getHeatmapLevel(count: number): number {

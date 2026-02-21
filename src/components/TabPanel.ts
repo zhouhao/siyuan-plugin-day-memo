@@ -49,7 +49,8 @@ export class TabPanel {
                 this.filterBar.updateTagFilter(tag);
             },
             (date) => {
-                this.store.setSearchQuery(date);
+                this.store.setSelectedDate(date);
+                this.filterBar.updateDateFilter(date);
             },
         );
 

@@ -12,6 +12,7 @@ export class MemoDataStore {
         filter: "all",
         searchQuery: "",
         selectedTag: null,
+        selectedDate: null,
         showArchived: false,
     };
 
@@ -122,6 +123,11 @@ export class MemoDataStore {
             memos = memos.filter((m) => m.tags.includes(selectedTag));
         }
 
+        if (this.filterState.selectedDate) {
+            const dateStr = this.filterState.selectedDate;
+            memos = memos.filter((m) => formatDate(m.createdAt) === dateStr);
+        }
+
         if (searchQuery) {
             const q = searchQuery.toLowerCase();
             memos = memos.filter((m) => m.content.toLowerCase().includes(q));
@@ -172,6 +178,11 @@ export class MemoDataStore {
         this.notify();
     }
 
+    setSelectedDate(date: string | null): void {
+        this.filterState.selectedDate = date;
+        this.notify();
+    }
+
     setShowArchived(show: boolean): void {
         this.filterState.showArchived = show;
         this.notify();
@@ -182,6 +193,7 @@ export class MemoDataStore {
             filter: "all",
             searchQuery: "",
             selectedTag: null,
+            selectedDate: null,
             showArchived: false,
         };
         this.notify();

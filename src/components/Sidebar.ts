@@ -11,14 +11,14 @@ export class Sidebar {
     private tagList: TagList;
     private unsubscribe: (() => void) | null = null;
     private onTagSelect: (tag: string | null) => void;
-    private onDateClick: (date: string) => void;
+    private onDateClick: (date: string | null) => void;
 
     constructor(
         container: HTMLElement,
         store: MemoDataStore,
         i18n: Record<string, string>,
         onTagSelect: (tag: string | null) => void,
-        onDateClick: (date: string) => void,
+        onDateClick: (date: string | null) => void,
     ) {
         this.container = container;
         this.store = store;

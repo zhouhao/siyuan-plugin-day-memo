@@ -19,6 +19,7 @@ export interface FilterState {
     filter: MemoFilter;
     searchQuery: string;
     selectedTag: string | null;
+    selectedDate: string | null;
     showArchived: boolean;
 }
 
