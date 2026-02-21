@@ -1,0 +1,15 @@
+node_modules/
+dist/
+index.js
+index.css
+package.zip
+*.js.map
+i18n/
+.DS_Store
+
+.idea/
+.minimax/
+*.zip
+
+.claude
+.omc

@@ -1,0 +1,34 @@
+{
+  "name": "siyuan-plugin-day-memo",
+  "author": "Hao Zhou",
+  "url": "https://github.com/zhouhao/siyuan-plugin-day-memo",
+  "version": "0.1.0",
+  "minAppVersion": "3.3.0",
+  "backends": ["all"],
+  "frontends": ["all"],
+  "disabledInPublish": false,
+  "displayName": {
+    "default": "DayMemo",
+    "zh_CN": "日记便签"
+  },
+  "description": {
+    "default": "A Memos-like quick note-taking plugin. Capture thoughts, tag them, search and filter — all within SiYuan.",
+    "zh_CN": "类似 Memos 的快速笔记插件。在思源中快速记录想法、添加标签、搜索和过滤。"
+  },
+  "readme": {
+    "default": "README.md",
+    "zh_CN": "README_zh_CN.md"
+  },
+  "funding": {
+    "custom": []
+  },
+  "keywords": [
+    "memo",
+    "memos",
+    "daylog",
+    "quick note",
+    "日记",
+    "便签",
+    "快速笔记"
+  ]
+}

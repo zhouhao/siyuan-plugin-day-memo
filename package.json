@@ -1,0 +1,39 @@
+{
+  "name": "siyuan-plugin-day-memo",
+  "version": "0.1.0",
+  "description": "A Memos-like quick note-taking plugin for SiYuan",
+  "main": "./src/index.ts",
+  "scripts": {
+    "dev": "webpack --mode development",
+    "build": "webpack --mode production"
+  },
+  "keywords": [
+    "siyuan",
+    "plugin",
+    "memos",
+    "daylog",
+    "note-taking"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.7.1",
+    "esbuild-loader": "^3.0.1",
+    "mini-css-extract-plugin": "2.3.0",
+    "sass": "^1.62.1",
+    "sass-loader": "^12.6.0",
+    "siyuan": "1.1.7",
+    "tslib": "2.4.0",
+    "typescript": "4.8.4",
+    "webpack": "^5.76.0",
+    "webpack-cli": "^5.0.2",
+    "zip-webpack-plugin": "^4.0.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "@parcel/watcher"
+    ]
+  }
+}
