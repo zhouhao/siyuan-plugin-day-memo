@@ -141,10 +141,31 @@ export function renderMarkdown(content: string): string {
         '<span class="day-memo__tag" data-tag="$1">#$1</span>'
     );
 
+    // Checklist items — must be before line break conversion
+    let checkIndex = 0;
+    html = html.replace(/^- \[([ xX])\] (.+)$/gm, (_match, state, text) => {
+        const checked = state !== " ";
+        const idx = checkIndex++;
+        const checkedAttr = checked ? " checked" : "";
+        const doneClass = checked ? " day-memo__checklist-text--done" : "";
+        return `<label class="day-memo__checklist-item"><input type="checkbox" class="day-memo__checkbox" data-check-index="${idx}"${checkedAttr}><span class="day-memo__checklist-text${doneClass}">${text}</span></label>`;
+    });
+
     // Line breaks
     html = html.replace(/\n/g, "<br>");
 
     return html;
+}
+
+export function toggleChecklistItem(content: string, checkIndex: number): string {
+    let idx = 0;
+    return content.replace(/^(- \[)([ xX])(\] .+)$/gm, (match, prefix, state, suffix) => {
+        if (idx++ === checkIndex) {
+            const newState = state === " " ? "x" : " ";
+            return `${prefix}${newState}${suffix}`;
+        }
+        return match;
+    });
 }
 
 /**

@@ -7,6 +7,7 @@ export interface MemoItemCallbacks {
     onTogglePin: (memo: Memo) => void;
     onToggleArchive: (memo: Memo) => void;
     onTagClick: (tag: string) => void;
+    onToggleCheck: (memo: Memo, checkIndex: number) => void;
 }
 
 export class MemoItem {
@@ -68,6 +69,14 @@ export class MemoItem {
                 e.stopPropagation();
                 const tag = (tagEl as HTMLElement).dataset.tag;
                 if (tag) this.callbacks.onTagClick(tag);
+            });
+        });
+
+        content.querySelectorAll(".day-memo__checkbox").forEach((checkbox) => {
+            checkbox.addEventListener("change", (e) => {
+                e.stopPropagation();
+                const idx = parseInt((checkbox as HTMLElement).dataset.checkIndex || "0", 10);
+                this.callbacks.onToggleCheck(this.memo, idx);
             });
         });
 

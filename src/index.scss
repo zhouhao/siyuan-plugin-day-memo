@@ -642,6 +642,27 @@
     }
 }
 
+.day-memo__checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    cursor: pointer;
+    padding: 2px 0;
+    line-height: 1.5;
+}
+
+.day-memo__checkbox {
+    margin-top: 4px;
+    cursor: pointer;
+    accent-color: var(--b3-theme-primary);
+    flex-shrink: 0;
+}
+
+.day-memo__checklist-text--done {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+
 .day-memo__tag {
     display: inline;
     color: var(--b3-theme-primary);

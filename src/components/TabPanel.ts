@@ -1,6 +1,7 @@
 import { confirm, showMessage } from "siyuan";
 import { MemoDataStore } from "../store";
 import { Memo } from "../types";
+import { toggleChecklistItem } from "../utils";
 import { MemoEditor } from "./MemoEditor";
 import { MemoList } from "./MemoList";
 import { FilterBar } from "./FilterBar";
@@ -81,6 +82,10 @@ export class TabPanel {
             onTagClick: (tag: string) => {
                 this.store.setSelectedTag(tag);
                 this.filterBar.updateTagFilter(tag);
+            },
+            onToggleCheck: (memo: Memo, checkIndex: number) => {
+                const newContent = toggleChecklistItem(memo.content, checkIndex);
+                this.store.updateMemo(memo.id, newContent);
             },
         };
 
