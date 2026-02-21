@@ -1,5 +1,8 @@
 import { MemoDataStore } from "../store";
 import { Memo } from "../types";
+import { uploadAsset, pushErrMsg } from "../api";
+
+const IMAGE_ACCEPT = "image/png,image/jpeg,image/gif,image/webp,image/svg+xml,image/bmp";
 
 export class MemoEditor {
     private container: HTMLElement;
@@ -8,8 +11,12 @@ export class MemoEditor {
     private textarea: HTMLTextAreaElement;
     private saveBtn: HTMLButtonElement;
     private cancelBtn: HTMLButtonElement;
+    private uploadBtn: HTMLButtonElement;
+    private fileInput: HTMLInputElement;
+    private previewContainer: HTMLElement;
     private editingMemo: Memo | null = null;
     private onSaved: (() => void) | null = null;
+    private uploading = false;
 
     constructor(
         container: HTMLElement,
@@ -41,9 +48,49 @@ export class MemoEditor {
                 this.handleSave();
             }
         });
+        this.textarea.addEventListener("paste", (e) => this.handlePaste(e));
+        this.textarea.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            this.textarea.classList.add("day-memo__editor-textarea--dragover");
+        });
+        this.textarea.addEventListener("dragleave", () => {
+            this.textarea.classList.remove("day-memo__editor-textarea--dragover");
+        });
+        this.textarea.addEventListener("drop", (e) => this.handleDrop(e));
+
+        this.previewContainer = document.createElement("div");
+        this.previewContainer.className = "day-memo__editor-preview";
+        this.previewContainer.style.display = "none";
+
+        this.fileInput = document.createElement("input");
+        this.fileInput.type = "file";
+        this.fileInput.accept = IMAGE_ACCEPT;
+        this.fileInput.multiple = true;
+        this.fileInput.style.display = "none";
+        this.fileInput.addEventListener("change", () => {
+            if (this.fileInput.files?.length) {
+                this.handleUpload(Array.from(this.fileInput.files));
+                this.fileInput.value = "";
+            }
+        });
 
         const actions = document.createElement("div");
         actions.className = "day-memo__editor-actions";
+
+        const leftActions = document.createElement("div");
+        leftActions.className = "day-memo__editor-actions-left";
+
+        this.uploadBtn = document.createElement("button");
+        this.uploadBtn.className = "day-memo__editor-upload b3-tooltips b3-tooltips__n";
+        this.uploadBtn.setAttribute("aria-label", this.i18n.uploadImage || "Upload image");
+        this.uploadBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`;
+        this.uploadBtn.addEventListener("click", () => this.fileInput.click());
+
+        leftActions.appendChild(this.uploadBtn);
+        leftActions.appendChild(this.fileInput);
+
+        const rightActions = document.createElement("div");
+        rightActions.className = "day-memo__editor-actions-right";
 
         this.cancelBtn = document.createElement("button");
         this.cancelBtn.className = "b3-button b3-button--outline day-memo__editor-cancel";
@@ -56,10 +103,14 @@ export class MemoEditor {
         this.saveBtn.textContent = this.i18n.saveMemo;
         this.saveBtn.addEventListener("click", () => this.handleSave());
 
-        actions.appendChild(this.cancelBtn);
-        actions.appendChild(this.saveBtn);
+        rightActions.appendChild(this.cancelBtn);
+        rightActions.appendChild(this.saveBtn);
+
+        actions.appendChild(leftActions);
+        actions.appendChild(rightActions);
 
         this.container.appendChild(this.textarea);
+        this.container.appendChild(this.previewContainer);
         this.container.appendChild(actions);
     }
 
@@ -75,6 +126,7 @@ export class MemoEditor {
         this.saveBtn.textContent = this.i18n.saveMemo;
         this.textarea.focus();
         this.autoResize();
+        this.refreshPreview();
     }
 
     private handleCancel(): void {
@@ -82,6 +134,7 @@ export class MemoEditor {
         this.textarea.value = "";
         this.cancelBtn.style.display = "none";
         this.textarea.style.height = "auto";
+        this.clearPreview();
     }
 
     private handleSave(): void {
@@ -98,7 +151,119 @@ export class MemoEditor {
 
         this.textarea.value = "";
         this.textarea.style.height = "auto";
+        this.clearPreview();
         this.onSaved?.();
+    }
+
+    private handlePaste(e: ClipboardEvent): void {
+        const items = e.clipboardData?.items;
+        if (!items) return;
+
+        const imageFiles: File[] = [];
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].type.startsWith("image/")) {
+                const file = items[i].getAsFile();
+                if (file) imageFiles.push(file);
+            }
+        }
+
+        if (imageFiles.length > 0) {
+            e.preventDefault();
+            this.handleUpload(imageFiles);
+        }
+    }
+
+    private handleDrop(e: DragEvent): void {
+        e.preventDefault();
+        this.textarea.classList.remove("day-memo__editor-textarea--dragover");
+
+        const files = e.dataTransfer?.files;
+        if (!files?.length) return;
+
+        const imageFiles = Array.from(files).filter((f) => f.type.startsWith("image/"));
+        if (imageFiles.length > 0) {
+            this.handleUpload(imageFiles);
+        }
+    }
+
+    private async handleUpload(files: File[]): Promise<void> {
+        if (this.uploading) return;
+        this.uploading = true;
+        this.uploadBtn.classList.add("day-memo__editor-upload--loading");
+        this.uploadBtn.setAttribute("disabled", "true");
+
+        try {
+            const succMap = await uploadAsset(files);
+            const insertParts: string[] = [];
+            for (const [originalName, assetPath] of Object.entries(succMap)) {
+                const alt = originalName.replace(/\.[^.]+$/, "");
+                insertParts.push(`![${alt}](${assetPath})`);
+            }
+            if (insertParts.length > 0) {
+                this.insertAtCursor(insertParts.join("\n"));
+                this.refreshPreview();
+            }
+        } catch (err) {
+            const msg = this.i18n.uploadFailed || "Upload failed";
+            pushErrMsg(`${msg}: ${(err as Error).message}`);
+        } finally {
+            this.uploading = false;
+            this.uploadBtn.classList.remove("day-memo__editor-upload--loading");
+            this.uploadBtn.removeAttribute("disabled");
+        }
+    }
+
+    private insertAtCursor(text: string): void {
+        const start = this.textarea.selectionStart;
+        const end = this.textarea.selectionEnd;
+        const value = this.textarea.value;
+
+        const before = value.substring(0, start);
+        const after = value.substring(end);
+        const needNewlineBefore = before.length > 0 && !before.endsWith("\n");
+        const needNewlineAfter = after.length > 0 && !after.startsWith("\n");
+
+        const insert =
+            (needNewlineBefore ? "\n" : "") +
+            text +
+            (needNewlineAfter ? "\n" : "");
+
+        this.textarea.value = before + insert + after;
+        const newPos = before.length + insert.length;
+        this.textarea.selectionStart = newPos;
+        this.textarea.selectionEnd = newPos;
+        this.textarea.focus();
+        this.autoResize();
+    }
+
+    private refreshPreview(): void {
+        const imageRegex = /!\[[^\]]*\]\(([^)]+)\)/g;
+        const content = this.textarea.value;
+        const matches: string[] = [];
+        let match: RegExpExecArray | null;
+        while ((match = imageRegex.exec(content)) !== null) {
+            matches.push(match[1]);
+        }
+
+        if (matches.length === 0) {
+            this.clearPreview();
+            return;
+        }
+
+        this.previewContainer.innerHTML = "";
+        this.previewContainer.style.display = "";
+        for (const src of matches) {
+            const thumb = document.createElement("img");
+            thumb.className = "day-memo__editor-preview-thumb";
+            thumb.src = src;
+            thumb.loading = "lazy";
+            this.previewContainer.appendChild(thumb);
+        }
+    }
+
+    private clearPreview(): void {
+        this.previewContainer.innerHTML = "";
+        this.previewContainer.style.display = "none";
     }
 
     destroy(): void {

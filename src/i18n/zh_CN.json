@@ -47,5 +47,7 @@
   "monthSep": "九月",
   "monthOct": "十月",
   "monthNov": "十一月",
-  "monthDec": "十二月"
+  "monthDec": "十二月",
+  "uploadImage": "上传图片",
+  "uploadFailed": "图片上传失败"
 }

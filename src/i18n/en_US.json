@@ -47,5 +47,7 @@
   "monthSep": "September",
   "monthOct": "October",
   "monthNov": "November",
-  "monthDec": "December"
+  "monthDec": "December",
+  "uploadImage": "Upload image",
+  "uploadFailed": "Image upload failed"
 }

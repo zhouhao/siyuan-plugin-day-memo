@@ -28,3 +28,26 @@ export function pushMsg(msg: string, timeout = 3000): Promise<unknown> {
 export function pushErrMsg(msg: string, timeout = 5000): Promise<unknown> {
     return request("/api/notification/pushErrMsg", { msg, timeout });
 }
+
+/**
+ * Upload asset files to SiYuan's assets directory.
+ * Uses /api/asset/upload (multipart/form-data).
+ * Returns a map of original filename → uploaded asset path.
+ */
+export async function uploadAsset(files: File[]): Promise<Record<string, string>> {
+    const form = new FormData();
+    form.append("assetsDirPath", "/assets/");
+    for (const file of files) {
+        form.append("file[]", file);
+    }
+
+    const response = await fetch("/api/asset/upload", {
+        method: "POST",
+        body: form,
+    });
+    const result = await response.json();
+    if (result.code !== 0) {
+        throw new Error(result.msg || "Upload failed");
+    }
+    return result.data.succMap as Record<string, string>;
+}

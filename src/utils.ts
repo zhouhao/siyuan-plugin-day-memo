@@ -111,6 +111,12 @@ export function renderMarkdown(content: string): string {
     // Strikethrough
     html = html.replace(/~~(.+?)~~/g, "<del>$1</del>");
 
+    // Images ![alt](url) — must be before link processing
+    html = html.replace(
+        /!\[([^\]]*)\]\(([^)]+)\)/g,
+        '<img src="$2" alt="$1" class="day-memo__image" loading="lazy">'
+    );
+
     // Links [text](url)
     html = html.replace(
         /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
