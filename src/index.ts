@@ -1,23 +1,22 @@
 import {
     Plugin,
     getFrontend,
-    adaptHotkey,
     Dialog,
     showMessage,
+    openTab,
 } from "siyuan";
 import "./index.scss";
 
-import { DOCK_TYPE, STORAGE_CONFIG, DEFAULT_CONFIG, PluginConfig } from "./types";
+import { TAB_TYPE } from "./types";
 import { MemoDataStore } from "./store";
-import { DockPanel } from "./components/DockPanel";
+import { TabPanel } from "./components/TabPanel";
 
 export default class DayMemoPlugin extends Plugin {
     private store: MemoDataStore;
     private isMobile: boolean;
-    private dockPanel: DockPanel | null = null;
-    private config: PluginConfig = { ...DEFAULT_CONFIG };
+    private tabPanel: TabPanel | null = null;
 
-    async onload(): Promise<void> {
+    onload(): void {
         const frontEnd = getFrontend();
         this.isMobile = frontEnd === "mobile" || frontEnd === "browser-mobile";
 
@@ -29,33 +28,22 @@ export default class DayMemoPlugin extends Plugin {
 
         this.store = new MemoDataStore(this);
 
-        const configData = await this.loadData(STORAGE_CONFIG);
-        if (configData) {
-            this.config = { ...DEFAULT_CONFIG, ...configData };
-        }
-
-        this.addDock({
-            config: {
-                position: this.config.dockPosition,
-                size: { width: 320, height: 0 },
-                icon: "iconDayMemo",
-                title: this.i18n.dockTitle,
-                hotkey: "⌥⌘M",
+        const plugin = this;
+        this.addTab({
+            type: TAB_TYPE,
+            init() {
+                const tabEl = (this as { element: Element }).element as HTMLElement;
+                plugin.store.load().then(() => {
+                    plugin.tabPanel = new TabPanel(
+                        tabEl,
+                        plugin.store,
+                        plugin.i18n,
+                    );
+                });
             },
-            data: {},
-            type: DOCK_TYPE,
-            init: async (dock) => {
-                await this.store.load();
-                this.dockPanel = new DockPanel(
-                    dock.element,
-                    this.store,
-                    this.i18n,
-                    this.isMobile,
-                );
-            },
-            destroy: () => {
-                this.dockPanel?.destroy();
-                this.dockPanel = null;
+            destroy() {
+                plugin.tabPanel?.destroy();
+                plugin.tabPanel = null;
             },
         });
 
@@ -74,13 +62,25 @@ export default class DayMemoPlugin extends Plugin {
             title: this.i18n.topBarTip,
             position: "right",
             callback: () => {
-                this.showQuickCaptureDialog();
+                this.openDayMemoTab();
             },
         });
     }
 
     onunload(): void {
-        this.dockPanel?.destroy();
+        this.tabPanel?.destroy();
+    }
+
+    private openDayMemoTab(): void {
+        openTab({
+            app: this.app,
+            custom: {
+                icon: "iconDayMemo",
+                title: this.i18n.pluginName,
+                data: {},
+                id: this.name + TAB_TYPE,
+            },
+        });
     }
 
     private showQuickCaptureDialog(): void {

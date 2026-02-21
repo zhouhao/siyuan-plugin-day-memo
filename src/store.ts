@@ -1,6 +1,6 @@
 import type { Plugin } from "siyuan";
 import { Memo, MemoStore, STORAGE_MEMOS, FilterState, MemoFilter } from "./types";
-import { generateId, extractTags } from "./utils";
+import { generateId, extractTags, formatDate } from "./utils";
 
 const INITIAL_STORE: MemoStore = { memos: [], version: 1 };
 
@@ -185,5 +185,22 @@ export class MemoDataStore {
             showArchived: false,
         };
         this.notify();
+    }
+
+    getMemosCountByDate(): Map<string, number> {
+        const counts = new Map<string, number>();
+        for (const memo of this.store.memos) {
+            const dateKey = formatDate(memo.createdAt);
+            counts.set(dateKey, (counts.get(dateKey) || 0) + 1);
+        }
+        return counts;
+    }
+
+    getDaysActive(): number {
+        const uniqueDays = new Set<string>();
+        for (const memo of this.store.memos) {
+            uniqueDays.add(formatDate(memo.createdAt));
+        }
+        return uniqueDays.size;
     }
 }

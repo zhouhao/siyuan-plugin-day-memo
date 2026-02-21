@@ -1,6 +1,5 @@
 {
   "pluginName": "日记便签",
-  "dockTitle": "日记便签",
   "topBarTip": "打开日记便签",
   "editorPlaceholder": "记录你的想法... 使用 #标签 添加标签...",
   "saveMemo": "保存",
@@ -25,11 +24,9 @@
   "memoSaved": "便签已保存",
   "memoUpdated": "便签已更新",
   "clearFilter": "清除过滤",
-  "showArchived": "显示归档",
-  "hideArchived": "隐藏归档",
-  "totalMemos": "共 {count} 条便签",
   "quickCapture": "快速记录",
-  "settings": "设置",
-  "settingDockPosition": "面板位置",
-  "settingDockPositionDesc": "日记便签面板的停靠位置"
+  "heatmapTitle": "活跃度",
+  "statMemos": "便签",
+  "statDays": "天数",
+  "statTags": "标签"
 }

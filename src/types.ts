@@ -22,14 +22,5 @@ export interface FilterState {
     showArchived: boolean;
 }
 
-export interface PluginConfig {
-    dockPosition: "LeftTop" | "LeftBottom" | "RightTop" | "RightBottom";
-}
-
-export const DEFAULT_CONFIG: PluginConfig = {
-    dockPosition: "RightTop",
-};
-
 export const STORAGE_MEMOS = "memos-data";
-export const STORAGE_CONFIG = "plugin-config";
-export const DOCK_TYPE = "day-memo-dock";
+export const TAB_TYPE = "day-memo-tab";

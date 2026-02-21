@@ -1,6 +1,5 @@
 {
   "pluginName": "DayMemo",
-  "dockTitle": "DayMemo",
   "topBarTip": "Open DayMemo",
   "editorPlaceholder": "What's on your mind? Use #tag to add tags...",
   "saveMemo": "Save",
@@ -25,11 +24,9 @@
   "memoSaved": "Memo saved",
   "memoUpdated": "Memo updated",
   "clearFilter": "Clear filter",
-  "showArchived": "Show archived",
-  "hideArchived": "Hide archived",
-  "totalMemos": "Total: {count} memos",
   "quickCapture": "Quick Capture",
-  "settings": "Settings",
-  "settingDockPosition": "Dock Position",
-  "settingDockPositionDesc": "Position of the DayMemo dock panel"
+  "heatmapTitle": "Activity",
+  "statMemos": "Memos",
+  "statDays": "Days",
+  "statTags": "Tags"
 }
