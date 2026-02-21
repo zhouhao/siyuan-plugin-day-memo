@@ -1,12 +1,10 @@
 import { MemoDataStore } from "../store";
 import { MemoFilter } from "../types";
-import { debounce } from "../utils";
 
 export class FilterBar {
     private container: HTMLElement;
     private store: MemoDataStore;
     private i18n: Record<string, string>;
-    private searchInput: HTMLInputElement;
 
     constructor(
         container: HTMLElement,
@@ -49,37 +47,7 @@ export class FilterBar {
             tabs.appendChild(btn);
         }
 
-        const searchWrapper = document.createElement("div");
-        searchWrapper.className = "day-memo__search-wrapper";
-
-        this.searchInput = document.createElement("input");
-        this.searchInput.type = "text";
-        this.searchInput.className = "day-memo__search-input b3-text-field";
-        this.searchInput.placeholder = this.i18n.search;
-        this.searchInput.value = currentFilter.searchQuery;
-
-        const debouncedSearch = debounce((value: string) => {
-            this.store.setSearchQuery(value);
-        }, 200);
-
-        this.searchInput.addEventListener("input", () => {
-            debouncedSearch(this.searchInput.value);
-        });
-
-        const clearBtn = document.createElement("button");
-        clearBtn.className = "day-memo__search-clear";
-        clearBtn.innerHTML = "✕";
-        clearBtn.title = this.i18n.clearFilter;
-        clearBtn.addEventListener("click", () => {
-            this.searchInput.value = "";
-            this.store.setSearchQuery("");
-        });
-
-        searchWrapper.appendChild(this.searchInput);
-        searchWrapper.appendChild(clearBtn);
-
         this.container.appendChild(tabs);
-        this.container.appendChild(searchWrapper);
     }
 
     private updateActiveTab(activeFilter: MemoFilter): void {

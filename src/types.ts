@@ -4,6 +4,7 @@ export interface Memo {
     tags: string[];
     pinned: boolean;
     archived: boolean;
+    deleted?: boolean;
     createdAt: number;
     updatedAt: number;
 }

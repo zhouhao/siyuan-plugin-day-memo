@@ -34,7 +34,7 @@ export class MemoList {
             empty.className = "day-memo__empty";
             const filter = this.store.getFilter();
             empty.textContent =
-                filter.searchQuery || filter.selectedTag
+                filter.searchQuery || filter.selectedTag || filter.selectedDate
                     ? this.i18n.noResults
                     : this.i18n.noMemos;
             this.container.appendChild(empty);

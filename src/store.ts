@@ -21,12 +21,33 @@ export class MemoDataStore {
     }
 
     async load(): Promise<void> {
-        const data = await this.plugin.loadData(STORAGE_MEMOS);
-        if (data && data.memos) {
-            this.store = data as MemoStore;
-        } else {
+        const remote = await this.plugin.loadData(STORAGE_MEMOS);
+        if (!remote || !remote.memos) {
             this.store = { ...INITIAL_STORE };
+            return;
         }
+        const remoteMemos = (remote as MemoStore).memos;
+        if (this.store.memos.length === 0) {
+            this.store = { ...remote as MemoStore, memos: remoteMemos.filter((m) => !m.deleted) };
+            return;
+        }
+        this.store.memos = this.mergeMemos(this.store.memos, remoteMemos);
+    }
+
+    private mergeMemos(local: Memo[], remote: Memo[]): Memo[] {
+        const merged = new Map<string, Memo>();
+        for (const m of remote) {
+            merged.set(m.id, m);
+        }
+        for (const m of local) {
+            const existing = merged.get(m.id);
+            if (!existing || m.updatedAt >= existing.updatedAt) {
+                merged.set(m.id, m);
+            }
+        }
+        return Array.from(merged.values())
+            .filter((m) => !m.deleted)
+            .sort((a, b) => b.createdAt - a.createdAt);
     }
 
     private async persist(): Promise<void> {
@@ -73,10 +94,12 @@ export class MemoDataStore {
     }
 
     deleteMemo(id: string): boolean {
-        const idx = this.store.memos.findIndex((m) => m.id === id);
-        if (idx === -1) return false;
-        this.store.memos.splice(idx, 1);
+        const memo = this.store.memos.find((m) => m.id === id);
+        if (!memo) return false;
+        memo.deleted = true;
+        memo.updatedAt = Date.now();
         this.persist();
+        this.store.memos = this.store.memos.filter((m) => !m.deleted);
         this.notify();
         return true;
     }
