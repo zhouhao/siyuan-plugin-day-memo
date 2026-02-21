@@ -12,7 +12,9 @@ export class MemoEditor {
     private saveBtn: HTMLButtonElement;
     private cancelBtn: HTMLButtonElement;
     private uploadBtn: HTMLButtonElement;
+    private attachBtn: HTMLButtonElement;
     private fileInput: HTMLInputElement;
+    private attachInput: HTMLInputElement;
     private previewContainer: HTMLElement;
     private editingMemo: Memo | null = null;
     private onSaved: (() => void) | null = null;
@@ -69,8 +71,19 @@ export class MemoEditor {
         this.fileInput.style.display = "none";
         this.fileInput.addEventListener("change", () => {
             if (this.fileInput.files?.length) {
-                this.handleUpload(Array.from(this.fileInput.files));
+                this.handleUpload(Array.from(this.fileInput.files), "image");
                 this.fileInput.value = "";
+            }
+        });
+
+        this.attachInput = document.createElement("input");
+        this.attachInput.type = "file";
+        this.attachInput.multiple = true;
+        this.attachInput.style.display = "none";
+        this.attachInput.addEventListener("change", () => {
+            if (this.attachInput.files?.length) {
+                this.handleUpload(Array.from(this.attachInput.files), "attachment");
+                this.attachInput.value = "";
             }
         });
 
@@ -86,8 +99,16 @@ export class MemoEditor {
         this.uploadBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`;
         this.uploadBtn.addEventListener("click", () => this.fileInput.click());
 
+        this.attachBtn = document.createElement("button");
+        this.attachBtn.className = "day-memo__editor-upload b3-tooltips b3-tooltips__n";
+        this.attachBtn.setAttribute("aria-label", this.i18n.uploadAttachment || "Upload attachment");
+        this.attachBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>`;
+        this.attachBtn.addEventListener("click", () => this.attachInput.click());
+
         leftActions.appendChild(this.uploadBtn);
+        leftActions.appendChild(this.attachBtn);
         leftActions.appendChild(this.fileInput);
+        leftActions.appendChild(this.attachInput);
 
         const rightActions = document.createElement("div");
         rightActions.className = "day-memo__editor-actions-right";
@@ -169,7 +190,7 @@ export class MemoEditor {
 
         if (imageFiles.length > 0) {
             e.preventDefault();
-            this.handleUpload(imageFiles);
+            this.handleUpload(imageFiles, "image");
         }
     }
 
@@ -180,36 +201,59 @@ export class MemoEditor {
         const files = e.dataTransfer?.files;
         if (!files?.length) return;
 
-        const imageFiles = Array.from(files).filter((f) => f.type.startsWith("image/"));
+        const allFiles = Array.from(files);
+        const imageFiles = allFiles.filter((f) => f.type.startsWith("image/"));
+        const otherFiles = allFiles.filter((f) => !f.type.startsWith("image/"));
+
         if (imageFiles.length > 0) {
-            this.handleUpload(imageFiles);
+            this.handleUpload(imageFiles, "image");
+        }
+        if (otherFiles.length > 0) {
+            this.handleUpload(otherFiles, "attachment");
         }
     }
 
-    private async handleUpload(files: File[]): Promise<void> {
+    private async handleUpload(files: File[], mode: "image" | "attachment"): Promise<void> {
         if (this.uploading) return;
         this.uploading = true;
-        this.uploadBtn.classList.add("day-memo__editor-upload--loading");
-        this.uploadBtn.setAttribute("disabled", "true");
+        this.setUploadLoading(true);
 
         try {
             const succMap = await uploadAsset(files);
             const insertParts: string[] = [];
             for (const [originalName, assetPath] of Object.entries(succMap)) {
-                const alt = originalName.replace(/\.[^.]+$/, "");
-                insertParts.push(`![${alt}](${assetPath})`);
+                if (mode === "image") {
+                    const alt = originalName.replace(/\.[^.]+$/, "");
+                    insertParts.push(`![${alt}](${assetPath})`);
+                } else {
+                    insertParts.push(`[${originalName}](${assetPath})`);
+                }
             }
             if (insertParts.length > 0) {
                 this.insertAtCursor(insertParts.join("\n"));
-                this.refreshPreview();
+                if (mode === "image") {
+                    this.refreshPreview();
+                }
             }
         } catch (err) {
             const msg = this.i18n.uploadFailed || "Upload failed";
             pushErrMsg(`${msg}: ${(err as Error).message}`);
         } finally {
             this.uploading = false;
-            this.uploadBtn.classList.remove("day-memo__editor-upload--loading");
-            this.uploadBtn.removeAttribute("disabled");
+            this.setUploadLoading(false);
+        }
+    }
+
+    private setUploadLoading(loading: boolean): void {
+        const btns = [this.uploadBtn, this.attachBtn];
+        for (const btn of btns) {
+            if (loading) {
+                btn.classList.add("day-memo__editor-upload--loading");
+                btn.setAttribute("disabled", "true");
+            } else {
+                btn.classList.remove("day-memo__editor-upload--loading");
+                btn.removeAttribute("disabled");
+            }
         }
     }
 

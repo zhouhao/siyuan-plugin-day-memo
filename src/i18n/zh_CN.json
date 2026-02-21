@@ -49,5 +49,6 @@
   "monthNov": "十一月",
   "monthDec": "十二月",
   "uploadImage": "上传图片",
-  "uploadFailed": "图片上传失败"
+  "uploadAttachment": "上传附件",
+  "uploadFailed": "上传失败"
 }

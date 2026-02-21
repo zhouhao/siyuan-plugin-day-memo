@@ -582,6 +582,31 @@
     }
 }
 
+.day-memo__attachment {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    background: var(--b3-theme-surface);
+    border: 1px solid var(--b3-border-color);
+    border-radius: 6px;
+    color: var(--b3-theme-on-surface);
+    text-decoration: none;
+    font-size: 13px;
+    transition: border-color 0.15s;
+
+    &::before {
+        content: "\1F4CE";
+        font-size: 14px;
+    }
+
+    &:hover {
+        border-color: var(--b3-theme-primary);
+        color: var(--b3-theme-primary);
+        text-decoration: none;
+    }
+}
+
 .day-memo__inline-code {
     background: var(--b3-theme-surface);
     border: 1px solid var(--b3-border-color);

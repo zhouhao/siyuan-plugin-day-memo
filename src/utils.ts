@@ -117,6 +117,12 @@ export function renderMarkdown(content: string): string {
         '<img src="$2" alt="$1" class="day-memo__image" loading="lazy">'
     );
 
+    // Asset file links [name](assets/...) — must be before external link processing
+    html = html.replace(
+        /\[([^\]]+)\]\((assets\/[^)]+)\)/g,
+        '<a href="$2" class="day-memo__attachment" target="_blank">$1</a>'
+    );
+
     // Links [text](url)
     html = html.replace(
         /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,

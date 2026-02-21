@@ -49,5 +49,6 @@
   "monthNov": "November",
   "monthDec": "December",
   "uploadImage": "Upload image",
-  "uploadFailed": "Image upload failed"
+  "uploadAttachment": "Upload attachment",
+  "uploadFailed": "Upload failed"
 }
