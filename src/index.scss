@@ -107,6 +107,14 @@
     min-height: unset;
 }
 
+.day-memo__calendar-today {
+    padding: 2px 8px;
+    font-size: 11px;
+    line-height: 1;
+    min-height: unset;
+    border-radius: 10px;
+}
+
 .day-memo__calendar-weekdays {
     display: grid;
     grid-template-columns: repeat(7, 1fr);

@@ -48,6 +48,7 @@
   "monthOct": "October",
   "monthNov": "November",
   "monthDec": "December",
+  "todayBtn": "Today",
   "uploadImage": "Upload image",
   "uploadAttachment": "Upload attachment",
   "uploadFailed": "Upload failed"

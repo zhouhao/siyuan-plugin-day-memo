@@ -53,6 +53,11 @@ export class Heatmap {
         const title = document.createElement("span");
         title.className = "day-memo__calendar-title";
 
+        const todayBtn = document.createElement("button");
+        todayBtn.className = "day-memo__calendar-today b3-button b3-button--outline";
+        todayBtn.textContent = this.i18n.todayBtn || "Today";
+        todayBtn.addEventListener("click", () => this.goToToday());
+
         const nextBtn = document.createElement("button");
         nextBtn.className = "day-memo__calendar-nav b3-button b3-button--outline";
         nextBtn.innerHTML = "&#x276F;";
@@ -60,6 +65,7 @@ export class Heatmap {
 
         header.appendChild(prevBtn);
         header.appendChild(title);
+        header.appendChild(todayBtn);
         header.appendChild(nextBtn);
         this.container.appendChild(header);
 
@@ -85,6 +91,13 @@ export class Heatmap {
         if (title) {
             const name = this.i18n[MONTH_KEYS[this.viewMonth]] || MONTH_FALLBACK[this.viewMonth];
             title.textContent = `${name} ${this.viewYear}`;
+        }
+
+        const now = new Date();
+        const isCurrentMonth = this.viewYear === now.getFullYear() && this.viewMonth === now.getMonth();
+        const todayBtn = this.container.querySelector(".day-memo__calendar-today") as HTMLElement;
+        if (todayBtn) {
+            todayBtn.style.display = isCurrentMonth ? "none" : "";
         }
 
         const grid = this.container.querySelector(".day-memo__calendar-grid");
@@ -144,6 +157,13 @@ export class Heatmap {
             this.viewMonth = 11;
             this.viewYear--;
         }
+        this.renderGrid();
+    }
+
+    private goToToday(): void {
+        const now = new Date();
+        this.viewYear = now.getFullYear();
+        this.viewMonth = now.getMonth();
         this.renderGrid();
     }
 
