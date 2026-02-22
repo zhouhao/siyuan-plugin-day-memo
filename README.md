@@ -63,7 +63,7 @@ A lightweight, [Memos](https://github.com/usememos/memos)-inspired quick note-ta
 
 ## Data Storage & Sync
 
-Memos are stored in `data/storage/petal/siyuan-plugin-day-memo/memos-data.json`, which is automatically included in SiYuan's cloud sync.
+Memos are stored in `data/storage/petal/siyuan-plugin-day-memo/memos-data`, which is automatically included in SiYuan's cloud sync.
 
 Uploaded images and attachments are stored in SiYuan's standard `data/assets/` directory, also included in cloud sync.
 
@@ -115,4 +115,4 @@ src/
 
 ## License
 
-[MIT](LICENSE)
+MIT

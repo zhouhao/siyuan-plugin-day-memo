@@ -6,7 +6,7 @@
   "minAppVersion": "3.3.0",
   "backends": ["all"],
   "frontends": ["all"],
-  "disabledInPublish": false,
+  "disabledInPublish": true,
   "displayName": {
     "default": "DayMemo",
     "zh_CN": "日记便签"

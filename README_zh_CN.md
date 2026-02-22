@@ -62,7 +62,7 @@
 
 ## 数据存储与同步
 
-便签数据存储在 `data/storage/petal/siyuan-plugin-day-memo/memos-data.json`，该文件会自动纳入思源的云端同步。
+便签数据存储在 `data/storage/petal/siyuan-plugin-day-memo/memos-data`，该文件会自动纳入思源的云端同步。
 
 上传的图片和附件存储在思源标准的 `data/assets/` 目录下，同样会纳入云端同步。
 
@@ -114,4 +114,4 @@ src/
 
 ## 许可证
 
-[MIT](LICENSE)
+MIT
