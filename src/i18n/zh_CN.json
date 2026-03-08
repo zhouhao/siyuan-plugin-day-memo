@@ -51,5 +51,7 @@
   "todayBtn": "今天",
   "uploadImage": "上传图片",
   "uploadAttachment": "上传附件",
-  "uploadFailed": "上传失败"
+  "uploadFailed": "上传失败",
+  "dockTitle": "日记便签",
+  "totalMemos": "{count} 条便签"
 }

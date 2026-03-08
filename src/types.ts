@@ -26,3 +26,4 @@ export interface FilterState {
 
 export const STORAGE_MEMOS = "memos-data";
 export const TAB_TYPE = "day-memo-tab";
+export const DOCK_TYPE = "day-memo-dock";

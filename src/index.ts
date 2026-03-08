@@ -7,14 +7,16 @@ import {
 } from "siyuan";
 import "./index.scss";
 
-import { TAB_TYPE } from "./types";
+import { TAB_TYPE, DOCK_TYPE } from "./types";
 import { MemoDataStore } from "./store";
 import { TabPanel } from "./components/TabPanel";
+import { DockPanel } from "./components/DockPanel";
 
 export default class DayMemoPlugin extends Plugin {
     private store: MemoDataStore;
     private isMobile: boolean;
     private tabPanel: TabPanel | null = null;
+    private dockPanel: DockPanel | null = null;
 
     onload(): void {
         const frontEnd = getFrontend();
@@ -44,6 +46,32 @@ export default class DayMemoPlugin extends Plugin {
             destroy() {
                 plugin.tabPanel?.destroy();
                 plugin.tabPanel = null;
+            },
+        });
+
+        this.addDock({
+            config: {
+                position: "LeftBottom",
+                size: { width: 320, height: 0 },
+                icon: "iconDayMemo",
+                title: this.i18n.dockTitle,
+            },
+            data: {},
+            type: DOCK_TYPE,
+            init() {
+                const dockEl = (this as { element: Element }).element as HTMLElement;
+                plugin.store.load().then(() => {
+                    plugin.dockPanel = new DockPanel(
+                        dockEl,
+                        plugin.store,
+                        plugin.i18n,
+                        plugin.isMobile,
+                    );
+                });
+            },
+            destroy() {
+                plugin.dockPanel?.destroy();
+                plugin.dockPanel = null;
             },
         });
 

@@ -51,5 +51,7 @@
   "todayBtn": "Today",
   "uploadImage": "Upload image",
   "uploadAttachment": "Upload attachment",
-  "uploadFailed": "Upload failed"
+  "uploadFailed": "Upload failed",
+  "dockTitle": "DayMemo",
+  "totalMemos": "{count} memos"
 }
