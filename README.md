@@ -22,33 +22,9 @@ A lightweight, [Memos](https://github.com/usememos/memos)-inspired quick note-ta
 - **Dark Mode** — Follows SiYuan's theme automatically
 - **i18n** — English and Chinese supported
 
-## Layout
+## Preview
 
-```
-┌──────────────────────────────────────────────────────────┐
-│  Toolbar  [DayMemo icon]                                 │
-├──────────────────┬───────────────────────────────────────┤
-│   Left Sidebar   │         Right Main Area               │
-│                  │                                       │
-│  🔍 Search       │  ┌─────────────────────────────────┐  │
-│                  │  │  📝 Memo Editor (textarea)      │  │
-│  📅 Calendar     │  │  [🖼 Image] [📎 Attach]         │  │
-│  (month view,    │  │     Ctrl+Enter to save          │  │
-│   heatmap,       │  └─────────────────────────────────┘  │
-│   [Today] btn,   │                                       │
-│   click to       │  [All] [Pinned] [Archived]  #tag ✕   │
-│   filter)        │                                       │
-│                  │  ── Feb 21, 2026 ──────────────────   │
-│  🏷️ Tags         │  memo content here...     📌 📦 ✏️ 🗑  │
-│  (cloud, click   │  ☑ checklist / 📊 mermaid  📌 📦 ✏️ 🗑  │
-│   to filter)     │  🖼️ image / 📎 attachment  📌 📦 ✏️ 🗑  │
-│                  │                                       │
-│                  │  ── Feb 20, 2026 ──────────────────   │
-│  📊 Stats        │  memo content here...     📌 📦 ✏️ 🗑  │
-│  (total, days,   │                                       │
-│   tags)          │                                       │
-└──────────────────┴───────────────────────────────────────┘
-```
+![Preview](preview.png)
 
 ## Usage
 
