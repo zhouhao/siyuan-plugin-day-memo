@@ -80,6 +80,17 @@ export class MemoItem {
             });
         });
 
+        content.addEventListener("dblclick", (e) => {
+            const target = e.target as HTMLElement;
+            if (target.closest(".day-memo__tag") ||
+                target.closest(".day-memo__checkbox") ||
+                target.closest("a")) {
+                return;
+            }
+            e.preventDefault();
+            this.callbacks.onEdit(this.memo);
+        });
+
         const footer = document.createElement("div");
         footer.className = "day-memo__item-footer";
 
