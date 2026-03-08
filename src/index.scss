@@ -553,6 +553,8 @@
     color: var(--b3-theme-on-surface);
     word-break: break-word;
     overflow-wrap: break-word;
+    user-select: text;
+    -webkit-user-select: text;
 
     strong {
         font-weight: 600;
