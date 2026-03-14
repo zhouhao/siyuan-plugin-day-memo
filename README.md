@@ -18,7 +18,8 @@ A lightweight, [Memos](https://github.com/usememos/memos)-inspired quick note-ta
 - **Search** — Full-text search across all memos in the sidebar
 - **Filter Tabs** — Switch between All / Pinned / Archived views
 - **Add to Daily Note** — One-click to append any memo into SiYuan's Daily Note for the memo's creation date, with source attribution
-- **Right-Click Context Menu** — Right-click any memo for quick actions: edit, pin, archive, add to daily note, copy content, delete
+- **Right-Click Context Menu** — Right-click any memo for quick actions: edit, pin, archive, add to daily note, set reminder, copy content, delete
+- **Reminders** — Set a reminder on any memo via the right-click menu; a datetime picker dialog defaults to 10 minutes from now; when the time arrives, you get both a SiYuan in-app notification and a browser system notification
 - **Pin & Archive** — Pin important memos to top, archive old ones to reduce clutter
 - **Cloud Sync Safe** — Timestamp-based merge logic with soft-delete tombstones for multi-device sync via SiYuan Cloud
 - **Dark Mode** — Follows SiYuan's theme automatically
@@ -38,7 +39,7 @@ A lightweight, [Memos](https://github.com/usememos/memos)-inspired quick note-ta
 6. Use the filter tabs (All / Pinned / Archived) to switch views
 7. Click a date on the calendar to filter memos for that day; use **Today** button to jump back to the current month
 8. Click tags in the sidebar to filter by tag
-9. Hover over a memo to see edit / pin / archive / 📅 add to daily note / delete actions, or **right-click** for a context menu
+9. Hover over a memo to see edit / pin / archive / 📅 add to daily note / delete actions, or **right-click** for a context menu with all actions plus **Set Reminder**
 10. Double-click a memo's content to quickly enter edit mode
 11. Select and copy text directly from memo content, or use the right-click menu to copy the full memo content
 
