@@ -14,9 +14,12 @@ export function showReminderDialog(
 ): void {
     const hasReminder = !!(memo.reminderAt && memo.reminderAt > Date.now());
 
-    let defaultValue = "";
+    let defaultValue: string;
     if (hasReminder) {
         defaultValue = formatDateTimeLocal(new Date(memo.reminderAt!));
+    } else {
+        const tenMinutesLater = new Date(Date.now() + 10 * 60 * 1000);
+        defaultValue = formatDateTimeLocal(tenMinutesLater);
     }
 
     const nowStr = formatDateTimeLocal(new Date());
