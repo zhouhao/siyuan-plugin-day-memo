@@ -17,6 +17,7 @@ A lightweight, [Memos](https://github.com/usememos/memos)-inspired quick note-ta
 - **Timeline View** — Memos grouped by date, newest first
 - **Search** — Full-text search across all memos in the sidebar
 - **Filter Tabs** — Switch between All / Pinned / Archived views
+- **Add to Daily Note** — One-click to append any memo into SiYuan's Daily Note for the memo's creation date, with source attribution
 - **Pin & Archive** — Pin important memos to top, archive old ones to reduce clutter
 - **Cloud Sync Safe** — Timestamp-based merge logic with soft-delete tombstones for multi-device sync via SiYuan Cloud
 - **Dark Mode** — Follows SiYuan's theme automatically
@@ -36,7 +37,7 @@ A lightweight, [Memos](https://github.com/usememos/memos)-inspired quick note-ta
 6. Use the filter tabs (All / Pinned / Archived) to switch views
 7. Click a date on the calendar to filter memos for that day; use **Today** button to jump back to the current month
 8. Click tags in the sidebar to filter by tag
-9. Hover over a memo to see edit / pin / archive / delete actions
+9. Hover over a memo to see edit / pin / archive / 📅 add to daily note / delete actions
 10. Double-click a memo's content to quickly enter edit mode
 11. Select and copy text directly from memo content
 
