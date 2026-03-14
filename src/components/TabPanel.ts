@@ -2,6 +2,7 @@ import { confirm, showMessage } from "siyuan";
 import { MemoDataStore } from "../store";
 import { Memo } from "../types";
 import { toggleChecklistItem } from "../utils";
+import { addToDailyNote } from "../api";
 import { MemoEditor } from "./MemoEditor";
 import { MemoList } from "./MemoList";
 import { FilterBar } from "./FilterBar";
@@ -87,6 +88,7 @@ export class TabPanel {
                 const newContent = toggleChecklistItem(memo.content, checkIndex);
                 this.store.updateMemo(memo.id, newContent);
             },
+            onAddToDailyNote: (memo: Memo) => this.handleAddToDailyNote(memo),
         };
 
         this.memoList = new MemoList(listContainer, this.store, this.i18n, callbacks);
@@ -101,6 +103,15 @@ export class TabPanel {
                 showMessage(this.i18n.memoDeleted);
             },
         );
+    }
+
+    private async handleAddToDailyNote(memo: Memo): Promise<void> {
+        try {
+            await addToDailyNote(memo.content, memo.createdAt, this.i18n.fromDayMemo);
+            showMessage(this.i18n.addedToDailyNote);
+        } catch {
+            showMessage(this.i18n.addToDailyNoteFailed);
+        }
     }
 
     destroy(): void {

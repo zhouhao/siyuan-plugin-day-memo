@@ -1,6 +1,7 @@
 import { confirm, showMessage } from "siyuan";
 import { MemoDataStore } from "../store";
 import { Memo } from "../types";
+import { addToDailyNote } from "../api";
 import { MemoEditor } from "./MemoEditor";
 import { MemoList } from "./MemoList";
 import { FilterBar } from "./FilterBar";
@@ -86,6 +87,7 @@ export class DockPanel {
                 this.store.setSelectedTag(tag);
                 this.filterBar.updateTagFilter(tag);
             },
+            onAddToDailyNote: (memo: Memo) => this.handleAddToDailyNote(memo),
         };
 
         this.tagList = new TagList(tagContainer, this.store, this.i18n, (tag) => {
@@ -109,6 +111,15 @@ export class DockPanel {
                 this.updateCount();
             },
         );
+    }
+
+    private async handleAddToDailyNote(memo: Memo): Promise<void> {
+        try {
+            await addToDailyNote(memo.content, memo.createdAt, this.i18n.fromDayMemo);
+            showMessage(this.i18n.addedToDailyNote);
+        } catch {
+            showMessage(this.i18n.addToDailyNoteFailed);
+        }
     }
 
     private updateCount(): void {

@@ -53,5 +53,9 @@
   "uploadAttachment": "Upload attachment",
   "uploadFailed": "Upload failed",
   "dockTitle": "DayMemo",
-  "totalMemos": "{count} memos"
+  "totalMemos": "{count} memos",
+  "addToDailyNote": "Add to Daily Note",
+  "addedToDailyNote": "Added to Daily Note",
+  "addToDailyNoteFailed": "Failed to add to Daily Note",
+  "fromDayMemo": "From DayMemo"
 }

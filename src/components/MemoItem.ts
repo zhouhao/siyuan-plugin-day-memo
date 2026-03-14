@@ -7,7 +7,8 @@ export interface MemoItemCallbacks {
     onTogglePin: (memo: Memo) => void;
     onToggleArchive: (memo: Memo) => void;
     onTagClick: (tag: string) => void;
-    onToggleCheck: (memo: Memo, checkIndex: number) => void;
+    onToggleCheck?: (memo: Memo, checkIndex: number) => void;
+    onAddToDailyNote?: (memo: Memo) => void;
 }
 
 export class MemoItem {
@@ -76,7 +77,7 @@ export class MemoItem {
             checkbox.addEventListener("change", (e) => {
                 e.stopPropagation();
                 const idx = parseInt((checkbox as HTMLElement).dataset.checkIndex || "0", 10);
-                this.callbacks.onToggleCheck(this.memo, idx);
+                this.callbacks.onToggleCheck?.(this.memo, idx);
             });
         });
 
@@ -110,6 +111,9 @@ export class MemoItem {
             this.memo.archived ? this.i18n.unarchive : this.i18n.archive,
             () => this.callbacks.onToggleArchive(this.memo),
         );
+        const dailyNoteBtn = this.createActionBtn("📅", this.i18n.addToDailyNote || "Add to Daily Note", () =>
+            this.callbacks.onAddToDailyNote?.(this.memo),
+        );
         const deleteBtn = this.createActionBtn("🗑️", this.i18n.delete, () =>
             this.callbacks.onDelete(this.memo),
         );
@@ -118,6 +122,7 @@ export class MemoItem {
         actions.appendChild(editBtn);
         actions.appendChild(pinBtn);
         actions.appendChild(archiveBtn);
+        actions.appendChild(dailyNoteBtn);
         actions.appendChild(deleteBtn);
         footer.appendChild(actions);
 

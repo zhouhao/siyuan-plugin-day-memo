@@ -169,6 +169,37 @@ export function toggleChecklistItem(content: string, checkIndex: number): string
     });
 }
 
+export function renderDailyNotePath(template: string, date: Date): string {
+    return template.replace(/\{\{\s*now\s*\|\s*date\s*"([^"]+)"\s*\}\}/g, (_match, goFormat: string) => {
+        return formatGoDate(goFormat, date);
+    });
+}
+
+function formatGoDate(goFormat: string, date: Date): string {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+
+    let result = "";
+    let i = 0;
+    while (i < goFormat.length) {
+        if (goFormat.startsWith("2006", i)) {
+            result += String(year);
+            i += 4;
+        } else if (goFormat.startsWith("01", i)) {
+            result += String(month).padStart(2, "0");
+            i += 2;
+        } else if (goFormat.startsWith("02", i)) {
+            result += String(day).padStart(2, "0");
+            i += 2;
+        } else {
+            result += goFormat[i];
+            i++;
+        }
+    }
+    return result;
+}
+
 /**
  * Escape HTML special characters.
  */

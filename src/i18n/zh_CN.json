@@ -53,5 +53,9 @@
   "uploadAttachment": "上传附件",
   "uploadFailed": "上传失败",
   "dockTitle": "日记便签",
-  "totalMemos": "{count} 条便签"
+  "totalMemos": "{count} 条便签",
+  "addToDailyNote": "添加到今日笔记",
+  "addedToDailyNote": "已添加到今日笔记",
+  "addToDailyNoteFailed": "添加到今日笔记失败",
+  "fromDayMemo": "来自「日记便签」"
 }
