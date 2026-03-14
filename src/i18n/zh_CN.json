@@ -58,5 +58,13 @@
   "addedToDailyNote": "已添加到今日笔记",
   "addToDailyNoteFailed": "添加到今日笔记失败",
   "fromDayMemo": "来自「日记便签」",
-  "copyContent": "复制内容"
+  "copyContent": "复制内容",
+  "setReminder": "设置提醒",
+  "editReminder": "修改提醒",
+  "clearReminder": "清除提醒",
+  "reminderTime": "提醒时间",
+  "reminderSet": "提醒已设置",
+  "reminderCleared": "提醒已清除",
+  "reminderPastTime": "请选择未来的时间",
+  "reminderNotification": "🔔 便签提醒"
 }

@@ -547,6 +547,11 @@
     font-size: 12px;
 }
 
+.day-memo__badge--reminder {
+    cursor: default;
+    opacity: 0.8;
+}
+
 .day-memo__item-content {
     font-size: 14px;
     line-height: 1.6;

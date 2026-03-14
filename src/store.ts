@@ -124,6 +124,30 @@ export class MemoDataStore {
         return memo;
     }
 
+    setReminder(id: string, reminderAt: number): Memo | null {
+        const memo = this.store.memos.find((m) => m.id === id);
+        if (!memo) return null;
+        memo.reminderAt = reminderAt;
+        memo.updatedAt = Date.now();
+        this.persist();
+        this.notify();
+        return memo;
+    }
+
+    clearReminder(id: string): Memo | null {
+        const memo = this.store.memos.find((m) => m.id === id);
+        if (!memo) return null;
+        delete memo.reminderAt;
+        memo.updatedAt = Date.now();
+        this.persist();
+        this.notify();
+        return memo;
+    }
+
+    getAllMemos(): Memo[] {
+        return [...this.store.memos];
+    }
+
     getMemo(id: string): Memo | undefined {
         return this.store.memos.find((m) => m.id === id);
     }

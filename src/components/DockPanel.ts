@@ -6,6 +6,7 @@ import { MemoEditor } from "./MemoEditor";
 import { MemoList } from "./MemoList";
 import { FilterBar } from "./FilterBar";
 import { TagList } from "./TagList";
+import { showReminderDialog } from "./ReminderDialog";
 
 export class DockPanel {
     private rootElement: HTMLElement;
@@ -88,6 +89,7 @@ export class DockPanel {
                 this.filterBar.updateTagFilter(tag);
             },
             onAddToDailyNote: (memo: Memo) => this.handleAddToDailyNote(memo),
+            onSetReminder: (memo: Memo) => showReminderDialog(memo, this.store, this.i18n),
         };
 
         this.tagList = new TagList(tagContainer, this.store, this.i18n, (tag) => {

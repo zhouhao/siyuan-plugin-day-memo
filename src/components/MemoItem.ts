@@ -10,6 +10,7 @@ export interface MemoItemCallbacks {
     onTagClick: (tag: string) => void;
     onToggleCheck?: (memo: Memo, checkIndex: number) => void;
     onAddToDailyNote?: (memo: Memo) => void;
+    onSetReminder?: (memo: Memo) => void;
 }
 
 export class MemoItem {
@@ -57,6 +58,13 @@ export class MemoItem {
             pin.className = "day-memo__badge day-memo__badge--pin";
             pin.innerHTML = "📌";
             badges.appendChild(pin);
+        }
+        if (this.memo.reminderAt && this.memo.reminderAt > Date.now()) {
+            const reminder = document.createElement("span");
+            reminder.className = "day-memo__badge day-memo__badge--reminder b3-tooltips b3-tooltips__s";
+            reminder.innerHTML = "🔔";
+            reminder.setAttribute("aria-label", new Date(this.memo.reminderAt).toLocaleString());
+            badges.appendChild(reminder);
         }
 
         header.appendChild(time);
@@ -178,6 +186,17 @@ export class MemoItem {
             label: this.i18n.addToDailyNote || "Add to Daily Note",
             click: () => {
                 this.callbacks.onAddToDailyNote?.(this.memo);
+            },
+        });
+
+        const hasReminder = this.memo.reminderAt && this.memo.reminderAt > Date.now();
+        menu.addItem({
+            iconHTML: "🔔",
+            label: hasReminder
+                ? (this.i18n.editReminder || "Edit Reminder")
+                : (this.i18n.setReminder || "Set Reminder"),
+            click: () => {
+                this.callbacks.onSetReminder?.(this.memo);
             },
         });
 

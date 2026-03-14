@@ -58,5 +58,13 @@
   "addedToDailyNote": "Added to Daily Note",
   "addToDailyNoteFailed": "Failed to add to Daily Note",
   "fromDayMemo": "From DayMemo",
-  "copyContent": "Copy Content"
+  "copyContent": "Copy Content",
+  "setReminder": "Set Reminder",
+  "editReminder": "Edit Reminder",
+  "clearReminder": "Clear Reminder",
+  "reminderTime": "Reminder Time",
+  "reminderSet": "Reminder set",
+  "reminderCleared": "Reminder cleared",
+  "reminderPastTime": "Please select a future time",
+  "reminderNotification": "🔔 Memo Reminder"
 }

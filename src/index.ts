@@ -9,6 +9,7 @@ import "./index.scss";
 
 import { TAB_TYPE, DOCK_TYPE } from "./types";
 import { MemoDataStore } from "./store";
+import { ReminderService } from "./ReminderService";
 import { TabPanel } from "./components/TabPanel";
 import { DockPanel } from "./components/DockPanel";
 
@@ -17,6 +18,7 @@ export default class DayMemoPlugin extends Plugin {
     private isMobile: boolean;
     private tabPanel: TabPanel | null = null;
     private dockPanel: DockPanel | null = null;
+    private reminderService: ReminderService | null = null;
 
     onload(): void {
         const frontEnd = getFrontend();
@@ -29,6 +31,9 @@ export default class DayMemoPlugin extends Plugin {
 </symbol>`);
 
         this.store = new MemoDataStore(this);
+        this.store.load().then(() => {
+            this.reminderService = new ReminderService(this.store, this.i18n);
+        });
 
         const plugin = this;
         this.addTab({
@@ -96,6 +101,7 @@ export default class DayMemoPlugin extends Plugin {
     }
 
     onunload(): void {
+        this.reminderService?.destroy();
         this.tabPanel?.destroy();
     }
 

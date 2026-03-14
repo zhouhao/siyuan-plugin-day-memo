@@ -7,6 +7,7 @@ import { MemoEditor } from "./MemoEditor";
 import { MemoList } from "./MemoList";
 import { FilterBar } from "./FilterBar";
 import { Sidebar } from "./Sidebar";
+import { showReminderDialog } from "./ReminderDialog";
 
 export class TabPanel {
     private rootElement: HTMLElement;
@@ -89,6 +90,7 @@ export class TabPanel {
                 this.store.updateMemo(memo.id, newContent);
             },
             onAddToDailyNote: (memo: Memo) => this.handleAddToDailyNote(memo),
+            onSetReminder: (memo: Memo) => showReminderDialog(memo, this.store, this.i18n),
         };
 
         this.memoList = new MemoList(listContainer, this.store, this.i18n, callbacks);

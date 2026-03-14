@@ -5,6 +5,7 @@ export interface Memo {
     pinned: boolean;
     archived: boolean;
     deleted?: boolean;
+    reminderAt?: number;
     createdAt: number;
     updatedAt: number;
 }
