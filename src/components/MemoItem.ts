@@ -1,5 +1,5 @@
 import { Memo } from "../types";
-import { renderMarkdown, formatTime, renderMermaidBlocks } from "../utils";
+import { renderMarkdown, formatDate, formatTime, renderMermaidBlocks } from "../utils";
 
 export interface MemoItemCallbacks {
     onEdit: (memo: Memo) => void;
@@ -44,7 +44,7 @@ export class MemoItem {
 
         const time = document.createElement("span");
         time.className = "day-memo__item-time";
-        time.textContent = formatTime(this.memo.createdAt);
+        time.textContent = `${formatDate(this.memo.createdAt)} ${formatTime(this.memo.createdAt)}`;
         if (this.memo.updatedAt > this.memo.createdAt + 1000) {
             time.textContent += " (edited)";
         }
