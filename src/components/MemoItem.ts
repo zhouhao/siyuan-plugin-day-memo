@@ -1,3 +1,4 @@
+import { Menu } from "siyuan";
 import { Memo } from "../types";
 import { renderMarkdown, formatDate, formatTime, renderMermaidBlocks } from "../utils";
 
@@ -92,6 +93,16 @@ export class MemoItem {
             this.callbacks.onEdit(this.memo);
         });
 
+        el.addEventListener("contextmenu", (e) => {
+            const target = e.target as HTMLElement;
+            if (target.closest("a") || target.closest(".day-memo__checkbox")) {
+                return;
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            this.showContextMenu(e.clientX, e.clientY);
+        });
+
         const footer = document.createElement("div");
         footer.className = "day-memo__item-footer";
 
@@ -133,6 +144,64 @@ export class MemoItem {
         renderMermaidBlocks(el);
 
         return el;
+    }
+
+    private showContextMenu(x: number, y: number): void {
+        const menu = new Menu("day-memo-context");
+
+        menu.addItem({
+            icon: "iconEdit",
+            label: this.i18n.edit,
+            click: () => {
+                this.callbacks.onEdit(this.memo);
+            },
+        });
+
+        menu.addItem({
+            icon: "iconPin",
+            label: this.memo.pinned ? this.i18n.unpin : this.i18n.pin,
+            click: () => {
+                this.callbacks.onTogglePin(this.memo);
+            },
+        });
+
+        menu.addItem({
+            icon: "iconInbox",
+            label: this.memo.archived ? this.i18n.unarchive : this.i18n.archive,
+            click: () => {
+                this.callbacks.onToggleArchive(this.memo);
+            },
+        });
+
+        menu.addItem({
+            icon: "iconCalendar",
+            label: this.i18n.addToDailyNote || "Add to Daily Note",
+            click: () => {
+                this.callbacks.onAddToDailyNote?.(this.memo);
+            },
+        });
+
+        menu.addSeparator();
+
+        menu.addItem({
+            icon: "iconCopy",
+            label: this.i18n.copyContent || "Copy",
+            click: () => {
+                navigator.clipboard.writeText(this.memo.content);
+            },
+        });
+
+        menu.addSeparator();
+
+        menu.addItem({
+            icon: "iconTrashcan",
+            label: this.i18n.delete,
+            click: () => {
+                this.callbacks.onDelete(this.memo);
+            },
+        });
+
+        menu.open({ x, y });
     }
 
     private createActionBtn(

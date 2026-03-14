@@ -57,5 +57,6 @@
   "addToDailyNote": "添加到今日笔记",
   "addedToDailyNote": "已添加到今日笔记",
   "addToDailyNoteFailed": "添加到今日笔记失败",
-  "fromDayMemo": "来自「日记便签」"
+  "fromDayMemo": "来自「日记便签」",
+  "copyContent": "复制内容"
 }

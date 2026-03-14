@@ -57,5 +57,6 @@
   "addToDailyNote": "Add to Daily Note",
   "addedToDailyNote": "Added to Daily Note",
   "addToDailyNoteFailed": "Failed to add to Daily Note",
-  "fromDayMemo": "From DayMemo"
+  "fromDayMemo": "From DayMemo",
+  "copyContent": "Copy Content"
 }
