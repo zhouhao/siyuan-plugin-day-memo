@@ -9,10 +9,10 @@ export function generateId(): string {
 
 /**
  * Extract #tags from memo content.
- * Supports: #tag, #multi-word-tag (with hyphens), #中文标签
+ * Supports: #tag, #multi-word-tag (with hyphens), #中文标签, #parent/child (multi-level)
  */
 export function extractTags(content: string): string[] {
-    const tagRegex = /#([\w\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff-]+)/g;
+    const tagRegex = /#([\w\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff-]+(?:\/[\w\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff-]+)*)/g;
     const tags: string[] = [];
     let match: RegExpExecArray | null;
     while ((match = tagRegex.exec(content)) !== null) {
@@ -134,7 +134,7 @@ export function renderMarkdown(content: string): string {
     );
 
     html = html.replace(
-        /#([\w\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff-]+)/g,
+        /#([\w\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff-]+(?:\/[\w\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff-]+)*)/g,
         '<span class="day-memo__tag" data-tag="$1">#$1</span>'
     );
 

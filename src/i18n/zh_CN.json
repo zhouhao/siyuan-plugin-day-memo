@@ -1,7 +1,7 @@
 {
   "pluginName": "日记便签",
   "topBarTip": "打开日记便签",
-  "editorPlaceholder": "记录你的想法... 使用 #标签 添加标签...",
+  "editorPlaceholder": "记录你的想法... 使用 #标签 或 #父级/子级 添加多级标签...",
   "saveMemo": "保存",
   "cancel": "取消",
   "delete": "删除",

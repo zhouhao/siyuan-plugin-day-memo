@@ -1,4 +1,5 @@
 import { MemoDataStore } from "../store";
+import { TagTreeNode } from "../types";
 
 export class TagList {
     private container: HTMLElement;
@@ -6,6 +7,7 @@ export class TagList {
     private i18n: Record<string, string>;
     private onTagSelect: (tag: string | null) => void;
     private unsubscribe: (() => void) | null = null;
+    private collapsedPaths: Set<string> = new Set();
 
     constructor(
         container: HTMLElement,
@@ -24,10 +26,10 @@ export class TagList {
 
     render(): void {
         this.container.innerHTML = "";
-        const tags = this.store.getAllTags();
+        const tree = this.store.getTagTree();
         const currentFilter = this.store.getFilter();
 
-        if (tags.length === 0) return;
+        if (tree.length === 0) return;
 
         const header = document.createElement("div");
         header.className = "day-memo__tag-list-header";
@@ -35,35 +37,68 @@ export class TagList {
         this.container.appendChild(header);
 
         const list = document.createElement("div");
-        list.className = "day-memo__tag-list-items";
+        list.className = "day-memo__tag-tree";
+        this.renderNodes(list, tree, currentFilter.selectedTag, 0);
+        this.container.appendChild(list);
+    }
 
-        for (const { tag, count } of tags) {
-            const item = document.createElement("button");
-            item.className = "day-memo__tag-list-item";
-            if (currentFilter.selectedTag === tag) {
-                item.classList.add("day-memo__tag-list-item--active");
+    private renderNodes(
+        parent: HTMLElement,
+        nodes: TagTreeNode[],
+        selectedTag: string | null,
+        depth: number,
+    ): void {
+        for (const node of nodes) {
+            const hasChildren = node.children.length > 0;
+            const isCollapsed = this.collapsedPaths.has(node.fullPath);
+            const subtreeCount = this.store.getSubtreeCount(node);
+            const isActive = selectedTag === node.fullPath;
+
+            const row = document.createElement("div");
+            row.className = "day-memo__tag-tree-row";
+            if (isActive) row.classList.add("day-memo__tag-tree-row--active");
+            row.style.paddingLeft = `${depth * 16 + 4}px`;
+
+            if (hasChildren) {
+                const toggle = document.createElement("span");
+                toggle.className = "day-memo__tag-tree-toggle";
+                toggle.textContent = isCollapsed ? "▶" : "▼";
+                toggle.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    if (isCollapsed) {
+                        this.collapsedPaths.delete(node.fullPath);
+                    } else {
+                        this.collapsedPaths.add(node.fullPath);
+                    }
+                    this.render();
+                });
+                row.appendChild(toggle);
+            } else {
+                const spacer = document.createElement("span");
+                spacer.className = "day-memo__tag-tree-spacer";
+                row.appendChild(spacer);
             }
 
-            const tagName = document.createElement("span");
-            tagName.className = "day-memo__tag-list-name";
-            tagName.textContent = `#${tag}`;
+            const label = document.createElement("span");
+            label.className = "day-memo__tag-tree-label";
+            label.textContent = depth === 0 ? `#${node.name}` : node.name;
+            row.appendChild(label);
 
-            const tagCount = document.createElement("span");
-            tagCount.className = "day-memo__tag-list-count";
-            tagCount.textContent = String(count);
+            const count = document.createElement("span");
+            count.className = "day-memo__tag-tree-count";
+            count.textContent = String(subtreeCount);
+            row.appendChild(count);
 
-            item.appendChild(tagName);
-            item.appendChild(tagCount);
-
-            item.addEventListener("click", () => {
-                const isActive = currentFilter.selectedTag === tag;
-                this.onTagSelect(isActive ? null : tag);
+            row.addEventListener("click", () => {
+                this.onTagSelect(isActive ? null : node.fullPath);
             });
 
-            list.appendChild(item);
-        }
+            parent.appendChild(row);
 
-        this.container.appendChild(list);
+            if (hasChildren && !isCollapsed) {
+                this.renderNodes(parent, node.children, selectedTag, depth + 1);
+            }
+        }
     }
 
     destroy(): void {

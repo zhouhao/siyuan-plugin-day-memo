@@ -1,5 +1,5 @@
 import type { Plugin } from "siyuan";
-import { Memo, MemoStore, STORAGE_MEMOS, FilterState, MemoFilter } from "./types";
+import { Memo, MemoStore, STORAGE_MEMOS, FilterState, MemoFilter, TagTreeNode } from "./types";
 import { generateId, extractTags, formatDate } from "./utils";
 
 const INITIAL_STORE: MemoStore = { memos: [], version: 1 };
@@ -167,7 +167,10 @@ export class MemoDataStore {
         }
 
         if (selectedTag) {
-            memos = memos.filter((m) => m.tags.includes(selectedTag));
+            const prefix = selectedTag + "/";
+            memos = memos.filter((m) =>
+                m.tags.some((t) => t === selectedTag || t.startsWith(prefix))
+            );
         }
 
         if (this.filterState.selectedDate) {
@@ -200,6 +203,49 @@ export class MemoDataStore {
         return Array.from(tagMap.entries())
             .map(([tag, count]) => ({ tag, count }))
             .sort((a, b) => b.count - a.count);
+    }
+
+    getTagTree(): TagTreeNode[] {
+        const tags = this.getAllTags();
+        const root: TagTreeNode[] = [];
+
+        for (const { tag, count } of tags) {
+            const parts = tag.split("/");
+            let siblings = root;
+
+            for (let i = 0; i < parts.length; i++) {
+                const fullPath = parts.slice(0, i + 1).join("/");
+                let node = siblings.find((n) => n.fullPath === fullPath);
+                if (!node) {
+                    node = { name: parts[i], fullPath, count: 0, children: [] };
+                    siblings.push(node);
+                }
+                if (i === parts.length - 1) {
+                    node.count += count;
+                }
+                siblings = node.children;
+            }
+        }
+
+        const sortTree = (nodes: TagTreeNode[]): void => {
+            nodes.sort((a, b) => {
+                const totalA = this.getSubtreeCount(a);
+                const totalB = this.getSubtreeCount(b);
+                return totalB - totalA;
+            });
+            nodes.forEach((n) => sortTree(n.children));
+        };
+        sortTree(root);
+
+        return root;
+    }
+
+    getSubtreeCount(node: TagTreeNode): number {
+        let total = node.count;
+        for (const child of node.children) {
+            total += this.getSubtreeCount(child);
+        }
+        return total;
     }
 
     getTotalCount(): number {
