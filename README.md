@@ -12,7 +12,7 @@ A lightweight, [Memos](https://github.com/usememos/memos)-inspired quick note-ta
 - **Interactive Checklist** — Use `- [ ]` and `- [x]` syntax for task lists; checkboxes are clickable and toggle state is saved automatically
 - **Mermaid Diagrams** — Fenced code blocks with ` ```mermaid ` are rendered as diagrams (flowcharts, sequence diagrams, etc.) using SiYuan's built-in Mermaid — zero extra dependencies
 - **Image & Attachment Upload** — Upload images (button, paste, drag-drop) and arbitrary file attachments (zip, pdf, etc.) directly into memos; stored in SiYuan's `data/assets/` and synced automatically
-- **Tag System** — Use `#tag` syntax to organize memos; tags are auto-extracted and displayed in the sidebar tag cloud
+- **Multi-Level Tag System** — Use `#tag` or `#parent/child/grandchild` syntax (Flomo-style) to organize memos; tags are displayed as a collapsible tree in the sidebar with expand/collapse toggles; clicking a parent tag filters all its child tags too
 - **Calendar View** — Real month calendar with `‹` `›` navigation, "Today" button to jump back, heatmap coloring by memo density, and click-to-filter by date
 - **Timeline View** — Memos grouped by date, newest first
 - **Search** — Full-text search across all memos in the sidebar
@@ -32,7 +32,7 @@ A lightweight, [Memos](https://github.com/usememos/memos)-inspired quick note-ta
 ## Usage
 
 1. Click the **DayMemo** icon in the top toolbar to open the full tab view, or find **DayMemo** in the sidebar dock for a compact panel
-2. Type your memo in the editor area, use `#tags` inline
+2. Type your memo in the editor area, use `#tag` or `#parent/child` for multi-level tags
 3. Attach images (click 🖼, paste from clipboard, or drag-drop) and files (click 📎) — they upload to SiYuan's `assets/` folder
 4. Use `- [ ]` for checklists (clickable after saving) and ` ```mermaid ` blocks for diagrams
 5. Press `Ctrl+Enter` or click Save
