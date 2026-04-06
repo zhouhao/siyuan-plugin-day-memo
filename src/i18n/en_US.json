@@ -1,7 +1,7 @@
 {
   "pluginName": "DayMemo",
   "topBarTip": "Open DayMemo",
-  "editorPlaceholder": "What's on your mind? Use #tag to add tags...",
+  "editorPlaceholder": "What's on your mind? Use #tag or #parent/child for tags...",
   "saveMemo": "Save",
   "cancel": "Cancel",
   "delete": "Delete",
