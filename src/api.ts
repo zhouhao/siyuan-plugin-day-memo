@@ -71,6 +71,7 @@ export async function addToDailyNote(
     memoContent: string,
     memoCreatedAt: number,
     sourceLabel: string,
+    customPathTemplate?: string,
 ): Promise<void> {
     const notebooks = await lsNotebooks();
     const openNotebooks = notebooks.filter((nb) => !nb.closed);
@@ -79,8 +80,13 @@ export async function addToDailyNote(
     }
     const notebookId = openNotebooks[0].id;
 
-    const conf = await getNotebookConf(notebookId);
-    const savePath = conf.dailyNoteSavePath || DEFAULT_DAILY_NOTE_PATH;
+    let savePath: string;
+    if (customPathTemplate) {
+        savePath = customPathTemplate;
+    } else {
+        const conf = await getNotebookConf(notebookId);
+        savePath = conf.dailyNoteSavePath || DEFAULT_DAILY_NOTE_PATH;
+    }
     const memoDate = new Date(memoCreatedAt);
     const dailyNotePath = renderDailyNotePath(savePath, memoDate);
 

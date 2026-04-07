@@ -1,5 +1,5 @@
 import type { Plugin } from "siyuan";
-import { Memo, MemoStore, STORAGE_MEMOS, FilterState, MemoFilter, TagTreeNode } from "./types";
+import { Memo, MemoStore, STORAGE_MEMOS, STORAGE_SETTINGS, FilterState, MemoFilter, TagTreeNode, PluginSettings, DEFAULT_SETTINGS } from "./types";
 import { generateId, extractTags, formatDate } from "./utils";
 
 const INITIAL_STORE: MemoStore = { memos: [], version: 1 };
@@ -7,6 +7,7 @@ const INITIAL_STORE: MemoStore = { memos: [], version: 1 };
 export class MemoDataStore {
     private plugin: Plugin;
     private store: MemoStore = { ...INITIAL_STORE };
+    private settings: PluginSettings = { ...DEFAULT_SETTINGS };
     private listeners: Array<() => void> = [];
     private filterState: FilterState = {
         filter: "all",
@@ -307,5 +308,21 @@ export class MemoDataStore {
             uniqueDays.add(formatDate(memo.createdAt));
         }
         return uniqueDays.size;
+    }
+
+    async loadSettings(): Promise<void> {
+        const data = await this.plugin.loadData(STORAGE_SETTINGS);
+        if (data) {
+            this.settings = { ...DEFAULT_SETTINGS, ...data };
+        }
+    }
+
+    async saveSettings(settings: PluginSettings): Promise<void> {
+        this.settings = { ...settings };
+        await this.plugin.saveData(STORAGE_SETTINGS, this.settings);
+    }
+
+    getSettings(): PluginSettings {
+        return { ...this.settings };
     }
 }

@@ -170,27 +170,110 @@ export function toggleChecklistItem(content: string, checkIndex: number): string
 }
 
 export function renderDailyNotePath(template: string, date: Date): string {
-    return template.replace(/\{\{\s*now\s*\|\s*date\s*"([^"]+)"\s*\}\}/g, (_match, goFormat: string) => {
+    // First pass: {{now | date "format"}}
+    let result = template.replace(/\{\{\s*now\s*\|\s*date\s*"([^"]+)"\s*\}\}/g, (_match, goFormat: string) => {
         return formatGoDate(goFormat, date);
     });
+    // Second pass: {{now | FuncName}} (no-argument template functions)
+    result = result.replace(/\{\{\s*now\s*\|\s*(\w+)\s*\}\}/g, (_match, funcName: string) => {
+        return evalTemplateFunc(funcName, date);
+    });
+    return result;
+}
+
+function getISOWeekData(date: Date): { year: number; week: number } {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    // Set to nearest Thursday: current date + 4 - current day number (Monday=1, Sunday=7)
+    const dayNum = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    const week = Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+    return { year: d.getUTCFullYear(), week };
+}
+
+function evalTemplateFunc(funcName: string, date: Date): string {
+    const weekdaysCN = ["日", "一", "二", "三", "四", "五", "六"];
+    const isoData = () => getISOWeekData(date);
+
+    switch (funcName) {
+        case "ISOWeek":
+            return String(isoData().week);
+        case "ISOYear":
+            return String(isoData().year);
+        case "ISOMonth":
+            return String(date.getMonth() + 1).padStart(2, "0");
+        case "ISOWeekDate": {
+            const { year, week } = isoData();
+            const dayNum = date.getDay() || 7;
+            return `${year}-W${String(week).padStart(2, "0")}-${dayNum}`;
+        }
+        case "Weekday":
+            return String(date.getDay());
+        case "WeekdayCN":
+            return weekdaysCN[date.getDay()];
+        case "WeekdayCN2":
+            return "周" + weekdaysCN[date.getDay()];
+        default:
+            return `{{now | ${funcName}}}`;
+    }
 }
 
 function formatGoDate(goFormat: string, date: Date): string {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+
+    const weekdaysFull = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const weekdaysShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const monthsFull = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+    const monthsShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
     let result = "";
     let i = 0;
     while (i < goFormat.length) {
+        // Go reference time: Mon Jan 2 15:04:05 MST 2006
+        // Match longer tokens first to avoid ambiguity
         if (goFormat.startsWith("2006", i)) {
             result += String(year);
             i += 4;
-        } else if (goFormat.startsWith("01", i)) {
-            result += String(month).padStart(2, "0");
+        } else if (goFormat.startsWith("January", i)) {
+            result += monthsFull[month - 1];
+            i += 7;
+        } else if (goFormat.startsWith("Jan", i)) {
+            result += monthsShort[month - 1];
+            i += 3;
+        } else if (goFormat.startsWith("Monday", i)) {
+            result += weekdaysFull[date.getDay()];
+            i += 6;
+        } else if (goFormat.startsWith("Mon", i)) {
+            result += weekdaysShort[date.getDay()];
+            i += 3;
+        } else if (goFormat.startsWith("15", i)) {
+            result += String(hours).padStart(2, "0");
+            i += 2;
+        } else if (goFormat.startsWith("04", i)) {
+            result += String(minutes).padStart(2, "0");
+            i += 2;
+        } else if (goFormat.startsWith("05", i)) {
+            result += String(seconds).padStart(2, "0");
+            i += 2;
+        } else if (goFormat.startsWith("03", i)) {
+            result += String(hours % 12 || 12).padStart(2, "0");
             i += 2;
         } else if (goFormat.startsWith("02", i)) {
             result += String(day).padStart(2, "0");
+            i += 2;
+        } else if (goFormat.startsWith("01", i)) {
+            result += String(month).padStart(2, "0");
+            i += 2;
+        } else if (goFormat.startsWith("PM", i) || goFormat.startsWith("pm", i)) {
+            const upper = goFormat[i] === "P";
+            result += hours >= 12 ? (upper ? "PM" : "pm") : (upper ? "AM" : "am");
             i += 2;
         } else {
             result += goFormat[i];

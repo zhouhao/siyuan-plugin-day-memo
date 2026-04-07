@@ -109,7 +109,8 @@ export class TabPanel {
 
     private async handleAddToDailyNote(memo: Memo): Promise<void> {
         try {
-            await addToDailyNote(memo.content, memo.createdAt, this.i18n.fromDayMemo);
+            const template = this.store.getSettings().dailyNotePathTemplate || undefined;
+            await addToDailyNote(memo.content, memo.createdAt, this.i18n.fromDayMemo, template);
             showMessage(this.i18n.addedToDailyNote);
         } catch {
             showMessage(this.i18n.addToDailyNoteFailed);

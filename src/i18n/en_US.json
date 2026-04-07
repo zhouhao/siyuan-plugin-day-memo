@@ -66,5 +66,10 @@
   "reminderSet": "Reminder set",
   "reminderCleared": "Reminder cleared",
   "reminderPastTime": "Please select a future time",
-  "reminderNotification": "🔔 Memo Reminder"
+  "reminderNotification": "🔔 Memo Reminder",
+  "settings": "Settings",
+  "settingDailyNotePath": "Daily Note Path Template",
+  "settingDailyNotePathDesc": "Custom path template for Daily Note. Leave empty to use notebook default. Supports: {{now | date \"2006-01-02\"}}, {{now | ISOWeek}}, {{now | WeekdayCN}}, etc.",
+  "settingDailyNotePathPlaceholder": "e.g. /Daily Note/{{now | date \"2006/01\"}}/{{now | date \"2006-01-02\"}}",
+  "settingsSaved": "Settings saved"
 }

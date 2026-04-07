@@ -32,6 +32,15 @@ export interface TagTreeNode {
     children: TagTreeNode[];
 }
 
+export interface PluginSettings {
+    dailyNotePathTemplate: string;
+}
+
+export const DEFAULT_SETTINGS: PluginSettings = {
+    dailyNotePathTemplate: "",
+};
+
 export const STORAGE_MEMOS = "memos-data";
+export const STORAGE_SETTINGS = "settings";
 export const TAB_TYPE = "day-memo-tab";
 export const DOCK_TYPE = "day-memo-dock";
