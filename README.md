@@ -17,7 +17,7 @@ A lightweight, [Memos](https://github.com/usememos/memos)-inspired quick note-ta
 - **Timeline View** — Memos grouped by date, newest first
 - **Search** — Full-text search across all memos in the sidebar
 - **Filter Tabs** — Switch between All / Pinned / Archived views
-- **Add to Daily Note** — One-click to append any memo into SiYuan's Daily Note for the memo's creation date, with source attribution
+- **Add to Daily Note** — One-click to append any memo into SiYuan's Daily Note for the memo's creation date, with source attribution; supports custom path templates with rich date variables (see Settings below)
 - **Right-Click Context Menu** — Right-click any memo for quick actions: edit, pin, archive, add to daily note, set reminder, copy content, delete
 - **Reminders** — Set a reminder on any memo via the right-click menu; a datetime picker dialog defaults to 10 minutes from now; when the time arrives, you get both a SiYuan in-app notification and a browser system notification
 - **Pin & Archive** — Pin important memos to top, archive old ones to reduce clutter
@@ -43,9 +43,36 @@ A lightweight, [Memos](https://github.com/usememos/memos)-inspired quick note-ta
 10. Double-click a memo's content to quickly enter edit mode
 11. Select and copy text directly from memo content, or use the right-click menu to copy the full memo content
 
+## Settings
+
+Open plugin settings (click the gear icon on the DayMemo plugin card in SiYuan's Marketplace → Installed) to configure:
+
+- **Daily Note Path Template** — Custom path template for the "Add to Daily Note" feature. Leave empty to use your notebook's default `dailyNoteSavePath`. Example:
+
+  ```
+  /Daily Note/{{now | date "2006/01"}}/第{{now | ISOWeek}}周/{{now | date "2006-01-02"}}-周{{now | WeekdayCN}}
+  ```
+
+  Supported template variables:
+
+  | Template | Description | Example Output |
+  |----------|-------------|----------------|
+  | `{{now \| date "2006-01-02"}}` | Go-style date format | `2026-04-07` |
+  | `{{now \| date "15:04:05"}}` | Go-style time format | `14:30:00` |
+  | `{{now \| ISOWeek}}` | ISO week number | `15` |
+  | `{{now \| ISOYear}}` | ISO week-numbering year | `2026` |
+  | `{{now \| Weekday}}` | Day of week (0=Sunday) | `2` |
+  | `{{now \| WeekdayCN}}` | Day of week in Chinese | `二` |
+  | `{{now \| WeekdayCN2}}` | Day of week in Chinese with prefix | `周二` |
+
+  Go date format tokens: `2006` (year), `01` (month), `02` (day), `15` (hour-24h), `03` (hour-12h), `04` (minute), `05` (second), `PM`/`pm`, `Monday`/`Mon`, `January`/`Jan`.
+
 ## Data Storage & Sync
 
-Memos are stored in `data/storage/petal/siyuan-plugin-day-memo/memos-data`, which is automatically included in SiYuan's cloud sync.
+- Memos: `data/storage/petal/siyuan-plugin-day-memo/memos-data`
+- Settings: `data/storage/petal/siyuan-plugin-day-memo/settings`
+
+Both are automatically included in SiYuan's cloud sync.
 
 Uploaded images and attachments are stored in SiYuan's standard `data/assets/` directory, also included in cloud sync.
 
