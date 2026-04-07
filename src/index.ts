@@ -4,10 +4,11 @@ import {
     Dialog,
     showMessage,
     openTab,
+    Setting,
 } from "siyuan";
 import "./index.scss";
 
-import { TAB_TYPE, DOCK_TYPE } from "./types";
+import { TAB_TYPE, DOCK_TYPE, PluginSettings } from "./types";
 import { MemoDataStore } from "./store";
 import { ReminderService } from "./ReminderService";
 import { TabPanel } from "./components/TabPanel";
@@ -31,6 +32,7 @@ export default class DayMemoPlugin extends Plugin {
 </symbol>`);
 
         this.store = new MemoDataStore(this);
+        this.store.loadSettings();
         this.store.load().then(() => {
             this.reminderService = new ReminderService(this.store, this.i18n);
         });
@@ -103,6 +105,36 @@ export default class DayMemoPlugin extends Plugin {
     onunload(): void {
         this.reminderService?.destroy();
         this.tabPanel?.destroy();
+    }
+
+    openSetting(): void {
+        const currentSettings = this.store.getSettings();
+
+        const pathInput = document.createElement("textarea");
+        pathInput.className = "b3-text-field fn__block";
+        pathInput.style.resize = "vertical";
+        pathInput.rows = 2;
+        pathInput.placeholder = this.i18n.settingDailyNotePathPlaceholder;
+        pathInput.value = currentSettings.dailyNotePathTemplate;
+
+        const setting = new Setting({
+            confirmCallback: () => {
+                const newSettings: PluginSettings = {
+                    dailyNotePathTemplate: pathInput.value.trim(),
+                };
+                this.store.saveSettings(newSettings);
+                showMessage(this.i18n.settingsSaved);
+            },
+        });
+
+        setting.addItem({
+            title: this.i18n.settingDailyNotePath,
+            description: this.i18n.settingDailyNotePathDesc,
+            direction: "column",
+            actionElement: pathInput,
+        });
+
+        setting.open(this.name);
     }
 
     private openDayMemoTab(): void {

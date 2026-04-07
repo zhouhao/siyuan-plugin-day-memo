@@ -66,5 +66,10 @@
   "reminderSet": "提醒已设置",
   "reminderCleared": "提醒已清除",
   "reminderPastTime": "请选择未来的时间",
-  "reminderNotification": "🔔 便签提醒"
+  "reminderNotification": "🔔 便签提醒",
+  "settings": "设置",
+  "settingDailyNotePath": "Daily Note 路径模板",
+  "settingDailyNotePathDesc": "自定义 Daily Note 的路径模板。留空则使用笔记本默认配置。支持：{{now | date \"2006-01-02\"}}、{{now | ISOWeek}}、{{now | WeekdayCN}} 等。",
+  "settingDailyNotePathPlaceholder": "例如 /Daily Note/{{now | date \"2006/01\"}}/第{{now | ISOWeek}}周/{{now | date \"2006-01-02\"}}-周{{now | WeekdayCN}}",
+  "settingsSaved": "设置已保存"
 }
