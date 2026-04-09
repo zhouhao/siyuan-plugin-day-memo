@@ -213,12 +213,37 @@ export default class DayMemoPlugin extends Plugin {
             actionElement: convertTaskInput,
         });
 
+        const rulesWrapper = document.createElement("div");
+        rulesWrapper.style.width = "100%";
+        rulesWrapper.appendChild(rulesContainer);
+
+        const divider = document.createElement("div");
+        divider.style.borderBottom = "2px dotted var(--b3-border-color, rgba(128,128,128,0.3))";
+        divider.style.margin = "12px 0 4px 0";
+        divider.style.width = "100%";
+        rulesWrapper.appendChild(divider);
+
         setting.addItem({
-            title: this.i18n.settingReplacementRules || "替换内容配置",
-            description: this.i18n.settingReplacementRulesDesc || "左侧输入匹配规则（支持正则表达式），右侧输入替换后的内容",
+            title: "",
+            description: "",
             direction: "column",
-            actionElement: rulesContainer,
+            actionElement: rulesWrapper,
         });
+
+        setTimeout(() => {
+            let el = rulesWrapper.parentElement;
+            while (el && !el.classList.contains("b3-label")) {
+                el = el.parentElement;
+            }
+            if (el) {
+                el.style.marginTop = "-12px";
+                el.style.paddingTop = "0";
+                const flexTitle = el.querySelector(".fn__flex-1");
+                if (flexTitle && flexTitle.textContent?.trim() === "") {
+                    (flexTitle as HTMLElement).style.display = "none";
+                }
+            }
+        }, 50);
 
         setting.open(this.name);
     }
