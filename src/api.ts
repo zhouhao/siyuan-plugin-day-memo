@@ -68,12 +68,12 @@ export async function appendBlock(parentID: string, markdown: string): Promise<v
 }
 
 export async function addToDailyNote(
-    memoContent: string,
-    targetDate: number,
-    sourceLabel: string,
-    customPathTemplate?: string,
-    convertTask?: boolean,
-    replacementRules?: import("./types").ReplacementRule[],
+  memoContent: string,
+  targetDate: number,
+  sourceLabel: string,
+  customPathTemplate?: string,
+  enableReplacementRules?: boolean,
+  replacementRules?: import("./types").ReplacementRule[],
 ): Promise<void> {
     const notebooks = await lsNotebooks();
     const openNotebooks = notebooks.filter((nb) => !nb.closed);
@@ -101,7 +101,7 @@ export async function addToDailyNote(
     }
 
     let processedMemoContent = memoContent;
-    if (convertTask && replacementRules && replacementRules.length > 0) {
+    if (enableReplacementRules && replacementRules && replacementRules.length > 0) {
         for (const rule of replacementRules) {
             if (!rule.match) continue;
             try {
@@ -111,7 +111,7 @@ export async function addToDailyNote(
                 console.error("Invalid regex in replacement rule:", rule.match, e);
             }
         }
-    } else if (convertTask) {
+    } else if (enableReplacementRules) {
         // Fallback or legacy behavior if no rules provided but switch is on
         processedMemoContent = processedMemoContent.replace(/^#任务 /gm, "- [ ] ");
     }

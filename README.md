@@ -18,6 +18,7 @@ A lightweight, [Memos](https://github.com/usememos/memos)-inspired quick note-ta
 - **Search** — Full-text search across all memos in the sidebar
 - **Filter Tabs** — Switch between All / Pinned / Archived views
 - **Add to Daily Note** — One-click to append any memo into SiYuan's Daily Note for the memo's creation date, with source attribution; supports custom path templates with rich date variables (see Settings below)
+- **Regex Replacement Rules** — Define custom regex find-and-replace rules (in Settings) that are automatically applied to memo content before it's added to Daily Note — e.g., convert `#task ` lines into `- [ ] ` checklist items
 - **Right-Click Context Menu** — Right-click any memo for quick actions: edit, pin, archive, add to daily note, set reminder, copy content, delete
 - **Reminders** — Set a reminder on any memo via the right-click menu; a datetime picker dialog defaults to 10 minutes from now; when the time arrives, you get both a SiYuan in-app notification and a browser system notification
 - **Pin & Archive** — Pin important memos to top, archive old ones to reduce clutter
@@ -66,6 +67,14 @@ Open plugin settings (click the gear icon on the DayMemo plugin card in SiYuan's
   | `{{now \| WeekdayCN2}}` | Day of week in Chinese with prefix | `周二` |
 
   Go date format tokens: `2006` (year), `01` (month), `02` (day), `15` (hour-24h), `03` (hour-12h), `04` (minute), `05` (second), `PM`/`pm`, `Monday`/`Mon`, `January`/`Jan`.
+
+- **Enable Regex Replacement** — Toggle switch to enable/disable regex replacement rules when adding memos to Daily Note.
+
+- **Replacement Rules** — A list of regex find-and-replace pairs applied (in order) to memo content before appending to Daily Note. Each rule has:
+  - **Match pattern** — A JavaScript-compatible regex (applied with `gm` flags). Example: `^#task `
+  - **Replacement text** — The replacement string. Example: `- [ ] `
+
+  Use the `+` / `-` buttons to add or remove rules. Rules with an empty match pattern are ignored.
 
 ## Data Storage & Sync
 

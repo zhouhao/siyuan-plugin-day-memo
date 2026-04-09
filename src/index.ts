@@ -117,10 +117,10 @@ export default class DayMemoPlugin extends Plugin {
         pathInput.placeholder = this.i18n.settingDailyNotePathPlaceholder;
         pathInput.value = currentSettings.dailyNotePathTemplate;
 
-        const convertTaskInput = document.createElement("input");
-        convertTaskInput.className = "b3-switch fn__flex-center";
-        convertTaskInput.type = "checkbox";
-        convertTaskInput.checked = !!currentSettings.convertTask;
+        const enableRulesInput = document.createElement("input");
+        enableRulesInput.className = "b3-switch fn__flex-center";
+        enableRulesInput.type = "checkbox";
+        enableRulesInput.checked = !!currentSettings.enableReplacementRules;
 
         const rulesContainer = document.createElement("div");
         rulesContainer.style.width = "100%";
@@ -145,13 +145,13 @@ export default class DayMemoPlugin extends Plugin {
                 const matchInput = document.createElement("input");
                 matchInput.className = "b3-text-field";
                 matchInput.style.flex = "1";
-                matchInput.placeholder = "被替换文本(支持正则如 ^#任务 )";
+                matchInput.placeholder = this.i18n.replacementMatchPlaceholder;
                 matchInput.value = rule.match;
 
                 const replaceInput = document.createElement("input");
                 replaceInput.className = "b3-text-field";
                 replaceInput.style.flex = "1";
-                replaceInput.placeholder = "替换后文本(如 - [ ] )";
+                replaceInput.placeholder = this.i18n.replacementReplacePlaceholder;
                 replaceInput.value = rule.replace;
 
                 const addBtn = document.createElement("button");
@@ -191,8 +191,11 @@ export default class DayMemoPlugin extends Plugin {
             confirmCallback: () => {
                 const newSettings: PluginSettings = {
                     dailyNotePathTemplate: pathInput.value.trim(),
-                    convertTask: convertTaskInput.checked,
-                    replacementRules: getRulesFns.map(fn => fn()).filter(r => r.match || r.replace),
+                    enableReplacementRules: enableRulesInput.checked,
+                    replacementRules: getRulesFns.map(fn => ({
+                        match: fn().match.trim(),
+                        replace: fn().replace.trim(),
+                    })).filter(r => r.match),
                 };
                 this.store.saveSettings(newSettings);
                 showMessage(this.i18n.settingsSaved);
@@ -207,10 +210,10 @@ export default class DayMemoPlugin extends Plugin {
         });
 
         setting.addItem({
-            title: this.i18n.settingConvertTask || "启用正则替换功能",
-            description: this.i18n.settingConvertTaskDesc || "开启后，按下方的配置规则对输入内容进行自动替换",
+            title: this.i18n.settingEnableReplacementRules,
+            description: this.i18n.settingEnableReplacementRulesDesc,
             direction: "row",
-            actionElement: convertTaskInput,
+            actionElement: enableRulesInput,
         });
 
         const rulesWrapper = document.createElement("div");
@@ -230,22 +233,13 @@ export default class DayMemoPlugin extends Plugin {
             actionElement: rulesWrapper,
         });
 
-        setTimeout(() => {
-            let el = rulesWrapper.parentElement;
-            while (el && !el.classList.contains("b3-label")) {
-                el = el.parentElement;
-            }
-            if (el) {
-                el.style.marginTop = "-12px";
-                el.style.paddingTop = "0";
-                const flexTitle = el.querySelector(".fn__flex-1");
-                if (flexTitle && flexTitle.textContent?.trim() === "") {
-                    (flexTitle as HTMLElement).style.display = "none";
-                }
-            }
-        }, 50);
-
         setting.open(this.name);
+
+        // Apply compact style to the rules wrapper's parent label via CSS class
+        const labelEl = rulesWrapper.closest(".b3-label");
+        if (labelEl) {
+            labelEl.classList.add("day-memo__rules-label");
+        }
     }
 
     private openDayMemoTab(): void {

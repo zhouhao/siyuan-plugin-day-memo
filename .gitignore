@@ -13,3 +13,6 @@ i18n/
 
 .claude
 .omc
+bun.lock
+
+.output.txt

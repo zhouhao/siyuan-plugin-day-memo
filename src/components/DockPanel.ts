@@ -119,9 +119,9 @@ export class DockPanel {
         try {
             const settings = this.store.getSettings();
             const template = settings.dailyNotePathTemplate || undefined;
-            const convertTask = settings.convertTask;
+            const enableReplacementRules = settings.enableReplacementRules;
             const replacementRules = settings.replacementRules;
-            await addToDailyNote(memo.content, memo.createdAt, this.i18n.fromDayMemo, template, convertTask, replacementRules);
+            await addToDailyNote(memo.content, memo.createdAt, this.i18n.fromDayMemo, template, enableReplacementRules, replacementRules);
             showMessage(this.i18n.addedToDailyNote);
         } catch {
             showMessage(this.i18n.addToDailyNoteFailed);
