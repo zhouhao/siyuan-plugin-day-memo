@@ -109,15 +109,11 @@ export class TabPanel {
 
     private async handleAddToDailyNote(memo: Memo): Promise<void> {
         try {
-<<<<<<< HEAD
-            const template = this.store.getSettings().dailyNotePathTemplate || undefined;
-            await addToDailyNote(memo.content, memo.createdAt, this.i18n.fromDayMemo, template);
-=======
             const settings = this.store.getSettings();
             const template = settings.dailyNotePathTemplate || undefined;
             const convertTask = settings.convertTask;
-            await addToDailyNote(memo.content, Date.now(), this.i18n.fromDayMemo, template, convertTask);
->>>>>>> fe81571 (feat: 添加了一个开关控制替换内容是否启动)
+            const replacementRules = settings.replacementRules;
+            await addToDailyNote(memo.content, Date.now(), this.i18n.fromDayMemo, template, convertTask, replacementRules);
             showMessage(this.i18n.addedToDailyNote);
         } catch {
             showMessage(this.i18n.addToDailyNoteFailed);

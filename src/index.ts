@@ -8,7 +8,7 @@ import {
 } from "siyuan";
 import "./index.scss";
 
-import { TAB_TYPE, DOCK_TYPE, PluginSettings } from "./types";
+import { TAB_TYPE, DOCK_TYPE, PluginSettings, ReplacementRule } from "./types";
 import { MemoDataStore } from "./store";
 import { ReminderService } from "./ReminderService";
 import { TabPanel } from "./components/TabPanel";
@@ -122,11 +122,77 @@ export default class DayMemoPlugin extends Plugin {
         convertTaskInput.type = "checkbox";
         convertTaskInput.checked = !!currentSettings.convertTask;
 
+        const rulesContainer = document.createElement("div");
+        rulesContainer.style.width = "100%";
+        let getRulesFns: Array<() => ReplacementRule> = [];
+
+        const renderRules = (rules: ReplacementRule[]) => {
+            rulesContainer.innerHTML = "";
+            getRulesFns = [];
+            
+            if (!rules || rules.length === 0) {
+                rules = [{ match: "", replace: "" }];
+            }
+
+            rules.forEach((rule, index) => {
+                const row = document.createElement("div");
+                row.style.display = "flex";
+                row.style.gap = "8px";
+                row.style.marginBottom = "8px";
+                row.style.alignItems = "center";
+                row.style.width = "100%";
+
+                const matchInput = document.createElement("input");
+                matchInput.className = "b3-text-field";
+                matchInput.style.flex = "1";
+                matchInput.placeholder = "被替换文本(支持正则如 ^#任务 )";
+                matchInput.value = rule.match;
+
+                const replaceInput = document.createElement("input");
+                replaceInput.className = "b3-text-field";
+                replaceInput.style.flex = "1";
+                replaceInput.placeholder = "替换后文本(如 - [ ] )";
+                replaceInput.value = rule.replace;
+
+                const addBtn = document.createElement("button");
+                addBtn.className = "b3-button b3-button--outline fn__flex-center";
+                addBtn.innerText = "+";
+                addBtn.onclick = () => {
+                    const currentRules = getRulesFns.map(fn => fn());
+                    currentRules.splice(index + 1, 0, { match: "", replace: "" });
+                    renderRules(currentRules);
+                };
+
+                const removeBtn = document.createElement("button");
+                removeBtn.className = "b3-button b3-button--outline fn__flex-center";
+                removeBtn.innerText = "-";
+                removeBtn.onclick = () => {
+                    const currentRules = getRulesFns.map(fn => fn());
+                    currentRules.splice(index, 1);
+                    renderRules(currentRules.length > 0 ? currentRules : [{ match: "", replace: "" }]);
+                };
+
+                row.appendChild(matchInput);
+                row.appendChild(replaceInput);
+                row.appendChild(addBtn);
+                row.appendChild(removeBtn);
+                rulesContainer.appendChild(row);
+
+                getRulesFns.push(() => ({
+                    match: matchInput.value,
+                    replace: replaceInput.value,
+                }));
+            });
+        };
+
+        renderRules(currentSettings.replacementRules || [{ match: "^#任务 ", replace: "- [ ] " }]);
+
         const setting = new Setting({
             confirmCallback: () => {
                 const newSettings: PluginSettings = {
                     dailyNotePathTemplate: pathInput.value.trim(),
                     convertTask: convertTaskInput.checked,
+                    replacementRules: getRulesFns.map(fn => fn()).filter(r => r.match || r.replace),
                 };
                 this.store.saveSettings(newSettings);
                 showMessage(this.i18n.settingsSaved);
@@ -141,10 +207,17 @@ export default class DayMemoPlugin extends Plugin {
         });
 
         setting.addItem({
-            title: this.i18n.settingConvertTask || "转换任务列表",
-            description: this.i18n.settingConvertTaskDesc || "将以 #任务 开头的行自动转换为 Markdown 任务列表 (- [ ])",
+            title: this.i18n.settingConvertTask || "启用正则替换功能",
+            description: this.i18n.settingConvertTaskDesc || "开启后，按下方的配置规则对输入内容进行自动替换",
             direction: "row",
             actionElement: convertTaskInput,
+        });
+
+        setting.addItem({
+            title: this.i18n.settingReplacementRules || "替换内容配置",
+            description: this.i18n.settingReplacementRulesDesc || "左侧输入匹配规则（支持正则表达式），右侧输入替换后的内容",
+            direction: "column",
+            actionElement: rulesContainer,
         });
 
         setting.open(this.name);

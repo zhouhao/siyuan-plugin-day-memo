@@ -32,14 +32,21 @@ export interface TagTreeNode {
     children: TagTreeNode[];
 }
 
+export interface ReplacementRule {
+    match: string;
+    replace: string;
+}
+
 export interface PluginSettings {
     dailyNotePathTemplate: string;
     convertTask?: boolean;
+    replacementRules?: ReplacementRule[];
 }
 
 export const DEFAULT_SETTINGS: PluginSettings = {
     dailyNotePathTemplate: "",
     convertTask: false,
+    replacementRules: [{ match: "^#任务 ", replace: "- [ ] " }],
 };
 
 export const STORAGE_MEMOS = "memos-data";
