@@ -34,10 +34,12 @@ export interface TagTreeNode {
 
 export interface PluginSettings {
     dailyNotePathTemplate: string;
+    convertTask?: boolean;
 }
 
 export const DEFAULT_SETTINGS: PluginSettings = {
     dailyNotePathTemplate: "",
+    convertTask: false,
 };
 
 export const STORAGE_MEMOS = "memos-data";

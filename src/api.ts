@@ -72,6 +72,7 @@ export async function addToDailyNote(
     memoCreatedAt: number,
     sourceLabel: string,
     customPathTemplate?: string,
+    convertTask?: boolean,
 ): Promise<void> {
     const notebooks = await lsNotebooks();
     const openNotebooks = notebooks.filter((nb) => !nb.closed);
@@ -98,7 +99,9 @@ export async function addToDailyNote(
         docId = await createDocWithMd(notebookId, dailyNotePath, "");
     }
 
-    const processedMemoContent = memoContent.replace(/^#任务 /gm, "- [ ] ");
+    const processedMemoContent = convertTask 
+        ? memoContent.replace(/^#任务 /gm, "- [ ] ") 
+        : memoContent;
     const content = `> ${sourceLabel}\n\n${processedMemoContent}`;
     await appendBlock(docId, content);
 }

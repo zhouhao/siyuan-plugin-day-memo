@@ -117,10 +117,16 @@ export default class DayMemoPlugin extends Plugin {
         pathInput.placeholder = this.i18n.settingDailyNotePathPlaceholder;
         pathInput.value = currentSettings.dailyNotePathTemplate;
 
+        const convertTaskInput = document.createElement("input");
+        convertTaskInput.className = "b3-switch fn__flex-center";
+        convertTaskInput.type = "checkbox";
+        convertTaskInput.checked = !!currentSettings.convertTask;
+
         const setting = new Setting({
             confirmCallback: () => {
                 const newSettings: PluginSettings = {
                     dailyNotePathTemplate: pathInput.value.trim(),
+                    convertTask: convertTaskInput.checked,
                 };
                 this.store.saveSettings(newSettings);
                 showMessage(this.i18n.settingsSaved);
@@ -132,6 +138,13 @@ export default class DayMemoPlugin extends Plugin {
             description: this.i18n.settingDailyNotePathDesc,
             direction: "column",
             actionElement: pathInput,
+        });
+
+        setting.addItem({
+            title: this.i18n.settingConvertTask || "转换任务列表",
+            description: this.i18n.settingConvertTaskDesc || "将以 #任务 开头的行自动转换为 Markdown 任务列表 (- [ ])",
+            direction: "row",
+            actionElement: convertTaskInput,
         });
 
         setting.open(this.name);
