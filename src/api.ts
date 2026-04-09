@@ -69,9 +69,11 @@ export async function appendBlock(parentID: string, markdown: string): Promise<v
 
 export async function addToDailyNote(
     memoContent: string,
-    memoCreatedAt: number,
+    targetDate: number,
     sourceLabel: string,
     customPathTemplate?: string,
+    convertTask?: boolean,
+    replacementRules?: import("./types").ReplacementRule[],
 ): Promise<void> {
     const notebooks = await lsNotebooks();
     const openNotebooks = notebooks.filter((nb) => !nb.closed);
@@ -87,7 +89,7 @@ export async function addToDailyNote(
         const conf = await getNotebookConf(notebookId);
         savePath = conf.dailyNoteSavePath || DEFAULT_DAILY_NOTE_PATH;
     }
-    const memoDate = new Date(memoCreatedAt);
+    const memoDate = new Date(targetDate);
     const dailyNotePath = renderDailyNotePath(savePath, memoDate);
 
     const ids = await getIDsByHPath(notebookId, dailyNotePath);
@@ -98,7 +100,23 @@ export async function addToDailyNote(
         docId = await createDocWithMd(notebookId, dailyNotePath, "");
     }
 
-    const content = `> ${sourceLabel}\n\n${memoContent}`;
+    let processedMemoContent = memoContent;
+    if (convertTask && replacementRules && replacementRules.length > 0) {
+        for (const rule of replacementRules) {
+            if (!rule.match) continue;
+            try {
+                const regex = new RegExp(rule.match, 'gm');
+                processedMemoContent = processedMemoContent.replace(regex, rule.replace || "");
+            } catch (e) {
+                console.error("Invalid regex in replacement rule:", rule.match, e);
+            }
+        }
+    } else if (convertTask) {
+        // Fallback or legacy behavior if no rules provided but switch is on
+        processedMemoContent = processedMemoContent.replace(/^#任务 /gm, "- [ ] ");
+    }
+
+    const content = `> ${sourceLabel}\n\n${processedMemoContent}`;
     await appendBlock(docId, content);
 }
 
