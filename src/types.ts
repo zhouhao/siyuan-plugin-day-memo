@@ -39,13 +39,13 @@ export interface ReplacementRule {
 
 export interface PluginSettings {
     dailyNotePathTemplate: string;
-    convertTask?: boolean;
+    enableReplacementRules?: boolean;
     replacementRules?: ReplacementRule[];
 }
 
 export const DEFAULT_SETTINGS: PluginSettings = {
     dailyNotePathTemplate: "",
-    convertTask: false,
+    enableReplacementRules: false,
     replacementRules: [{ match: "^#任务 ", replace: "- [ ] " }],
 };
 

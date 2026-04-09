@@ -762,3 +762,13 @@
     min-height: 120px;
     border-radius: 8px;
 }
+
+/* Compact style for replacement-rules setting label */
+.day-memo__rules-label {
+    margin-top: -12px !important;
+    padding-top: 0 !important;
+
+    > .fn__flex-1:empty {
+        display: none;
+    }
+}

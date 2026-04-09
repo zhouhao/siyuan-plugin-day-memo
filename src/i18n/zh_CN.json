@@ -71,5 +71,9 @@
   "settingDailyNotePath": "Daily Note 路径模板",
   "settingDailyNotePathDesc": "自定义 Daily Note 的路径模板。留空则使用笔记本默认配置。支持：{{now | date \"2006-01-02\"}}、{{now | ISOWeek}}、{{now | WeekdayCN}} 等。",
   "settingDailyNotePathPlaceholder": "例如 /Daily Note/{{now | date \"2006/01\"}}/第{{now | ISOWeek}}周/{{now | date \"2006-01-02\"}}-周{{now | WeekdayCN}}",
-  "settingsSaved": "设置已保存"
+  "settingsSaved": "设置已保存",
+  "settingEnableReplacementRules": "启用正则替换功能",
+  "settingEnableReplacementRulesDesc": "开启后，按下方的配置规则对输入内容进行自动替换",
+  "replacementMatchPlaceholder": "被替换文本(支持正则如 ^#任务 )",
+  "replacementReplacePlaceholder": "替换后文本(如 - [ ] )"
 }
