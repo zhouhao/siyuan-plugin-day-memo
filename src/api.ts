@@ -98,7 +98,8 @@ export async function addToDailyNote(
         docId = await createDocWithMd(notebookId, dailyNotePath, "");
     }
 
-    const content = `> ${sourceLabel}\n\n${memoContent}`;
+    const processedMemoContent = memoContent.replace(/^#任务 /gm, "- [ ] ");
+    const content = `> ${sourceLabel}\n\n${processedMemoContent}`;
     await appendBlock(docId, content);
 }
 
