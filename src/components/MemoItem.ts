@@ -205,7 +205,7 @@ export class MemoItem {
 
         const hasReminder = this.memo.reminderAt && this.memo.reminderAt > Date.now();
         menu.addItem({
-            iconHTML: "🔔",
+            icon: "iconClock",
             label: hasReminder
                 ? (this.i18n.editReminder || "Edit Reminder")
                 : (this.i18n.setReminder || "Set Reminder"),
@@ -215,7 +215,7 @@ export class MemoItem {
         });
 
         menu.addItem({
-            iconHTML: "💬",
+            icon: "iconSparkles",
             label: this.i18n.annotate || "Annotate",
             click: () => {
                 this.callbacks.onAnnotate?.(this.memo);

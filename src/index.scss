@@ -929,6 +929,14 @@
 
 .day-memo__annotation-link-icon {
     font-size: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.day-memo__icon {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
 }
 
 .day-memo__annotation-link-label {
