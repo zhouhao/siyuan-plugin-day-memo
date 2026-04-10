@@ -77,5 +77,19 @@
   "settingUseCurrentDate": "Use Current Date for Daily Note",
   "settingUseCurrentDateDesc": "When enabled, uses the current system date; when disabled, uses the memo's creation date",
   "replacementMatchPlaceholder": "Match pattern (regex, e.g. ^#task )",
-  "replacementReplacePlaceholder": "Replacement text (e.g. - [ ] )"
+  "replacementReplacePlaceholder": "Replacement text (e.g. - [ ] )",
+  "randomReview": "Random Review",
+  "reviewTitle": "Random Review",
+  "reviewNext": "Next",
+  "reviewClose": "Close",
+  "reviewEmpty": "No memos to review.",
+  "reviewCounter": "{current} / {total}",
+  "annotate": "Annotate",
+  "annotationOf": "Annotation of",
+  "annotations": "Annotations",
+  "annotationCreated": "Annotation created",
+  "annotationPlaceholder": "Write your annotation...",
+  "viewAnnotations": "View Annotations",
+  "viewSource": "View Source",
+  "annotationCount": "{count} annotations"
 }

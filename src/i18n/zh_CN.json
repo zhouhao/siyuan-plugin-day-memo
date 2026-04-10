@@ -77,5 +77,19 @@
   "settingUseCurrentDate": "添加到今日笔记-使用当前日期",
   "settingUseCurrentDateDesc": "开启后，添加到日记时使用当前系统日期；关闭则使用便签的创建日期",
   "replacementMatchPlaceholder": "被替换文本(支持正则如 ^#任务 )",
-  "replacementReplacePlaceholder": "替换后文本(如 - [ ] )"
+  "replacementReplacePlaceholder": "替换后文本(如 - [ ] )",
+  "randomReview": "随机回顾",
+  "reviewTitle": "随机回顾",
+  "reviewNext": "换一批",
+  "reviewClose": "关闭",
+  "reviewEmpty": "暂无可回顾的便签。",
+  "reviewCounter": "{current} / {total}",
+  "annotate": "标注",
+  "annotationOf": "标注来源",
+  "annotations": "标注",
+  "annotationCreated": "标注已创建",
+  "annotationPlaceholder": "写下你的标注...",
+  "viewAnnotations": "查看标注",
+  "viewSource": "查看原文",
+  "annotationCount": "{count} 条标注"
 }

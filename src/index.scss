@@ -430,12 +430,11 @@
 }
 
 .day-memo__tag-list-header {
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 600;
-    color: var(--b3-theme-on-surface-light);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
+    color: var(--b3-theme-on-surface);
+    letter-spacing: 0.3px;
+    margin-bottom: 6px;
 }
 
 .day-memo__tag-tree {
@@ -761,6 +760,211 @@
 .day-memo__quick-textarea {
     min-height: 120px;
     border-radius: 8px;
+}
+
+/* Random Review button */
+.day-memo__sidebar-review {
+    margin-top: auto;
+}
+
+.day-memo__review-btn {
+    width: 100%;
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Review dialog */
+.day-memo__review-content {
+    padding: 0 !important;
+}
+
+.day-memo__review-card {
+    min-height: 120px;
+}
+
+.day-memo__review-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--b3-border-color);
+}
+
+.day-memo__review-card-time {
+    font-size: 12px;
+    color: var(--b3-theme-on-surface-light);
+}
+
+.day-memo__review-counter {
+    font-size: 12px;
+    color: var(--b3-theme-on-surface-light);
+    font-weight: 500;
+}
+
+.day-memo__review-card-body {
+    padding: 16px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--b3-theme-on-surface);
+    word-break: break-word;
+    overflow-wrap: break-word;
+    max-height: 400px;
+    overflow-y: auto;
+
+    .day-memo__tag {
+        color: var(--b3-theme-primary);
+        font-weight: 500;
+    }
+
+    .day-memo__image {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 8px;
+        margin: 6px 0;
+    }
+
+    .day-memo__inline-code {
+        background: var(--b3-theme-surface);
+        border: 1px solid var(--b3-border-color);
+        border-radius: 3px;
+        padding: 1px 4px;
+        font-size: 0.9em;
+        font-family: var(--b3-font-family-code);
+    }
+
+    .day-memo__code-block {
+        background: var(--b3-theme-surface);
+        border: 1px solid var(--b3-border-color);
+        border-radius: 6px;
+        padding: 10px 12px;
+        margin: 6px 0;
+        overflow-x: auto;
+        font-size: 13px;
+        font-family: var(--b3-font-family-code);
+    }
+}
+
+.day-memo__review-empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--b3-theme-on-surface-light);
+    font-size: 14px;
+}
+
+/* Annotation banner in editor */
+.day-memo__annotation-banner {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    background: var(--b3-theme-surface);
+    border: 1px solid var(--b3-theme-primary-lighter, var(--b3-border-color));
+    border-left: 3px solid var(--b3-theme-primary);
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--b3-theme-on-surface-light);
+    line-height: 1.4;
+    overflow: hidden;
+}
+
+.day-memo__annotation-banner-icon {
+    flex-shrink: 0;
+}
+
+.day-memo__annotation-banner-label {
+    flex-shrink: 0;
+    font-weight: 600;
+    color: var(--b3-theme-primary);
+}
+
+.day-memo__annotation-banner-text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.day-memo__annotation-banner-close {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--b3-theme-on-surface-light);
+    font-size: 14px;
+    padding: 0 4px;
+    line-height: 1;
+
+    &:hover {
+        color: var(--b3-theme-on-surface);
+    }
+}
+
+/* Annotation links on memo items */
+.day-memo__annotation-links {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 6px 12px;
+    border-top: 1px dashed var(--b3-border-color);
+}
+
+.day-memo__annotation-link {
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 3px 0;
+    font-size: 12px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.15s;
+    color: var(--b3-theme-on-surface-light);
+
+    &:hover {
+        color: var(--b3-theme-primary);
+    }
+}
+
+.day-memo__annotation-link-icon {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.day-memo__icon {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+}
+
+.day-memo__annotation-link-label {
+    font-weight: 500;
+}
+
+.day-memo__annotation-link-preview {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* Highlight animation for navigated memo */
+.day-memo__item--highlight {
+    animation: day-memo-highlight 2s ease-out;
+}
+
+@keyframes day-memo-highlight {
+    0% {
+        background-color: rgba(var(--b3-theme-primary-rgb, 64, 158, 255), 0.2);
+        box-shadow: 0 0 0 2px rgba(var(--b3-theme-primary-rgb, 64, 158, 255), 0.3);
+    }
+    100% {
+        background-color: transparent;
+        box-shadow: none;
+    }
 }
 
 /* Compact style for replacement-rules setting label */
