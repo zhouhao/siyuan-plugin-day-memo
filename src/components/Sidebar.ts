@@ -65,11 +65,6 @@ export class Sidebar {
     const heatmapSection = document.createElement("div");
     heatmapSection.className = "day-memo__sidebar-section";
 
-    const heatmapHeader = document.createElement("div");
-    heatmapHeader.className = "day-memo__sidebar-section-header";
-    heatmapHeader.textContent = this.i18n.heatmapTitle || "Activity";
-    heatmapSection.appendChild(heatmapHeader);
-
     const heatmapContainer = document.createElement("div");
     heatmapSection.appendChild(heatmapContainer);
     this.heatmap = new Heatmap(
@@ -93,8 +88,13 @@ export class Sidebar {
     );
     this.container.appendChild(tagSection);
 
+    const statsSection = document.createElement("div");
+    statsSection.className = "day-memo__sidebar-stats";
+    this.container.appendChild(statsSection);
+
     const reviewSection = document.createElement("div");
-    reviewSection.className = "day-memo__sidebar-section";
+    reviewSection.className =
+      "day-memo__sidebar-section day-memo__sidebar-review";
     const reviewBtn = document.createElement("button");
     reviewBtn.className = "day-memo__review-btn b3-button b3-button--outline";
     reviewBtn.textContent = this.i18n.randomReview || "Random Review";
@@ -103,10 +103,6 @@ export class Sidebar {
     });
     reviewSection.appendChild(reviewBtn);
     this.container.appendChild(reviewSection);
-
-    const statsSection = document.createElement("div");
-    statsSection.className = "day-memo__sidebar-stats";
-    this.container.appendChild(statsSection);
 
     this.updateStats();
   }

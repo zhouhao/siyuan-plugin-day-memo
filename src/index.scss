@@ -430,12 +430,11 @@
 }
 
 .day-memo__tag-list-header {
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 600;
-    color: var(--b3-theme-on-surface-light);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
+    color: var(--b3-theme-on-surface);
+    letter-spacing: 0.3px;
+    margin-bottom: 6px;
 }
 
 .day-memo__tag-tree {
@@ -764,6 +763,10 @@
 }
 
 /* Random Review button */
+.day-memo__sidebar-review {
+    margin-top: auto;
+}
+
 .day-memo__review-btn {
     width: 100%;
     font-size: 13px;
