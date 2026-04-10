@@ -21,6 +21,7 @@ A lightweight, [Memos](https://github.com/usememos/memos)-inspired quick note-ta
 - **Regex Replacement Rules** — Define custom regex find-and-replace rules (in Settings) that are automatically applied to memo content before it's added to Daily Note — e.g., convert `#task ` lines into `- [ ] ` checklist items
 - **Right-Click Context Menu** — Right-click any memo for quick actions: edit, pin, archive, add to daily note, set reminder, copy content, delete
 - **Reminders** — Set a reminder on any memo via the right-click menu; a datetime picker dialog defaults to 10 minutes from now; when the time arrives, you get both a SiYuan in-app notification and a browser system notification
+- **Annotations** — Annotate any memo to create a linked note (similar to Flomo's annotation feature); the annotation and source memo are connected with bidirectional links for easy navigation; annotation previews are displayed inline below the source memo
 - **Random Review** — One-click "Random Review" button in the sidebar to revisit random memos in a card-style dialog; browse through a batch of 5, navigate back and forth, or shuffle for a fresh set — inspired by Flomo's daily review
 - **Pin & Archive** — Pin important memos to top, archive old ones to reduce clutter
 - **Cloud Sync Safe** — Timestamp-based merge logic with soft-delete tombstones for multi-device sync via SiYuan Cloud
@@ -41,9 +42,10 @@ A lightweight, [Memos](https://github.com/usememos/memos)-inspired quick note-ta
 6. Use the filter tabs (All / Pinned / Archived) to switch views
 7. Click a date on the calendar to filter memos for that day; use **Today** button to jump back to the current month
 8. Click tags in the sidebar to filter by tag
-9. Hover over a memo to see edit / pin / archive / 📅 add to daily note / delete actions, or **right-click** for a context menu with all actions plus **Set Reminder**
-10. Double-click a memo's content to quickly enter edit mode
-11. Select and copy text directly from memo content, or use the right-click menu to copy the full memo content
+9. Hover over a memo to see edit / pin / archive / annotate / 📅 add to daily note / delete actions, or **right-click** for a context menu with all actions plus **Set Reminder** and **Annotate**
+10. Click the annotate button on any memo to create an annotation — a new linked memo; annotations appear below the source memo with a preview, and clicking navigates between them
+11. Double-click a memo's content to quickly enter edit mode
+12. Select and copy text directly from memo content, or use the right-click menu to copy the full memo content
 
 ## Settings
 
