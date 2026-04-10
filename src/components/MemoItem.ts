@@ -271,20 +271,22 @@ export class MemoItem {
         }
 
         if (hasAnnotations) {
-            const count = this.memo.annotations!.length;
-            const label = document.createElement("a");
-            label.className = "day-memo__annotation-link day-memo__annotation-link--annotations";
-            label.href = "#";
-            label.innerHTML = `<span class="day-memo__annotation-link-icon">💬</span><span class="day-memo__annotation-link-label">${(this.i18n.annotationCount || "{count} annotations").replace("{count}", String(count))}</span>`;
-            label.addEventListener("click", (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                // Navigate to the first annotation
-                if (this.memo.annotations!.length > 0) {
-                    this.callbacks.onNavigateToMemo?.(this.memo.annotations![0]);
-                }
-            });
-            container.appendChild(label);
+            for (const annotationId of this.memo.annotations!) {
+                const annotationMemo = this.store.getMemo(annotationId);
+                const link = document.createElement("a");
+                link.className = "day-memo__annotation-link day-memo__annotation-link--annotations";
+                link.href = "#";
+                const contentPreview = annotationMemo
+                    ? (annotationMemo.content.length > 60 ? annotationMemo.content.substring(0, 60) + "..." : annotationMemo.content)
+                    : annotationId;
+                link.innerHTML = `<span class="day-memo__annotation-link-icon">💬</span><span class="day-memo__annotation-link-preview">${contentPreview}</span>`;
+                link.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.callbacks.onNavigateToMemo?.(annotationId);
+                });
+                container.appendChild(link);
+            }
         }
 
         return container;
