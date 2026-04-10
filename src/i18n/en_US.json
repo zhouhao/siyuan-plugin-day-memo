@@ -75,5 +75,11 @@
   "settingEnableReplacementRules": "Enable Regex Replacement",
   "settingEnableReplacementRulesDesc": "When enabled, memo content will be auto-replaced according to the rules below before adding to Daily Note",
   "replacementMatchPlaceholder": "Match pattern (regex, e.g. ^#task )",
-  "replacementReplacePlaceholder": "Replacement text (e.g. - [ ] )"
+  "replacementReplacePlaceholder": "Replacement text (e.g. - [ ] )",
+  "randomReview": "Random Review",
+  "reviewTitle": "Random Review",
+  "reviewNext": "Next",
+  "reviewClose": "Close",
+  "reviewEmpty": "No memos to review.",
+  "reviewCounter": "{current} / {total}"
 }

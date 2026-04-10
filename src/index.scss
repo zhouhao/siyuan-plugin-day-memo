@@ -763,6 +763,93 @@
     border-radius: 8px;
 }
 
+/* Random Review button */
+.day-memo__review-btn {
+    width: 100%;
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Review dialog */
+.day-memo__review-content {
+    padding: 0 !important;
+}
+
+.day-memo__review-card {
+    min-height: 120px;
+}
+
+.day-memo__review-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--b3-border-color);
+}
+
+.day-memo__review-card-time {
+    font-size: 12px;
+    color: var(--b3-theme-on-surface-light);
+}
+
+.day-memo__review-counter {
+    font-size: 12px;
+    color: var(--b3-theme-on-surface-light);
+    font-weight: 500;
+}
+
+.day-memo__review-card-body {
+    padding: 16px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--b3-theme-on-surface);
+    word-break: break-word;
+    overflow-wrap: break-word;
+    max-height: 400px;
+    overflow-y: auto;
+
+    .day-memo__tag {
+        color: var(--b3-theme-primary);
+        font-weight: 500;
+    }
+
+    .day-memo__image {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 8px;
+        margin: 6px 0;
+    }
+
+    .day-memo__inline-code {
+        background: var(--b3-theme-surface);
+        border: 1px solid var(--b3-border-color);
+        border-radius: 3px;
+        padding: 1px 4px;
+        font-size: 0.9em;
+        font-family: var(--b3-font-family-code);
+    }
+
+    .day-memo__code-block {
+        background: var(--b3-theme-surface);
+        border: 1px solid var(--b3-border-color);
+        border-radius: 6px;
+        padding: 10px 12px;
+        margin: 6px 0;
+        overflow-x: auto;
+        font-size: 13px;
+        font-family: var(--b3-font-family-code);
+    }
+}
+
+.day-memo__review-empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--b3-theme-on-surface-light);
+    font-size: 14px;
+}
+
 /* Compact style for replacement-rules setting label */
 .day-memo__rules-label {
     margin-top: -12px !important;
