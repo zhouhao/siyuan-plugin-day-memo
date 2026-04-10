@@ -151,6 +151,16 @@ export class MemoDataStore {
         parent.updatedAt = Date.now();
       }
     }
+    // Clean up child annotations' back-references when deleting a parent memo
+    if (memo.annotations && memo.annotations.length > 0) {
+      for (const aid of memo.annotations) {
+        const child = this.store.memos.find((m) => m.id === aid);
+        if (child && child.annotationOf === id) {
+          delete child.annotationOf;
+          child.updatedAt = Date.now();
+        }
+      }
+    }
     memo.deleted = true;
     memo.updatedAt = Date.now();
     this.persist();
