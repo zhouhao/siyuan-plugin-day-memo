@@ -17,6 +17,8 @@ export class MemoEditor {
     private attachInput: HTMLInputElement;
     private previewContainer: HTMLElement;
     private editingMemo: Memo | null = null;
+    private annotatingMemo: Memo | null = null;
+    private annotationBanner: HTMLElement;
     private onSaved: (() => void) | null = null;
     private uploading = false;
 
@@ -130,6 +132,11 @@ export class MemoEditor {
         actions.appendChild(leftActions);
         actions.appendChild(rightActions);
 
+        this.annotationBanner = document.createElement("div");
+        this.annotationBanner.className = "day-memo__annotation-banner";
+        this.annotationBanner.style.display = "none";
+
+        this.container.appendChild(this.annotationBanner);
         this.container.appendChild(this.textarea);
         this.container.appendChild(this.previewContainer);
         this.container.appendChild(actions);
@@ -142,6 +149,8 @@ export class MemoEditor {
 
     startEdit(memo: Memo): void {
         this.editingMemo = memo;
+        this.annotatingMemo = null;
+        this.hideAnnotationBanner();
         this.textarea.value = memo.content;
         this.cancelBtn.style.display = "";
         this.saveBtn.textContent = this.i18n.saveMemo;
@@ -150,9 +159,53 @@ export class MemoEditor {
         this.refreshPreview();
     }
 
+    startAnnotation(memo: Memo): void {
+        this.editingMemo = null;
+        this.annotatingMemo = memo;
+        this.textarea.value = "";
+        this.cancelBtn.style.display = "";
+        this.saveBtn.textContent = this.i18n.saveMemo;
+        this.textarea.placeholder = this.i18n.annotationPlaceholder || "Write your annotation...";
+        this.showAnnotationBanner(memo);
+        this.textarea.focus();
+        this.autoResize();
+        this.clearPreview();
+    }
+
+    private showAnnotationBanner(memo: Memo): void {
+        const preview = memo.content.length > 80 ? memo.content.substring(0, 80) + "..." : memo.content;
+        this.annotationBanner.innerHTML = "";
+        const icon = document.createElement("span");
+        icon.className = "day-memo__annotation-banner-icon";
+        icon.textContent = "💬";
+        const label = document.createElement("span");
+        label.className = "day-memo__annotation-banner-label";
+        label.textContent = `${this.i18n.annotate}: `;
+        const text = document.createElement("span");
+        text.className = "day-memo__annotation-banner-text";
+        text.textContent = preview;
+        const closeBtn = document.createElement("button");
+        closeBtn.className = "day-memo__annotation-banner-close";
+        closeBtn.textContent = "✕";
+        closeBtn.addEventListener("click", () => this.handleCancel());
+        this.annotationBanner.appendChild(icon);
+        this.annotationBanner.appendChild(label);
+        this.annotationBanner.appendChild(text);
+        this.annotationBanner.appendChild(closeBtn);
+        this.annotationBanner.style.display = "";
+    }
+
+    private hideAnnotationBanner(): void {
+        this.annotationBanner.style.display = "none";
+        this.annotationBanner.innerHTML = "";
+    }
+
     private handleCancel(): void {
         this.editingMemo = null;
+        this.annotatingMemo = null;
+        this.hideAnnotationBanner();
         this.textarea.value = "";
+        this.textarea.placeholder = this.i18n.editorPlaceholder;
         this.cancelBtn.style.display = "none";
         this.textarea.style.height = "auto";
         this.clearPreview();
@@ -165,6 +218,12 @@ export class MemoEditor {
         if (this.editingMemo) {
             this.store.updateMemo(this.editingMemo.id, content);
             this.editingMemo = null;
+            this.cancelBtn.style.display = "none";
+        } else if (this.annotatingMemo) {
+            this.store.createAnnotation(this.annotatingMemo.id, content);
+            this.annotatingMemo = null;
+            this.hideAnnotationBanner();
+            this.textarea.placeholder = this.i18n.editorPlaceholder;
             this.cancelBtn.style.display = "none";
         } else {
             this.store.createMemo(content);

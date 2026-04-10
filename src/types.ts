@@ -6,6 +6,8 @@ export interface Memo {
     archived: boolean;
     deleted?: boolean;
     reminderAt?: number;
+    annotationOf?: string;
+    annotations?: string[];
     createdAt: number;
     updatedAt: number;
 }

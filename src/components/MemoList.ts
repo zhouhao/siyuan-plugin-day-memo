@@ -53,7 +53,7 @@ export class MemoList {
             this.container.appendChild(dateHeader);
 
             for (const memo of dayMemos) {
-                const item = new MemoItem(memo, this.callbacks, this.i18n);
+                const item = new MemoItem(memo, this.callbacks, this.i18n, this.store);
                 this.container.appendChild(item.getElement());
             }
         }

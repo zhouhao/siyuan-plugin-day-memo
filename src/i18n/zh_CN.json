@@ -81,5 +81,13 @@
   "reviewNext": "换一批",
   "reviewClose": "关闭",
   "reviewEmpty": "暂无可回顾的便签。",
-  "reviewCounter": "{current} / {total}"
+  "reviewCounter": "{current} / {total}",
+  "annotate": "标注",
+  "annotationOf": "标注来源",
+  "annotations": "标注",
+  "annotationCreated": "标注已创建",
+  "annotationPlaceholder": "写下你的标注...",
+  "viewAnnotations": "查看标注",
+  "viewSource": "查看原文",
+  "annotationCount": "{count} 条标注"
 }

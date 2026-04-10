@@ -81,5 +81,13 @@
   "reviewNext": "Next",
   "reviewClose": "Close",
   "reviewEmpty": "No memos to review.",
-  "reviewCounter": "{current} / {total}"
+  "reviewCounter": "{current} / {total}",
+  "annotate": "Annotate",
+  "annotationOf": "Annotation of",
+  "annotations": "Annotations",
+  "annotationCreated": "Annotation created",
+  "annotationPlaceholder": "Write your annotation...",
+  "viewAnnotations": "View Annotations",
+  "viewSource": "View Source",
+  "annotationCount": "{count} annotations"
 }

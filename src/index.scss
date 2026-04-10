@@ -853,6 +853,123 @@
     font-size: 14px;
 }
 
+/* Annotation banner in editor */
+.day-memo__annotation-banner {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    background: var(--b3-theme-surface);
+    border: 1px solid var(--b3-theme-primary-lighter, var(--b3-border-color));
+    border-left: 3px solid var(--b3-theme-primary);
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--b3-theme-on-surface-light);
+    line-height: 1.4;
+    overflow: hidden;
+}
+
+.day-memo__annotation-banner-icon {
+    flex-shrink: 0;
+}
+
+.day-memo__annotation-banner-label {
+    flex-shrink: 0;
+    font-weight: 600;
+    color: var(--b3-theme-primary);
+}
+
+.day-memo__annotation-banner-text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.day-memo__annotation-banner-close {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--b3-theme-on-surface-light);
+    font-size: 14px;
+    padding: 0 4px;
+    line-height: 1;
+
+    &:hover {
+        color: var(--b3-theme-on-surface);
+    }
+}
+
+/* Annotation links on memo items */
+.day-memo__annotation-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 6px 12px;
+    border-top: 1px dashed var(--b3-border-color);
+}
+
+.day-memo__annotation-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s;
+    color: var(--b3-theme-on-surface-light);
+    background: var(--b3-theme-surface);
+
+    &:hover {
+        background: var(--b3-list-hover);
+        color: var(--b3-theme-primary);
+    }
+}
+
+.day-memo__annotation-link-icon {
+    font-size: 12px;
+}
+
+.day-memo__annotation-link-label {
+    font-weight: 500;
+}
+
+.day-memo__annotation-link-preview {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    opacity: 0.7;
+}
+
+.day-memo__annotation-link--source {
+    border-left: 2px solid var(--b3-theme-primary);
+}
+
+.day-memo__annotation-link--annotations {
+    border-left: 2px solid var(--b3-theme-secondary, #ff9800);
+}
+
+/* Highlight animation for navigated memo */
+.day-memo__item--highlight {
+    animation: day-memo-highlight 2s ease-out;
+}
+
+@keyframes day-memo-highlight {
+    0% {
+        background-color: rgba(var(--b3-theme-primary-rgb, 64, 158, 255), 0.2);
+        box-shadow: 0 0 0 2px rgba(var(--b3-theme-primary-rgb, 64, 158, 255), 0.3);
+    }
+    100% {
+        background-color: transparent;
+        box-shadow: none;
+    }
+}
+
 /* Compact style for replacement-rules setting label */
 .day-memo__rules-label {
     margin-top: -12px !important;

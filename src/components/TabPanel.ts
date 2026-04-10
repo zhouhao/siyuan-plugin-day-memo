@@ -91,6 +91,8 @@ export class TabPanel {
             },
             onAddToDailyNote: (memo: Memo) => this.handleAddToDailyNote(memo),
             onSetReminder: (memo: Memo) => showReminderDialog(memo, this.store, this.i18n),
+            onAnnotate: (memo: Memo) => this.editor.startAnnotation(memo),
+            onNavigateToMemo: (memoId: string) => this.navigateToMemo(memoId, listContainer),
         };
 
         this.memoList = new MemoList(listContainer, this.store, this.i18n, callbacks);
@@ -117,6 +119,15 @@ export class TabPanel {
             showMessage(this.i18n.addedToDailyNote);
         } catch {
             showMessage(this.i18n.addToDailyNoteFailed);
+        }
+    }
+
+    private navigateToMemo(memoId: string, listContainer: HTMLElement): void {
+        const el = listContainer.querySelector(`[data-memo-id="${memoId}"]`) as HTMLElement;
+        if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "center" });
+            el.classList.add("day-memo__item--highlight");
+            setTimeout(() => el.classList.remove("day-memo__item--highlight"), 2000);
         }
     }
 

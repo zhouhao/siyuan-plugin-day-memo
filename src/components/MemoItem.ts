@@ -1,5 +1,6 @@
 import { Menu } from "siyuan";
 import { Memo } from "../types";
+import { MemoDataStore } from "../store";
 import { renderMarkdown, formatDate, formatTime, renderMermaidBlocks } from "../utils";
 
 export interface MemoItemCallbacks {
@@ -11,6 +12,8 @@ export interface MemoItemCallbacks {
     onToggleCheck?: (memo: Memo, checkIndex: number) => void;
     onAddToDailyNote?: (memo: Memo) => void;
     onSetReminder?: (memo: Memo) => void;
+    onAnnotate?: (memo: Memo) => void;
+    onNavigateToMemo?: (memoId: string) => void;
 }
 
 export class MemoItem {
@@ -18,15 +21,18 @@ export class MemoItem {
     private memo: Memo;
     private callbacks: MemoItemCallbacks;
     private i18n: Record<string, string>;
+    private store: MemoDataStore;
 
     constructor(
         memo: Memo,
         callbacks: MemoItemCallbacks,
         i18n: Record<string, string>,
+        store: MemoDataStore,
     ) {
         this.memo = memo;
         this.callbacks = callbacks;
         this.i18n = i18n;
+        this.store = store;
         this.element = this.createElement();
     }
 
@@ -133,6 +139,9 @@ export class MemoItem {
         const dailyNoteBtn = this.createActionBtn("📅", this.i18n.addToDailyNote || "Add to Daily Note", () =>
             this.callbacks.onAddToDailyNote?.(this.memo),
         );
+        const annotateBtn = this.createActionBtn("💬", this.i18n.annotate || "Annotate", () =>
+            this.callbacks.onAnnotate?.(this.memo),
+        );
         const deleteBtn = this.createActionBtn("🗑️", this.i18n.delete, () =>
             this.callbacks.onDelete(this.memo),
         );
@@ -141,12 +150,17 @@ export class MemoItem {
         actions.appendChild(editBtn);
         actions.appendChild(pinBtn);
         actions.appendChild(archiveBtn);
+        actions.appendChild(annotateBtn);
         actions.appendChild(dailyNoteBtn);
         actions.appendChild(deleteBtn);
         footer.appendChild(actions);
 
+        // Annotation links section
+        const annotationLinks = this.createAnnotationLinks();
+
         el.appendChild(header);
         el.appendChild(content);
+        if (annotationLinks) el.appendChild(annotationLinks);
         el.appendChild(footer);
 
         renderMermaidBlocks(el);
@@ -200,6 +214,14 @@ export class MemoItem {
             },
         });
 
+        menu.addItem({
+            iconHTML: "💬",
+            label: this.i18n.annotate || "Annotate",
+            click: () => {
+                this.callbacks.onAnnotate?.(this.memo);
+            },
+        });
+
         menu.addSeparator();
 
         menu.addItem({
@@ -221,6 +243,51 @@ export class MemoItem {
         });
 
         menu.open({ x, y });
+    }
+
+    private createAnnotationLinks(): HTMLElement | null {
+        const hasSource = !!this.memo.annotationOf;
+        const hasAnnotations = this.memo.annotations && this.memo.annotations.length > 0;
+        if (!hasSource && !hasAnnotations) return null;
+
+        const container = document.createElement("div");
+        container.className = "day-memo__annotation-links";
+
+        if (hasSource) {
+            const sourceMemo = this.store.getMemo(this.memo.annotationOf!);
+            const link = document.createElement("a");
+            link.className = "day-memo__annotation-link day-memo__annotation-link--source";
+            link.href = "#";
+            const preview = sourceMemo
+                ? (sourceMemo.content.length > 40 ? sourceMemo.content.substring(0, 40) + "..." : sourceMemo.content)
+                : this.memo.annotationOf!;
+            link.innerHTML = `<span class="day-memo__annotation-link-icon">↩</span><span class="day-memo__annotation-link-label">${this.i18n.viewSource || "View Source"}</span><span class="day-memo__annotation-link-preview">${preview}</span>`;
+            link.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.callbacks.onNavigateToMemo?.(this.memo.annotationOf!);
+            });
+            container.appendChild(link);
+        }
+
+        if (hasAnnotations) {
+            const count = this.memo.annotations!.length;
+            const label = document.createElement("a");
+            label.className = "day-memo__annotation-link day-memo__annotation-link--annotations";
+            label.href = "#";
+            label.innerHTML = `<span class="day-memo__annotation-link-icon">💬</span><span class="day-memo__annotation-link-label">${(this.i18n.annotationCount || "{count} annotations").replace("{count}", String(count))}</span>`;
+            label.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                // Navigate to the first annotation
+                if (this.memo.annotations!.length > 0) {
+                    this.callbacks.onNavigateToMemo?.(this.memo.annotations![0]);
+                }
+            });
+            container.appendChild(label);
+        }
+
+        return container;
     }
 
     private createActionBtn(

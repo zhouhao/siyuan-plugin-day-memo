@@ -96,6 +96,39 @@ export class MemoDataStore {
     return memo;
   }
 
+  createAnnotation(parentId: string, content: string): Memo | null {
+    const parent = this.store.memos.find((m) => m.id === parentId);
+    if (!parent) return null;
+    const now = Date.now();
+    const annotation: Memo = {
+      id: generateId(),
+      content: content.trim(),
+      tags: extractTags(content),
+      pinned: false,
+      archived: false,
+      annotationOf: parentId,
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.store.memos.unshift(annotation);
+    if (!parent.annotations) parent.annotations = [];
+    parent.annotations.push(annotation.id);
+    parent.updatedAt = now;
+    this.persist();
+    this.notify();
+    return annotation;
+  }
+
+  removeAnnotationLink(annotationId: string, parentId: string): void {
+    const parent = this.store.memos.find((m) => m.id === parentId);
+    if (parent && parent.annotations) {
+      parent.annotations = parent.annotations.filter((id) => id !== annotationId);
+      parent.updatedAt = Date.now();
+    }
+    this.persist();
+    this.notify();
+  }
+
   updateMemo(id: string, content: string): Memo | null {
     const memo = this.store.memos.find((m) => m.id === id);
     if (!memo) return null;
@@ -110,6 +143,14 @@ export class MemoDataStore {
   deleteMemo(id: string): boolean {
     const memo = this.store.memos.find((m) => m.id === id);
     if (!memo) return false;
+    // Clean up annotation links
+    if (memo.annotationOf) {
+      const parent = this.store.memos.find((m) => m.id === memo.annotationOf);
+      if (parent && parent.annotations) {
+        parent.annotations = parent.annotations.filter((aid) => aid !== id);
+        parent.updatedAt = Date.now();
+      }
+    }
     memo.deleted = true;
     memo.updatedAt = Date.now();
     this.persist();
