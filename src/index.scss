@@ -999,6 +999,36 @@
     }
 }
 
+/* Templates setting label */
+.day-memo__templates-label {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+
+    > .fn__flex-1:empty {
+        display: none;
+    }
+}
+
+/* Settings section header */
+.day-memo__setting-section-header {
+    margin-bottom: 12px;
+    padding-top: 8px;
+    border-top: 1px solid var(--b3-border-color);
+}
+
+.day-memo__setting-section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--b3-theme-on-surface);
+    margin-bottom: 4px;
+}
+
+.day-memo__setting-section-desc {
+    font-size: 12px;
+    color: var(--b3-theme-on-surface-light);
+    margin-bottom: 4px;
+}
+
 /* Template dropdown */
 .day-memo__editor-actions-left {
     position: relative;

@@ -342,11 +342,20 @@ export default class DayMemoPlugin extends Plugin {
       actionElement: rulesWrapper,
     });
 
+    const templatesHeader = document.createElement("div");
+    templatesHeader.className = "day-memo__setting-section-header";
+    templatesHeader.innerHTML = `<div class="day-memo__setting-section-title">${this.i18n.settingTemplates}</div><div class="day-memo__setting-section-desc">${this.i18n.settingTemplatesDesc}</div>`;
+
+    const templatesWrapper = document.createElement("div");
+    templatesWrapper.style.width = "100%";
+    templatesWrapper.appendChild(templatesHeader);
+    templatesWrapper.appendChild(templatesContainer);
+
     setting.addItem({
-      title: this.i18n.settingTemplates,
-      description: this.i18n.settingTemplatesDesc,
+      title: "",
+      description: "",
       direction: "column",
-      actionElement: templatesContainer,
+      actionElement: templatesWrapper,
     });
 
     setting.open(this.name);
@@ -361,6 +370,12 @@ export default class DayMemoPlugin extends Plugin {
     const labelEl = rulesWrapper.closest(".b3-label");
     if (labelEl) {
       labelEl.classList.add("day-memo__rules-label");
+    }
+
+    // Apply style to the templates wrapper's parent label
+    const templatesLabelEl = templatesWrapper.closest(".b3-label");
+    if (templatesLabelEl) {
+      templatesLabelEl.classList.add("day-memo__templates-label");
     }
   }
 
