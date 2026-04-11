@@ -23,6 +23,7 @@ A lightweight, [Memos](https://github.com/usememos/memos)-inspired quick note-ta
 - **Reminders** — Set a reminder on any memo via the right-click menu; a datetime picker dialog defaults to 10 minutes from now; when the time arrives, you get both a SiYuan in-app notification and a browser system notification
 - **Annotations** — Annotate any memo to create a linked note (similar to Flomo's annotation feature); the annotation and source memo are connected with bidirectional links for easy navigation; annotation previews are displayed inline below the source memo; deleting a memo automatically cleans up all bidirectional annotation links to keep data consistent
 - **Memo Templates** — Define reusable templates in Settings for quick memo creation; click the template button in the editor toolbar to pick from your saved templates and insert the content at cursor position
+- **Tag Trigger** — Automatically create memos from SiYuan blocks that contain a specific tag (default: `#to-memo#`). When you add the trigger tag to any block in SiYuan, the plugin detects it in real time and imports the block content as a new memo (with the trigger tag stripped). Configurable trigger tag name in Settings; duplicates are prevented via block ID tracking
 - **Random Review** — One-click "Random Review" button in the sidebar to revisit random memos in a card-style dialog; browse through a batch of 5, navigate back and forth, or shuffle for a fresh set; edit memos directly in the review dialog (`Ctrl+Enter` to save, `Escape` to cancel) — inspired by Flomo's daily review
 - **Pin & Archive** — Pin important memos to top, archive old ones to reduce clutter
 - **Cloud Sync Safe** — Timestamp-based merge logic with soft-delete tombstones for multi-device sync via SiYuan Cloud
@@ -87,6 +88,10 @@ Open plugin settings (click the gear icon on the DayMemo plugin card in SiYuan's
   - **Content** — The template text to insert
 
   Use the `+` / `-` buttons to add or remove templates. Templates with an empty name or content are ignored. To use a template, click the document icon (📄) in the editor toolbar and select from the dropdown.
+
+- **Tag Trigger** — Toggle to enable/disable automatic memo creation from tagged SiYuan blocks.
+
+- **Trigger Tag** — The tag name used to trigger memo creation (default: `to-memo`). When the plugin detects a block containing `#to-memo#` (SiYuan tag format), it automatically creates a memo from that block's content with the trigger tag removed.
 
 ## Data Storage & Sync
 
