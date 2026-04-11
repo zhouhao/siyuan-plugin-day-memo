@@ -803,6 +803,22 @@
     font-weight: 500;
 }
 
+.day-memo__review-card-editor {
+    display: block;
+    width: 100%;
+    min-height: 120px;
+    max-height: 400px;
+    padding: 16px;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: vertical;
+    box-sizing: border-box;
+    border: none;
+    border-top: 1px solid var(--b3-border-color);
+    font-family: var(--b3-font-family);
+}
+
 .day-memo__review-card-body {
     padding: 16px;
     font-size: 14px;
