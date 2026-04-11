@@ -71,6 +71,8 @@ Open plugin settings (click the gear icon on the DayMemo plugin card in SiYuan's
 
   Go date format tokens: `2006` (year), `01` (month), `02` (day), `15` (hour-24h), `03` (hour-12h), `04` (minute), `05` (second), `PM`/`pm`, `Monday`/`Mon`, `January`/`Jan`.
 
+- **Use Current Date for Daily Note** — When enabled, uses the current system date when adding a memo to Daily Note; when disabled (default), uses the memo's creation date.
+
 - **Enable Regex Replacement** — Toggle switch to enable/disable regex replacement rules when adding memos to Daily Note.
 
 - **Replacement Rules** — A list of regex find-and-replace pairs applied (in order) to memo content before appending to Daily Note. Each rule has:
