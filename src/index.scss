@@ -4,13 +4,13 @@
     height: 100%;
     background-color: var(--b3-theme-background);
     overflow: hidden;
-    --day-memo-secondary-color: color-mix(in srgb, var(--b3-theme-on-surface) 85%, transparent);
+    --day-memo-secondary-color: var(--b3-theme-on-background);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
 .day-memo__dock {
-    --day-memo-secondary-color: color-mix(in srgb, var(--b3-theme-on-surface) 85%, transparent);
+    --day-memo-secondary-color: var(--b3-theme-on-background);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
