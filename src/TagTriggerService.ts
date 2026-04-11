@@ -41,6 +41,10 @@ export class TagTriggerService {
         if (detail.cmd !== "transactions") return;
 
         const triggerTag = "#" + (settings.triggerTag || "to-memo");
+        const triggerPattern = new RegExp(
+            triggerTag.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?=[\\s\\p{P}]|$)",
+            "u",
+        );
 
         for (const tx of detail.data || []) {
             for (const op of tx.doOperations || []) {
@@ -48,7 +52,7 @@ export class TagTriggerService {
                 if (!op.data || !op.id) continue;
 
                 const text = this.extractTextFromDom(op.data);
-                if (!text.includes(triggerTag)) continue;
+                if (!triggerPattern.test(text)) continue;
 
                 this.pendingBlocks.set(op.id, text);
             }
@@ -79,18 +83,17 @@ export class TagTriggerService {
         const settings = this.store.getSettings();
         const triggerTag = "#" + (settings.triggerTag || "to-memo");
         const tagPattern = new RegExp(
-            triggerTag.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\s*",
-            "g",
+            triggerTag.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?=[\\s\\p{P}]|$)\\s*",
+            "gu",
         );
 
         for (const [blockId, rawText] of this.pendingBlocks) {
             const cleanedContent = rawText.replace(tagPattern, "").trim();
             if (!cleanedContent) continue;
 
+            const isUpdate = !!this.store.findBySourceBlockId(blockId);
             const result = this.store.createMemoFromBlock(cleanedContent, blockId);
             if (result) {
-                const existing = this.store.findBySourceBlockId(blockId);
-                const isUpdate = existing && existing.id === result.id && existing.createdAt !== result.createdAt;
                 const msg = isUpdate
                     ? (this.i18n.memoUpdated || "Memo updated")
                     : (this.i18n.tagTriggerCreated || "Memo created from tag");

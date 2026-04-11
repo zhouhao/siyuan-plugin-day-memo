@@ -41,15 +41,17 @@ export default class DayMemoPlugin extends Plugin {
 </symbol>`);
 
     this.store = new MemoDataStore(this);
-    this.store.loadSettings();
-    this.store.load().then(() => {
-      this.reminderService = new ReminderService(this.store, this.i18n);
-      this.tagTriggerService = new TagTriggerService(
-        this,
-        this.store,
-        this.i18n,
-      );
-    });
+    this.store
+      .loadSettings()
+      .then(() => this.store.load())
+      .then(() => {
+        this.reminderService = new ReminderService(this.store, this.i18n);
+        this.tagTriggerService = new TagTriggerService(
+          this,
+          this.store,
+          this.i18n,
+        );
+      });
 
     const plugin = this;
     this.addTab({

@@ -16,3 +16,4 @@ i18n/
 bun.lock
 
 .output.txt
+package-lock.json
