@@ -1,56 +1,63 @@
 export interface Memo {
-    id: string;
-    content: string;
-    tags: string[];
-    pinned: boolean;
-    archived: boolean;
-    deleted?: boolean;
-    reminderAt?: number;
-    annotationOf?: string;
-    annotations?: string[];
-    createdAt: number;
-    updatedAt: number;
+  id: string;
+  content: string;
+  tags: string[];
+  pinned: boolean;
+  archived: boolean;
+  deleted?: boolean;
+  reminderAt?: number;
+  annotationOf?: string;
+  annotations?: string[];
+  createdAt: number;
+  updatedAt: number;
 }
 
 export interface MemoStore {
-    memos: Memo[];
-    version: number;
+  memos: Memo[];
+  version: number;
 }
 
 export type MemoFilter = "all" | "pinned" | "archived";
 
 export interface FilterState {
-    filter: MemoFilter;
-    searchQuery: string;
-    selectedTag: string | null;
-    selectedDate: string | null;
-    showArchived: boolean;
+  filter: MemoFilter;
+  searchQuery: string;
+  selectedTag: string | null;
+  selectedDate: string | null;
+  showArchived: boolean;
 }
 
 export interface TagTreeNode {
-    name: string;
-    fullPath: string;
-    count: number;
-    children: TagTreeNode[];
+  name: string;
+  fullPath: string;
+  count: number;
+  children: TagTreeNode[];
 }
 
 export interface ReplacementRule {
-    match: string;
-    replace: string;
+  match: string;
+  replace: string;
+}
+
+export interface MemoTemplate {
+  id: string;
+  name: string;
+  content: string;
 }
 
 export interface PluginSettings {
-    dailyNotePathTemplate: string;
-    enableReplacementRules?: boolean;
-    replacementRules?: ReplacementRule[];
-    useCurrentDateForDailyNote?: boolean;
+  dailyNotePathTemplate: string;
+  enableReplacementRules?: boolean;
+  replacementRules?: ReplacementRule[];
+  useCurrentDateForDailyNote?: boolean;
+  templates?: MemoTemplate[];
 }
 
 export const DEFAULT_SETTINGS: PluginSettings = {
-    dailyNotePathTemplate: "",
-    enableReplacementRules: false,
-    replacementRules: [{ match: "^#任务 ", replace: "- [ ] " }],
-    useCurrentDateForDailyNote: false,
+  dailyNotePathTemplate: "",
+  enableReplacementRules: false,
+  replacementRules: [{ match: "^#任务 ", replace: "- [ ] " }],
+  useCurrentDateForDailyNote: false,
 };
 
 export const STORAGE_MEMOS = "memos-data";

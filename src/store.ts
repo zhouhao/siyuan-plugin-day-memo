@@ -2,6 +2,7 @@ import type { Plugin } from "siyuan";
 import {
   Memo,
   MemoStore,
+  MemoTemplate,
   STORAGE_MEMOS,
   STORAGE_SETTINGS,
   FilterState,
@@ -122,7 +123,9 @@ export class MemoDataStore {
   removeAnnotationLink(annotationId: string, parentId: string): void {
     const parent = this.store.memos.find((m) => m.id === parentId);
     if (parent && parent.annotations) {
-      parent.annotations = parent.annotations.filter((id) => id !== annotationId);
+      parent.annotations = parent.annotations.filter(
+        (id) => id !== annotationId,
+      );
       parent.updatedAt = Date.now();
     }
     this.persist();
@@ -399,5 +402,9 @@ export class MemoDataStore {
 
   getSettings(): PluginSettings {
     return { ...this.settings };
+  }
+
+  getTemplates(): MemoTemplate[] {
+    return this.settings.templates ? [...this.settings.templates] : [];
   }
 }

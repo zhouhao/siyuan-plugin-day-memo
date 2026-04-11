@@ -91,5 +91,11 @@
   "annotationPlaceholder": "写下你的标注...",
   "viewAnnotations": "查看标注",
   "viewSource": "查看原文",
-  "annotationCount": "{count} 条标注"
+  "annotationCount": "{count} 条标注",
+  "templateBtn": "使用模板",
+  "noTemplates": "暂无模板，请在设置中添加模板。",
+  "settingTemplates": "便签模板",
+  "settingTemplatesDesc": "定义可复用的模板，快速创建便签",
+  "templateNamePlaceholder": "模板名称",
+  "templateContentPlaceholder": "模板内容"
 }
