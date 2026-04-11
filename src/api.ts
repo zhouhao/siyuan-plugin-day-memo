@@ -1,5 +1,5 @@
 import { fetchPost } from "siyuan";
-import { renderDailyNotePath } from "./utils";
+import { renderDailyNotePath, convertTagsToSiYuanFormat } from "./utils";
 
 /**
  * Wrapper for SiYuan kernel API calls.
@@ -143,6 +143,7 @@ export async function addToDailyNote(
     }
   }
 
+  processedMemoContent = convertTagsToSiYuanFormat(processedMemoContent);
   const content = `> ${sourceLabel}\n\n${processedMemoContent}`;
   await appendBlock(docId, content);
 }
