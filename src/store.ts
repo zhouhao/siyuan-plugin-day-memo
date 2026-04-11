@@ -46,7 +46,10 @@ export class MemoDataStore {
       };
       return;
     }
-    this.store.memos = this.mergeMemos(this.store.memos, remoteMemos);
+    this.store = {
+      ...this.store,
+      memos: this.mergeMemos(this.store.memos, remoteMemos),
+    };
   }
 
   private mergeMemos(local: Memo[], remote: Memo[]): Memo[] {
@@ -63,6 +66,21 @@ export class MemoDataStore {
     return Array.from(merged.values())
       .filter((m) => !m.deleted)
       .sort((a, b) => b.createdAt - a.createdAt);
+  }
+
+  private findById(id: string): Memo | undefined {
+    return this.store.memos.find((m) => m.id === id);
+  }
+
+  private replaceMemo(id: string, updater: (memo: Memo) => Memo): Memo | null {
+    const memo = this.findById(id);
+    if (!memo) return null;
+    const updated = updater(memo);
+    this.store = {
+      ...this.store,
+      memos: this.store.memos.map((m) => (m.id === id ? updated : m)),
+    };
+    return updated;
   }
 
   private async persist(): Promise<void> {
@@ -91,14 +109,17 @@ export class MemoDataStore {
       createdAt: now,
       updatedAt: now,
     };
-    this.store.memos.unshift(memo);
+    this.store = {
+      ...this.store,
+      memos: [memo, ...this.store.memos],
+    };
     this.persist();
     this.notify();
     return memo;
   }
 
   createAnnotation(parentId: string, content: string): Memo | null {
-    const parent = this.store.memos.find((m) => m.id === parentId);
+    const parent = this.findById(parentId);
     if (!parent) return null;
     const now = Date.now();
     const annotation: Memo = {
@@ -111,105 +132,136 @@ export class MemoDataStore {
       createdAt: now,
       updatedAt: now,
     };
-    this.store.memos.unshift(annotation);
-    if (!parent.annotations) parent.annotations = [];
-    parent.annotations.push(annotation.id);
-    parent.updatedAt = now;
+    const updatedParent: Memo = {
+      ...parent,
+      annotations: [...(parent.annotations || []), annotation.id],
+      updatedAt: now,
+    };
+    this.store = {
+      ...this.store,
+      memos: [annotation, ...this.store.memos.map((m) =>
+        m.id === parentId ? updatedParent : m,
+      )],
+    };
     this.persist();
     this.notify();
     return annotation;
   }
 
   removeAnnotationLink(annotationId: string, parentId: string): void {
-    const parent = this.store.memos.find((m) => m.id === parentId);
-    if (parent && parent.annotations) {
-      parent.annotations = parent.annotations.filter(
+    const now = Date.now();
+    this.replaceMemo(parentId, (parent) => ({
+      ...parent,
+      annotations: (parent.annotations || []).filter(
         (id) => id !== annotationId,
-      );
-      parent.updatedAt = Date.now();
-    }
+      ),
+      updatedAt: now,
+    }));
     this.persist();
     this.notify();
   }
 
   updateMemo(id: string, content: string): Memo | null {
-    const memo = this.store.memos.find((m) => m.id === id);
-    if (!memo) return null;
-    memo.content = content.trim();
-    memo.tags = extractTags(content);
-    memo.updatedAt = Date.now();
+    const result = this.replaceMemo(id, (memo) => ({
+      ...memo,
+      content: content.trim(),
+      tags: extractTags(content),
+      updatedAt: Date.now(),
+    }));
+    if (!result) return null;
     this.persist();
     this.notify();
-    return memo;
+    return result;
   }
 
   deleteMemo(id: string): boolean {
-    const memo = this.store.memos.find((m) => m.id === id);
+    const memo = this.findById(id);
     if (!memo) return false;
-    // Clean up annotation links
+
+    const now = Date.now();
+    let memos = this.store.memos;
+
+    // Clean up annotation links: remove this memo from parent's annotations list
     if (memo.annotationOf) {
-      const parent = this.store.memos.find((m) => m.id === memo.annotationOf);
-      if (parent && parent.annotations) {
-        parent.annotations = parent.annotations.filter((aid) => aid !== id);
-        parent.updatedAt = Date.now();
-      }
+      memos = memos.map((m) =>
+        m.id === memo.annotationOf
+          ? {
+              ...m,
+              annotations: (m.annotations || []).filter((aid) => aid !== id),
+              updatedAt: now,
+            }
+          : m,
+      );
     }
+
     // Clean up child annotations' back-references when deleting a parent memo
     if (memo.annotations && memo.annotations.length > 0) {
-      for (const aid of memo.annotations) {
-        const child = this.store.memos.find((m) => m.id === aid);
-        if (child && child.annotationOf === id) {
-          delete child.annotationOf;
-          child.updatedAt = Date.now();
-        }
-      }
+      const childIds = new Set(memo.annotations);
+      memos = memos.map((m) =>
+        childIds.has(m.id) && m.annotationOf === id
+          ? { ...m, annotationOf: undefined, updatedAt: now }
+          : m,
+      );
     }
-    memo.deleted = true;
-    memo.updatedAt = Date.now();
+
+    // Soft-delete the memo, then filter out deleted
+    memos = memos
+      .map((m) =>
+        m.id === id ? { ...m, deleted: true, updatedAt: now } : m,
+      )
+      .filter((m) => !m.deleted);
+
+    this.store = { ...this.store, memos };
     this.persist();
-    this.store.memos = this.store.memos.filter((m) => !m.deleted);
     this.notify();
     return true;
   }
 
   togglePin(id: string): Memo | null {
-    const memo = this.store.memos.find((m) => m.id === id);
-    if (!memo) return null;
-    memo.pinned = !memo.pinned;
-    memo.updatedAt = Date.now();
+    const result = this.replaceMemo(id, (memo) => ({
+      ...memo,
+      pinned: !memo.pinned,
+      updatedAt: Date.now(),
+    }));
+    if (!result) return null;
     this.persist();
     this.notify();
-    return memo;
+    return result;
   }
 
   toggleArchive(id: string): Memo | null {
-    const memo = this.store.memos.find((m) => m.id === id);
-    if (!memo) return null;
-    memo.archived = !memo.archived;
-    memo.updatedAt = Date.now();
+    const result = this.replaceMemo(id, (memo) => ({
+      ...memo,
+      archived: !memo.archived,
+      updatedAt: Date.now(),
+    }));
+    if (!result) return null;
     this.persist();
     this.notify();
-    return memo;
+    return result;
   }
 
   setReminder(id: string, reminderAt: number): Memo | null {
-    const memo = this.store.memos.find((m) => m.id === id);
-    if (!memo) return null;
-    memo.reminderAt = reminderAt;
-    memo.updatedAt = Date.now();
+    const result = this.replaceMemo(id, (memo) => ({
+      ...memo,
+      reminderAt,
+      updatedAt: Date.now(),
+    }));
+    if (!result) return null;
     this.persist();
     this.notify();
-    return memo;
+    return result;
   }
 
   clearReminder(id: string): Memo | null {
-    const memo = this.store.memos.find((m) => m.id === id);
-    if (!memo) return null;
-    delete memo.reminderAt;
-    memo.updatedAt = Date.now();
+    const result = this.replaceMemo(id, (memo) => {
+      const { reminderAt: _, ...rest } = memo;
+      return { ...rest, updatedAt: Date.now() };
+    });
+    if (!result) return null;
     this.persist();
     this.notify();
-    return memo;
+    return result;
   }
 
   getAllMemos(): Memo[] {
@@ -217,7 +269,7 @@ export class MemoDataStore {
   }
 
   getMemo(id: string): Memo | undefined {
-    return this.store.memos.find((m) => m.id === id);
+    return this.findById(id);
   }
 
   getFilteredMemos(): Memo[] {
@@ -325,27 +377,27 @@ export class MemoDataStore {
   }
 
   setFilter(filter: MemoFilter): void {
-    this.filterState.filter = filter;
+    this.filterState = { ...this.filterState, filter };
     this.notify();
   }
 
   setSearchQuery(query: string): void {
-    this.filterState.searchQuery = query;
+    this.filterState = { ...this.filterState, searchQuery: query };
     this.notify();
   }
 
   setSelectedTag(tag: string | null): void {
-    this.filterState.selectedTag = tag;
+    this.filterState = { ...this.filterState, selectedTag: tag };
     this.notify();
   }
 
   setSelectedDate(date: string | null): void {
-    this.filterState.selectedDate = date;
+    this.filterState = { ...this.filterState, selectedDate: date };
     this.notify();
   }
 
   setShowArchived(show: boolean): void {
-    this.filterState.showArchived = show;
+    this.filterState = { ...this.filterState, showArchived: show };
     this.notify();
   }
 
