@@ -8,6 +8,7 @@ export interface Memo {
   reminderAt?: number;
   annotationOf?: string;
   annotations?: string[];
+  sourceBlockId?: string;
   createdAt: number;
   updatedAt: number;
 }
@@ -51,6 +52,8 @@ export interface PluginSettings {
   replacementRules?: ReplacementRule[];
   useCurrentDateForDailyNote?: boolean;
   templates?: MemoTemplate[];
+  tagTriggerEnabled?: boolean;
+  triggerTag?: string;
 }
 
 export const DEFAULT_SETTINGS: PluginSettings = {
@@ -58,6 +61,8 @@ export const DEFAULT_SETTINGS: PluginSettings = {
   enableReplacementRules: false,
   replacementRules: [{ match: "^#任务 ", replace: "- [ ] " }],
   useCurrentDateForDailyNote: false,
+  tagTriggerEnabled: false,
+  triggerTag: "to-memo",
 };
 
 export const STORAGE_MEMOS = "memos-data";

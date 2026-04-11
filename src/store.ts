@@ -139,9 +139,10 @@ export class MemoDataStore {
     };
     this.store = {
       ...this.store,
-      memos: [annotation, ...this.store.memos.map((m) =>
-        m.id === parentId ? updatedParent : m,
-      )],
+      memos: [
+        annotation,
+        ...this.store.memos.map((m) => (m.id === parentId ? updatedParent : m)),
+      ],
     };
     this.persist();
     this.notify();
@@ -206,9 +207,7 @@ export class MemoDataStore {
 
     // Soft-delete the memo, then filter out deleted
     memos = memos
-      .map((m) =>
-        m.id === id ? { ...m, deleted: true, updatedAt: now } : m,
-      )
+      .map((m) => (m.id === id ? { ...m, deleted: true, updatedAt: now } : m))
       .filter((m) => !m.deleted);
 
     this.store = { ...this.store, memos };
@@ -458,5 +457,34 @@ export class MemoDataStore {
 
   getTemplates(): MemoTemplate[] {
     return this.settings.templates ? [...this.settings.templates] : [];
+  }
+
+  findBySourceBlockId(blockId: string): Memo | undefined {
+    return this.store.memos.find((m) => m.sourceBlockId === blockId);
+  }
+
+  createMemoFromBlock(content: string, sourceBlockId: string): Memo | null {
+    const existing = this.findBySourceBlockId(sourceBlockId);
+    if (existing) {
+      return this.updateMemo(existing.id, content);
+    }
+    const now = Date.now();
+    const memo: Memo = {
+      id: generateId(),
+      content: content.trim(),
+      tags: extractTags(content),
+      pinned: false,
+      archived: false,
+      sourceBlockId,
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.store = {
+      ...this.store,
+      memos: [memo, ...this.store.memos],
+    };
+    this.persist();
+    this.notify();
+    return memo;
   }
 }
