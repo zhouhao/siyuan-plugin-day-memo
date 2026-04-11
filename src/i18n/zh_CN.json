@@ -97,5 +97,10 @@
   "settingTemplates": "便签模板",
   "settingTemplatesDesc": "定义可复用的模板，快速创建便签",
   "templateNamePlaceholder": "模板名称",
-  "templateContentPlaceholder": "模板内容"
+  "templateContentPlaceholder": "模板内容",
+  "settingTagTriggerEnabled": "标签触发",
+  "settingTagTriggerEnabledDesc": "在思源笔记中使用指定标签时，自动创建便签",
+  "settingTriggerTag": "触发标签",
+  "settingTriggerTagDesc": "触发创建便签的标签名称（不含 #）",
+  "tagTriggerCreated": "已通过标签自动创建便签"
 }

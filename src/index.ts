@@ -18,6 +18,7 @@ import {
 import { generateId } from "./utils";
 import { MemoDataStore } from "./store";
 import { ReminderService } from "./ReminderService";
+import { TagTriggerService } from "./TagTriggerService";
 import { TabPanel } from "./components/TabPanel";
 import { DockPanel } from "./components/DockPanel";
 
@@ -27,6 +28,7 @@ export default class DayMemoPlugin extends Plugin {
   private tabPanel: TabPanel | null = null;
   private dockPanel: DockPanel | null = null;
   private reminderService: ReminderService | null = null;
+  private tagTriggerService: TagTriggerService | null = null;
 
   onload(): void {
     const frontEnd = getFrontend();
@@ -42,6 +44,11 @@ export default class DayMemoPlugin extends Plugin {
     this.store.loadSettings();
     this.store.load().then(() => {
       this.reminderService = new ReminderService(this.store, this.i18n);
+      this.tagTriggerService = new TagTriggerService(
+        this,
+        this.store,
+        this.i18n,
+      );
     });
 
     const plugin = this;
@@ -107,6 +114,7 @@ export default class DayMemoPlugin extends Plugin {
 
   onunload(): void {
     this.reminderService?.destroy();
+    this.tagTriggerService?.destroy();
     this.tabPanel?.destroy();
   }
 
@@ -282,6 +290,17 @@ export default class DayMemoPlugin extends Plugin {
 
     renderTemplates(currentSettings.templates || []);
 
+    const tagTriggerEnabledInput = document.createElement("input");
+    tagTriggerEnabledInput.className = "b3-switch fn__flex-center";
+    tagTriggerEnabledInput.type = "checkbox";
+    tagTriggerEnabledInput.checked = !!currentSettings.tagTriggerEnabled;
+
+    const triggerTagInput = document.createElement("input");
+    triggerTagInput.className = "b3-text-field";
+    triggerTagInput.style.width = "200px";
+    triggerTagInput.placeholder = "to-memo";
+    triggerTagInput.value = currentSettings.triggerTag || "to-memo";
+
     const setting = new Setting({
       confirmCallback: () => {
         const newSettings: PluginSettings = {
@@ -297,6 +316,9 @@ export default class DayMemoPlugin extends Plugin {
           templates: getTemplateFns
             .map((fn) => fn())
             .filter((t) => t.name.trim() && t.content.trim()),
+          tagTriggerEnabled: tagTriggerEnabledInput.checked,
+          triggerTag:
+            triggerTagInput.value.trim().replace(/^#/, "") || "to-memo",
         };
         this.store.saveSettings(newSettings);
         showMessage(this.i18n.settingsSaved);
@@ -333,6 +355,20 @@ export default class DayMemoPlugin extends Plugin {
       description: "",
       direction: "column",
       actionElement: rulesWrapper,
+    });
+
+    setting.addItem({
+      title: this.i18n.settingTagTriggerEnabled,
+      description: this.i18n.settingTagTriggerEnabledDesc,
+      direction: "row",
+      actionElement: tagTriggerEnabledInput,
+    });
+
+    setting.addItem({
+      title: this.i18n.settingTriggerTag,
+      description: this.i18n.settingTriggerTagDesc,
+      direction: "row",
+      actionElement: triggerTagInput,
     });
 
     const templatesHeader = document.createElement("div");

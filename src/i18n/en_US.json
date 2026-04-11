@@ -97,5 +97,10 @@
   "settingTemplates": "Memo Templates",
   "settingTemplatesDesc": "Define reusable templates for quick memo creation",
   "templateNamePlaceholder": "Template name",
-  "templateContentPlaceholder": "Template content"
+  "templateContentPlaceholder": "Template content",
+  "settingTagTriggerEnabled": "Tag Trigger",
+  "settingTagTriggerEnabledDesc": "Automatically create a memo when a block in SiYuan contains the trigger tag",
+  "settingTriggerTag": "Trigger Tag",
+  "settingTriggerTagDesc": "The tag name (without #) that triggers memo creation",
+  "tagTriggerCreated": "Memo created from tag"
 }
