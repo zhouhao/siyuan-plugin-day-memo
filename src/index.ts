@@ -328,13 +328,6 @@ export default class DayMemoPlugin extends Plugin {
     rulesWrapper.style.width = "100%";
     rulesWrapper.appendChild(rulesContainer);
 
-    const divider = document.createElement("div");
-    divider.style.borderBottom =
-      "2px dotted var(--b3-border-color, rgba(128,128,128,0.3))";
-    divider.style.margin = "12px 0 4px 0";
-    divider.style.width = "100%";
-    rulesWrapper.appendChild(divider);
-
     setting.addItem({
       title: "",
       description: "",
