@@ -43,12 +43,14 @@ export interface PluginSettings {
     dailyNotePathTemplate: string;
     enableReplacementRules?: boolean;
     replacementRules?: ReplacementRule[];
+    useCurrentDateForDailyNote?: boolean;
 }
 
 export const DEFAULT_SETTINGS: PluginSettings = {
     dailyNotePathTemplate: "",
     enableReplacementRules: false,
     replacementRules: [{ match: "^#任务 ", replace: "- [ ] " }],
+    useCurrentDateForDailyNote: false,
 };
 
 export const STORAGE_MEMOS = "memos-data";

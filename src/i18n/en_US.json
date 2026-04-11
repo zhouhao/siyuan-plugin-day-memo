@@ -74,6 +74,8 @@
   "settingsSaved": "Settings saved",
   "settingEnableReplacementRules": "Enable Regex Replacement",
   "settingEnableReplacementRulesDesc": "When enabled, memo content will be auto-replaced according to the rules below before adding to Daily Note",
+  "settingUseCurrentDate": "Use Current Date for Daily Note",
+  "settingUseCurrentDateDesc": "When enabled, uses the current system date; when disabled, uses the memo's creation date",
   "replacementMatchPlaceholder": "Match pattern (regex, e.g. ^#task )",
   "replacementReplacePlaceholder": "Replacement text (e.g. - [ ] )",
   "randomReview": "Random Review",

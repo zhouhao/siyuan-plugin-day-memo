@@ -117,6 +117,11 @@ export default class DayMemoPlugin extends Plugin {
         pathInput.placeholder = this.i18n.settingDailyNotePathPlaceholder;
         pathInput.value = currentSettings.dailyNotePathTemplate;
 
+        const useCurrentDateInput = document.createElement("input");
+        useCurrentDateInput.className = "b3-switch fn__flex-center";
+        useCurrentDateInput.type = "checkbox";
+        useCurrentDateInput.checked = !!currentSettings.useCurrentDateForDailyNote;
+
         const enableRulesInput = document.createElement("input");
         enableRulesInput.className = "b3-switch fn__flex-center";
         enableRulesInput.type = "checkbox";
@@ -191,6 +196,7 @@ export default class DayMemoPlugin extends Plugin {
             confirmCallback: () => {
                 const newSettings: PluginSettings = {
                     dailyNotePathTemplate: pathInput.value.trim(),
+                    useCurrentDateForDailyNote: useCurrentDateInput.checked,
                     enableReplacementRules: enableRulesInput.checked,
                     replacementRules: getRulesFns.map(fn => ({
                         match: fn().match.trim(),
@@ -207,6 +213,13 @@ export default class DayMemoPlugin extends Plugin {
             description: this.i18n.settingDailyNotePathDesc,
             direction: "column",
             actionElement: pathInput,
+        });
+
+        setting.addItem({
+            title: this.i18n.settingUseCurrentDate,
+            description: this.i18n.settingUseCurrentDateDesc,
+            direction: "row",
+            actionElement: useCurrentDateInput,
         });
 
         setting.addItem({
