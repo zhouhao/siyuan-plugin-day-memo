@@ -211,7 +211,7 @@ export default class DayMemoPlugin extends Plugin {
         setting.addItem({
             title: this.i18n.settingDailyNotePath,
             description: this.i18n.settingDailyNotePathDesc,
-            direction: "column",
+            direction: "row",
             actionElement: pathInput,
         });
 
@@ -247,6 +247,12 @@ export default class DayMemoPlugin extends Plugin {
         });
 
         setting.open(this.name);
+
+        // Remove left/right padding from the Daily Note path setting
+        const pathLabelEl = pathInput.closest(".b3-label");
+        if (pathLabelEl) {
+            pathLabelEl.classList.add("day-memo__path-label");
+        }
 
         // Apply compact style to the rules wrapper's parent label via CSS class
         const labelEl = rulesWrapper.closest(".b3-label");

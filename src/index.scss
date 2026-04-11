@@ -967,6 +967,12 @@
     }
 }
 
+/* Remove left/right padding for Daily Note path setting */
+.day-memo__path-label {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
 /* Compact style for replacement-rules setting label */
 .day-memo__rules-label {
     margin-top: -12px !important;
