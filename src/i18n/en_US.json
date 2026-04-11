@@ -91,5 +91,11 @@
   "annotationPlaceholder": "Write your annotation...",
   "viewAnnotations": "View Annotations",
   "viewSource": "View Source",
-  "annotationCount": "{count} annotations"
+  "annotationCount": "{count} annotations",
+  "templateBtn": "Use template",
+  "noTemplates": "No templates yet. Add templates in Settings.",
+  "settingTemplates": "Memo Templates",
+  "settingTemplatesDesc": "Define reusable templates for quick memo creation",
+  "templateNamePlaceholder": "Template name",
+  "templateContentPlaceholder": "Template content"
 }
