@@ -583,7 +583,7 @@
 .day-memo__item-content {
     font-size: 15px;
     line-height: 1.6;
-    color: var(--b3-theme-on-surface);
+    color: var(--b3-theme-on-background);
     word-break: break-word;
     overflow-wrap: break-word;
     user-select: text;
@@ -832,7 +832,7 @@
     padding: 16px;
     font-size: 15px;
     line-height: 1.6;
-    color: var(--b3-theme-on-surface);
+    color: var(--b3-theme-on-background);
     word-break: break-word;
     overflow-wrap: break-word;
     max-height: 400px;
