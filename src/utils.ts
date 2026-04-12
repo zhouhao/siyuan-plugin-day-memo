@@ -9,11 +9,11 @@ export function generateId(): string {
 
 /**
  * Convert memo tags from `#tag` format to SiYuan's `#tag#` format.
- * Skips tags that already have a trailing `#`.
+ * Tags already in `#tag#` format are left unchanged.
  */
 export function convertTagsToSiYuanFormat(content: string): string {
   return content.replace(
-    /#([\w\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff-]+(?:\/[\w\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff-]+)*)(?!#)/g,
+    /#([\w\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff-]+(?:\/[\w\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff-]+)*)#?/g,
     "#$1#",
   );
 }

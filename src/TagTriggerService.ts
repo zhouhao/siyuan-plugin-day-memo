@@ -77,7 +77,23 @@ export class TagTriggerService {
   private extractTextFromDom(domString: string): string {
     const parser = new DOMParser();
     const doc = parser.parseFromString(domString, "text/html");
-    return doc.body.textContent || "";
+    // SiYuan stores tags as: #<span data-type="tag">tagname</span>#
+    // The # delimiters are text nodes around the span.
+    // We strip surrounding # from text nodes and replace the span with #tagname
+    // to ensure tags always end up as #tagname in the extracted text.
+    doc.querySelectorAll('span[data-type="tag"]').forEach((el) => {
+      const tagText = el.textContent || "";
+      const prev = el.previousSibling;
+      if (prev && prev.nodeType === 3 && prev.textContent?.endsWith("#")) {
+        prev.textContent = prev.textContent.slice(0, -1);
+      }
+      const next = el.nextSibling;
+      if (next && next.nodeType === 3 && next.textContent?.startsWith("#")) {
+        next.textContent = next.textContent.slice(1);
+      }
+      el.textContent = `#${tagText}`;
+    });
+    return (doc.body.textContent || "").replace(/\u200b/g, "");
   }
 
   private scheduleProcess(): void {
@@ -99,6 +115,7 @@ export class TagTriggerService {
 
     for (const [blockId, rawText] of this.pendingBlocks) {
       const cleanedContent = rawText.replace(tagPattern, "").trim();
+      console.log("[DayMemo] Note text", rawText, " vs ", cleanedContent);
       if (!cleanedContent) continue;
 
       const result = this.store.createMemoFromBlock(cleanedContent, blockId);
