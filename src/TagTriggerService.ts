@@ -115,7 +115,6 @@ export class TagTriggerService {
 
     for (const [blockId, rawText] of this.pendingBlocks) {
       const cleanedContent = rawText.replace(tagPattern, "").trim();
-      console.log("[DayMemo] Note text", rawText, " vs ", cleanedContent);
       if (!cleanedContent) continue;
 
       const result = this.store.createMemoFromBlock(cleanedContent, blockId);
