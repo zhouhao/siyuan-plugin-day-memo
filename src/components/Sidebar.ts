@@ -76,7 +76,8 @@ export class Sidebar {
     this.container.appendChild(heatmapSection);
 
     const tagSection = document.createElement("div");
-    tagSection.className = "day-memo__sidebar-section";
+    tagSection.className =
+      "day-memo__sidebar-section day-memo__sidebar-section--tags";
 
     const tagContainer = document.createElement("div");
     tagSection.appendChild(tagContainer);

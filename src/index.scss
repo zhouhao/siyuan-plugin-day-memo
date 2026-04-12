@@ -19,8 +19,9 @@
     width: 240px;
     min-width: 200px;
     border-right: 1px solid var(--b3-border-color);
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
     flex-shrink: 0;
 }
 
@@ -45,6 +46,8 @@
     flex-direction: column;
     padding: 12px;
     gap: 16px;
+    height: 100%;
+    overflow: hidden;
 }
 
 .day-memo__sidebar-search {
@@ -57,6 +60,13 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+    flex-shrink: 0;
+
+    &--tags {
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+    }
 }
 
 .day-memo__sidebar-section-header {
@@ -436,6 +446,9 @@
 
 .day-memo__tag-list {
     padding: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
 }
 
 .day-memo__tag-list-header {
