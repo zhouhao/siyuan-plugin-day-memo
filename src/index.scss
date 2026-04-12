@@ -787,6 +787,8 @@
 /* Random Review button */
 .day-memo__sidebar-review {
     margin-top: auto;
+    flex-shrink: 0;
+    padding-bottom: 20px;
 }
 
 .day-memo__review-btn {
