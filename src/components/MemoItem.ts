@@ -162,11 +162,6 @@ export class MemoItem {
       this.i18n.annotate || "Annotate",
       () => this.callbacks.onAnnotate?.(this.memo),
     );
-    const flomoBtn = this.createActionBtn(
-      "🌿",
-      this.i18n.sendToFlomo || "Send to flomo",
-      () => this.callbacks.onSendToFlomo?.(this.memo),
-    );
     const deleteBtn = this.createActionBtn("🗑️", this.i18n.delete, () =>
       this.callbacks.onDelete(this.memo),
     );
@@ -177,7 +172,14 @@ export class MemoItem {
     actions.appendChild(archiveBtn);
     actions.appendChild(annotateBtn);
     actions.appendChild(dailyNoteBtn);
-    actions.appendChild(flomoBtn);
+    if (this.store.getSettings().flomoSyncEnabled) {
+      const flomoBtn = this.createActionBtn(
+        "🌿",
+        this.i18n.sendToFlomo || "Send to flomo",
+        () => this.callbacks.onSendToFlomo?.(this.memo),
+      );
+      actions.appendChild(flomoBtn);
+    }
     actions.appendChild(deleteBtn);
     footer.appendChild(actions);
 
@@ -249,13 +251,15 @@ export class MemoItem {
       },
     });
 
-    menu.addItem({
-      icon: "iconCloud",
-      label: this.i18n.sendToFlomo || "Send to flomo",
-      click: () => {
-        this.callbacks.onSendToFlomo?.(this.memo);
-      },
-    });
+    if (this.store.getSettings().flomoSyncEnabled) {
+      menu.addItem({
+        icon: "iconCloud",
+        label: this.i18n.sendToFlomo || "Send to flomo",
+        click: () => {
+          this.callbacks.onSendToFlomo?.(this.memo);
+        },
+      });
+    }
 
     menu.addSeparator();
 
