@@ -9,6 +9,7 @@ import { showReminderDialog } from "./ReminderDialog";
 import {
   handleDelete,
   handleAddToDailyNote,
+  handleSendToFlomo,
   navigateToMemo,
 } from "./panelActions";
 
@@ -94,6 +95,8 @@ export class TabPanel {
       },
       onAddToDailyNote: (memo: Memo) =>
         handleAddToDailyNote(memo, this.store, this.i18n),
+      onSendToFlomo: (memo: Memo) =>
+        handleSendToFlomo(memo, this.store, this.i18n),
       onSetReminder: (memo: Memo) =>
         showReminderDialog(memo, this.store, this.i18n),
       onAnnotate: (memo: Memo) => this.editor.startAnnotation(memo),

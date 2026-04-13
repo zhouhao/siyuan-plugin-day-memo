@@ -149,6 +149,28 @@ export async function addToDailyNote(
 }
 
 /**
+ * Send a memo's content to flomo via webhook API.
+ * Requires a valid flomo PRO webhook URL.
+ */
+export async function sendToFlomo(
+  webhookUrl: string,
+  content: string,
+): Promise<void> {
+  const response = await fetch(webhookUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ content }),
+  });
+  if (!response.ok) {
+    throw new Error(`Flomo API error: ${response.status}`);
+  }
+  const result = await response.json();
+  if (result.code !== 0) {
+    throw new Error(result.message || "Failed to send to flomo");
+  }
+}
+
+/**
  * Upload asset files to SiYuan's assets directory.
  * Uses /api/asset/upload (multipart/form-data).
  * Returns a map of original filename → uploaded asset path.

@@ -1,7 +1,7 @@
 import { confirm, showMessage } from "siyuan";
 import { MemoDataStore } from "../store";
 import { Memo } from "../types";
-import { addToDailyNote } from "../api";
+import { addToDailyNote, sendToFlomo } from "../api";
 
 export function handleDelete(
   memo: Memo,
@@ -39,6 +39,24 @@ export async function handleAddToDailyNote(
   }
 }
 
+export async function handleSendToFlomo(
+  memo: Memo,
+  store: MemoDataStore,
+  i18n: Record<string, string>,
+): Promise<void> {
+  const settings = store.getSettings();
+  if (!settings.flomoSyncEnabled || !settings.flomoWebhookUrl) {
+    showMessage(i18n.flomoNotConfigured);
+    return;
+  }
+  try {
+    await sendToFlomo(settings.flomoWebhookUrl, memo.content);
+    showMessage(i18n.flomoSentSuccess);
+  } catch {
+    showMessage(i18n.flomoSentFailed);
+  }
+}
+
 export function navigateToMemo(
   memoId: string,
   listContainer: HTMLElement,
@@ -49,9 +67,6 @@ export function navigateToMemo(
   if (el) {
     el.scrollIntoView({ behavior: "smooth", block: "center" });
     el.classList.add("day-memo__item--highlight");
-    setTimeout(
-      () => el.classList.remove("day-memo__item--highlight"),
-      2000,
-    );
+    setTimeout(() => el.classList.remove("day-memo__item--highlight"), 2000);
   }
 }

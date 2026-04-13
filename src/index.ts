@@ -301,6 +301,19 @@ export default class DayMemoPlugin extends Plugin {
     triggerTagInput.placeholder = "to-memo";
     triggerTagInput.value = currentSettings.triggerTag || "to-memo";
 
+    const flomoSyncEnabledInput = document.createElement("input");
+    flomoSyncEnabledInput.className = "b3-switch fn__flex-center";
+    flomoSyncEnabledInput.type = "checkbox";
+    flomoSyncEnabledInput.checked = !!currentSettings.flomoSyncEnabled;
+
+    const flomoWebhookUrlInput = document.createElement("input");
+    flomoWebhookUrlInput.className = "b3-text-field";
+    flomoWebhookUrlInput.style.width = "360px";
+    flomoWebhookUrlInput.type = "password";
+    flomoWebhookUrlInput.placeholder =
+      "https://flomoapp.com/mine?source=incoming_webhook&api_key=...";
+    flomoWebhookUrlInput.value = currentSettings.flomoWebhookUrl || "";
+
     const setting = new Setting({
       confirmCallback: () => {
         const newSettings: PluginSettings = {
@@ -319,6 +332,8 @@ export default class DayMemoPlugin extends Plugin {
           tagTriggerEnabled: tagTriggerEnabledInput.checked,
           triggerTag:
             triggerTagInput.value.trim().replace(/^#/, "") || "to-memo",
+          flomoSyncEnabled: flomoSyncEnabledInput.checked,
+          flomoWebhookUrl: flomoWebhookUrlInput.value.trim(),
         };
         this.store.saveSettings(newSettings);
         showMessage(this.i18n.settingsSaved);
@@ -369,6 +384,20 @@ export default class DayMemoPlugin extends Plugin {
       description: this.i18n.settingTriggerTagDesc,
       direction: "row",
       actionElement: triggerTagInput,
+    });
+
+    setting.addItem({
+      title: this.i18n.settingFlomoSyncEnabled,
+      description: this.i18n.settingFlomoSyncEnabledDesc,
+      direction: "row",
+      actionElement: flomoSyncEnabledInput,
+    });
+
+    setting.addItem({
+      title: this.i18n.settingFlomoWebhookUrl,
+      description: this.i18n.settingFlomoWebhookUrlDesc,
+      direction: "row",
+      actionElement: flomoWebhookUrlInput,
     });
 
     const templatesHeader = document.createElement("div");

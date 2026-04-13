@@ -7,7 +7,11 @@ import { MemoList } from "./MemoList";
 import { FilterBar } from "./FilterBar";
 import { TagList } from "./TagList";
 import { showReminderDialog } from "./ReminderDialog";
-import { handleAddToDailyNote, navigateToMemo } from "./panelActions";
+import {
+  handleAddToDailyNote,
+  handleSendToFlomo,
+  navigateToMemo,
+} from "./panelActions";
 
 export class DockPanel {
   private rootElement: HTMLElement;
@@ -95,6 +99,8 @@ export class DockPanel {
       },
       onAddToDailyNote: (memo: Memo) =>
         handleAddToDailyNote(memo, this.store, this.i18n),
+      onSendToFlomo: (memo: Memo) =>
+        handleSendToFlomo(memo, this.store, this.i18n),
       onSetReminder: (memo: Memo) =>
         showReminderDialog(memo, this.store, this.i18n),
       onAnnotate: (memo: Memo) => this.editor.startAnnotation(memo),
