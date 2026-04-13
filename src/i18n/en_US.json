@@ -102,5 +102,13 @@
   "settingTagTriggerEnabledDesc": "Automatically create a memo when a block in SiYuan contains the trigger tag",
   "settingTriggerTag": "Trigger Tag",
   "settingTriggerTagDesc": "The tag name (without #) that triggers memo creation",
-  "tagTriggerCreated": "Memo created from tag"
+  "tagTriggerCreated": "Memo created from tag",
+  "sendToFlomo": "Send to flomo",
+  "flomoSentSuccess": "Sent to flomo",
+  "flomoSentFailed": "Failed to send to flomo",
+  "flomoNotConfigured": "Please configure flomo webhook URL in Settings",
+  "settingFlomoSyncEnabled": "flomo Sync",
+  "settingFlomoSyncEnabledDesc": "Enable one-way push to flomo (requires flomo PRO)",
+  "settingFlomoWebhookUrl": "flomo Webhook URL",
+  "settingFlomoWebhookUrlDesc": "Your flomo API webhook URL. Find it in flomo Settings → API"
 }

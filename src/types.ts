@@ -54,6 +54,8 @@ export interface PluginSettings {
   templates?: MemoTemplate[];
   tagTriggerEnabled?: boolean;
   triggerTag?: string;
+  flomoWebhookUrl?: string;
+  flomoSyncEnabled?: boolean;
 }
 
 export const DEFAULT_SETTINGS: PluginSettings = {
@@ -63,6 +65,8 @@ export const DEFAULT_SETTINGS: PluginSettings = {
   useCurrentDateForDailyNote: false,
   tagTriggerEnabled: false,
   triggerTag: "to-memo",
+  flomoWebhookUrl: "",
+  flomoSyncEnabled: false,
 };
 
 export const STORAGE_MEMOS = "memos-data";

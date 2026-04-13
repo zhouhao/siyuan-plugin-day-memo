@@ -19,6 +19,7 @@ export interface MemoItemCallbacks {
   onAddToDailyNote?: (memo: Memo) => void;
   onSetReminder?: (memo: Memo) => void;
   onAnnotate?: (memo: Memo) => void;
+  onSendToFlomo?: (memo: Memo) => void;
   onNavigateToMemo?: (memoId: string) => void;
 }
 
@@ -161,6 +162,11 @@ export class MemoItem {
       this.i18n.annotate || "Annotate",
       () => this.callbacks.onAnnotate?.(this.memo),
     );
+    const flomoBtn = this.createActionBtn(
+      "🌿",
+      this.i18n.sendToFlomo || "Send to flomo",
+      () => this.callbacks.onSendToFlomo?.(this.memo),
+    );
     const deleteBtn = this.createActionBtn("🗑️", this.i18n.delete, () =>
       this.callbacks.onDelete(this.memo),
     );
@@ -171,6 +177,7 @@ export class MemoItem {
     actions.appendChild(archiveBtn);
     actions.appendChild(annotateBtn);
     actions.appendChild(dailyNoteBtn);
+    actions.appendChild(flomoBtn);
     actions.appendChild(deleteBtn);
     footer.appendChild(actions);
 
@@ -239,6 +246,14 @@ export class MemoItem {
       label: this.i18n.annotate || "Annotate",
       click: () => {
         this.callbacks.onAnnotate?.(this.memo);
+      },
+    });
+
+    menu.addItem({
+      icon: "iconCloud",
+      label: this.i18n.sendToFlomo || "Send to flomo",
+      click: () => {
+        this.callbacks.onSendToFlomo?.(this.memo);
       },
     });
 

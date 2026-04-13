@@ -102,5 +102,13 @@
   "settingTagTriggerEnabledDesc": "在思源笔记中使用指定标签时，自动创建便签",
   "settingTriggerTag": "触发标签",
   "settingTriggerTagDesc": "触发创建便签的标签名称（不含 #）",
-  "tagTriggerCreated": "已通过标签自动创建便签"
+  "tagTriggerCreated": "已通过标签自动创建便签",
+  "sendToFlomo": "发送到 flomo",
+  "flomoSentSuccess": "已发送到 flomo",
+  "flomoSentFailed": "发送到 flomo 失败",
+  "flomoNotConfigured": "请在设置中配置 flomo Webhook URL",
+  "settingFlomoSyncEnabled": "flomo 同步",
+  "settingFlomoSyncEnabledDesc": "启用单向推送到 flomo（需要 flomo PRO）",
+  "settingFlomoWebhookUrl": "flomo Webhook URL",
+  "settingFlomoWebhookUrlDesc": "你的 flomo API Webhook 地址，在 flomo 设置 → API 中获取"
 }
