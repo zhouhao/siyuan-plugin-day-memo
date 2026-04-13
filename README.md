@@ -24,6 +24,7 @@ A lightweight, [Memos](https://github.com/usememos/memos)-inspired quick note-ta
 - **Annotations** — Annotate any memo to create a linked note (similar to Flomo's annotation feature); the annotation and source memo are connected with bidirectional links for easy navigation; annotation previews are displayed inline below the source memo; deleting a memo automatically cleans up all bidirectional annotation links to keep data consistent
 - **Memo Templates** — Define reusable templates in Settings for quick memo creation; click the template button in the editor toolbar to pick from your saved templates and insert the content at cursor position
 - **Tag Trigger** — Automatically create memos from SiYuan blocks that contain a specific tag (default: `#to-memo#`). When you add the trigger tag to any block in SiYuan, the plugin detects it in real time and imports the block content as a new memo (with the trigger tag stripped). Configurable trigger tag name in Settings; duplicates are prevented via block ID tracking
+- **Export All as Markdown** — Export all memos to a single Markdown file from Settings; each memo includes its content and annotation relationships (parent/child links)
 - **flomo One-Way Push** — Push memos to [flomo](https://flomoapp.com) via its Incoming Webhook API (flomo PRO required). Once enabled and the webhook URL is configured in Settings, each memo gains a **Send to flomo** action in both its hover buttons and right-click menu
 - **Random Review** — One-click "Random Review" button in the sidebar to revisit random memos in a card-style dialog; browse through a batch of 5, navigate back and forth, or shuffle for a fresh set; edit memos directly in the review dialog (`Ctrl+Enter` to save, `Escape` to cancel) — inspired by Flomo's daily review
 - **Pin & Archive** — Pin important memos to top, archive old ones to reduce clutter
@@ -97,6 +98,8 @@ Open plugin settings (click the gear icon on the DayMemo plugin card in SiYuan's
 - **flomo Sync** — Toggle to enable one-way push to flomo. When enabled, the **Send to flomo** action becomes available on each memo.
 
 - **flomo Webhook URL** — Your flomo API webhook URL. Find it in flomo → Settings → API (flomo PRO required). Format: `https://flomoapp.com/iwh/xxx/xxx/`.
+
+- **Export All as Markdown** — Click the export button to download all memos as a single `.md` file. Each memo is exported with its content and annotation relationships (links to parent/child annotations). The file is named `daymemo-export-YYYY-MM-DD.md`.
 
 ## Data Storage & Sync
 
