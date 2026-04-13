@@ -110,5 +110,9 @@
   "settingFlomoSyncEnabled": "flomo 同步",
   "settingFlomoSyncEnabledDesc": "启用单向推送到 flomo（需要 flomo PRO）",
   "settingFlomoWebhookUrl": "flomo Webhook URL",
-  "settingFlomoWebhookUrlDesc": "你的 flomo API Webhook 地址，在 flomo 设置 → API 中获取"
+  "settingFlomoWebhookUrlDesc": "你的 flomo API Webhook 地址，在 flomo 设置 → API 中获取",
+  "exportAllMarkdown": "导出全部为 Markdown",
+  "exportAllMarkdownDesc": "将所有便签下载为一个 Markdown 文件",
+  "exportSuccess": "已导出 {count} 条便签",
+  "exportEmpty": "没有可导出的便签"
 }

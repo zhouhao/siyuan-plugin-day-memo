@@ -15,7 +15,7 @@ import {
   ReplacementRule,
   MemoTemplate,
 } from "./types";
-import { generateId } from "./utils";
+import { generateId, formatDate } from "./utils";
 import { MemoDataStore } from "./store";
 import { ReminderService } from "./ReminderService";
 import { TagTriggerService } from "./TagTriggerService";
@@ -398,6 +398,64 @@ export default class DayMemoPlugin extends Plugin {
       description: this.i18n.settingFlomoWebhookUrlDesc,
       direction: "row",
       actionElement: flomoWebhookUrlInput,
+    });
+
+    const exportBtn = document.createElement("button");
+    exportBtn.className = "b3-button b3-button--outline";
+    exportBtn.innerText = this.i18n.exportAllMarkdown;
+    exportBtn.onclick = () => {
+      const memos = this.store.getAllMemos();
+      if (memos.length === 0) {
+        showMessage(this.i18n.exportEmpty);
+        return;
+      }
+      const lines: string[] = [];
+      for (const memo of memos) {
+        const date = new Date(memo.createdAt);
+        const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")} ${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+        lines.push(`## ${dateStr}`);
+        lines.push("");
+        lines.push(memo.content);
+        if (memo.annotationOf) {
+          const parent = this.store.getMemo(memo.annotationOf);
+          if (parent) {
+            lines.push("");
+            lines.push(`> Annotation of: ${parent.content.split("\n")[0]}`);
+          }
+        }
+        if (memo.annotations && memo.annotations.length > 0) {
+          const names = memo.annotations
+            .map((id) => this.store.getMemo(id))
+            .filter(Boolean)
+            .map((m) => m!.content.split("\n")[0]);
+          if (names.length > 0) {
+            lines.push("");
+            lines.push(`> Annotations: ${names.join(", ")}`);
+          }
+        }
+        lines.push("");
+        lines.push("---");
+        lines.push("");
+      }
+      const blob = new Blob([lines.join("\n")], {
+        type: "text/markdown;charset=utf-8",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `daymemo-export-${formatDate(Date.now())}.md`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showMessage(
+        this.i18n.exportSuccess.replace("{count}", String(memos.length)),
+      );
+    };
+
+    setting.addItem({
+      title: this.i18n.exportAllMarkdown,
+      description: this.i18n.exportAllMarkdownDesc,
+      direction: "row",
+      actionElement: exportBtn,
     });
 
     const templatesHeader = document.createElement("div");

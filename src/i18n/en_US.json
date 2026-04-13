@@ -110,5 +110,9 @@
   "settingFlomoSyncEnabled": "flomo Sync",
   "settingFlomoSyncEnabledDesc": "Enable one-way push to flomo (requires flomo PRO)",
   "settingFlomoWebhookUrl": "flomo Webhook URL",
-  "settingFlomoWebhookUrlDesc": "Your flomo API webhook URL. Find it in flomo Settings → API"
+  "settingFlomoWebhookUrlDesc": "Your flomo API webhook URL. Find it in flomo Settings → API",
+  "exportAllMarkdown": "Export All as Markdown",
+  "exportAllMarkdownDesc": "Download all memos as a single Markdown file",
+  "exportSuccess": "Exported {count} memos",
+  "exportEmpty": "No memos to export"
 }
