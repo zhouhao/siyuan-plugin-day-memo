@@ -24,6 +24,7 @@ export class MemoEditor {
   private templateDropdown: HTMLElement;
   private onSaved: (() => void) | null = null;
   private uploading = false;
+  private userResized = false;
 
   constructor(
     container: HTMLElement,
@@ -49,6 +50,16 @@ export class MemoEditor {
     this.textarea.placeholder = this.i18n.editorPlaceholder;
     this.textarea.rows = 3;
     this.textarea.addEventListener("input", () => this.autoResize());
+    this.textarea.addEventListener("mousedown", () => {
+      const startH = this.textarea.offsetHeight;
+      const onUp = () => {
+        document.removeEventListener("mouseup", onUp);
+        if (this.textarea.offsetHeight !== startH) {
+          this.userResized = true;
+        }
+      };
+      document.addEventListener("mouseup", onUp);
+    });
     this.textarea.addEventListener("keydown", (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
         e.preventDefault();
@@ -174,9 +185,10 @@ export class MemoEditor {
   }
 
   private autoResize(): void {
+    if (this.userResized) return;
     this.textarea.style.height = "auto";
     this.textarea.style.height =
-      Math.min(this.textarea.scrollHeight, 200) + "px";
+      Math.min(this.textarea.scrollHeight, 300) + "px";
   }
 
   startEdit(memo: Memo): void {
@@ -243,6 +255,7 @@ export class MemoEditor {
     this.textarea.value = "";
     this.textarea.placeholder = this.i18n.editorPlaceholder;
     this.cancelBtn.style.display = "none";
+    this.userResized = false;
     this.textarea.style.height = "auto";
     this.clearPreview();
   }
@@ -266,6 +279,7 @@ export class MemoEditor {
     }
 
     this.textarea.value = "";
+    this.userResized = false;
     this.textarea.style.height = "auto";
     this.clearPreview();
     this.onSaved?.();

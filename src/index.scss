@@ -260,9 +260,9 @@
 
 .day-memo__editor-textarea {
     width: 100%;
-    min-height: 80px;
-    max-height: 200px;
-    resize: none;
+    min-height: 120px;
+    max-height: 600px;
+    resize: vertical;
     border: 1px solid var(--b3-border-color);
     border-radius: 8px;
     padding: 12px 14px;
