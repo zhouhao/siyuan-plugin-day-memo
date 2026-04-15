@@ -1,6 +1,8 @@
 import { MemoDataStore } from "../store";
 import { Memo, MemoTemplate } from "../types";
 import { uploadAsset, pushErrMsg } from "../api";
+import { MentionPopup } from "./MentionPopup";
+import { makeMemoRefToken } from "../memoRef";
 
 const IMAGE_ACCEPT =
   "image/png,image/jpeg,image/gif,image/webp,image/svg+xml,image/bmp";
@@ -25,6 +27,8 @@ export class MemoEditor {
   private onSaved: (() => void) | null = null;
   private uploading = false;
   private userResized = false;
+  private mentionPopup: MentionPopup;
+  private mentionAnchor = -1;
 
   constructor(
     container: HTMLElement,
@@ -34,6 +38,9 @@ export class MemoEditor {
     this.container = container;
     this.store = store;
     this.i18n = i18n;
+    this.mentionPopup = new MentionPopup(this.store, this.i18n, {
+      onSelect: (memo) => this.insertMemoRef(memo),
+    });
     this.render();
   }
 
@@ -49,7 +56,19 @@ export class MemoEditor {
     this.textarea.className = "day-memo__editor-textarea b3-text-field";
     this.textarea.placeholder = this.i18n.editorPlaceholder;
     this.textarea.rows = 3;
-    this.textarea.addEventListener("input", () => this.autoResize());
+    this.textarea.addEventListener("input", () => {
+      this.autoResize();
+      this.updateMentionPopup();
+    });
+    this.textarea.addEventListener("blur", () =>
+      setTimeout(() => this.mentionPopup.hide(), 150),
+    );
+    this.textarea.addEventListener("click", () => this.updateMentionPopup());
+    this.textarea.addEventListener("keyup", (e) => {
+      if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) {
+        this.updateMentionPopup();
+      }
+    });
     this.textarea.addEventListener("mousedown", () => {
       const startH = this.textarea.offsetHeight;
       const onUp = () => {
@@ -61,6 +80,7 @@ export class MemoEditor {
       document.addEventListener("mouseup", onUp);
     });
     this.textarea.addEventListener("keydown", (e) => {
+      if (this.mentionPopup.handleKey(e)) return;
       if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
         e.preventDefault();
         this.handleSave();
@@ -369,6 +389,41 @@ export class MemoEditor {
     }
   }
 
+  private updateMentionPopup(): void {
+    const caret = this.textarea.selectionStart;
+    const value = this.textarea.value;
+    const before = value.substring(0, caret);
+    const match = before.match(/(?:^|\s)@([^\s@]{0,50})$/);
+    if (!match) {
+      this.mentionPopup.hide();
+      this.mentionAnchor = -1;
+      return;
+    }
+    const query = match[1];
+    this.mentionAnchor = caret - query.length - 1;
+    this.mentionPopup.setExcludeId(
+      this.editingMemo?.id || this.annotatingMemo?.id || null,
+    );
+    this.mentionPopup.show(this.textarea, query);
+  }
+
+  private insertMemoRef(memo: Memo): void {
+    if (this.mentionAnchor < 0) return;
+    const token = makeMemoRefToken(memo);
+    const caret = this.textarea.selectionStart;
+    const value = this.textarea.value;
+    const before = value.substring(0, this.mentionAnchor);
+    const after = value.substring(caret);
+    const insert = token + " ";
+    this.textarea.value = before + insert + after;
+    const newPos = before.length + insert.length;
+    this.textarea.selectionStart = newPos;
+    this.textarea.selectionEnd = newPos;
+    this.textarea.focus();
+    this.autoResize();
+    this.mentionAnchor = -1;
+  }
+
   private insertAtCursor(text: string): void {
     const start = this.textarea.selectionStart;
     const end = this.textarea.selectionEnd;
@@ -495,6 +550,7 @@ export class MemoEditor {
   }
 
   destroy(): void {
+    this.mentionPopup.destroy();
     this.container.innerHTML = "";
   }
 }

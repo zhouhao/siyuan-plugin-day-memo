@@ -99,6 +99,15 @@ export class MemoItem {
       });
     });
 
+    content.querySelectorAll(".day-memo__memo-ref").forEach((refEl) => {
+      refEl.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const id = (refEl as HTMLElement).dataset.memoRef;
+        if (id) this.callbacks.onNavigateToMemo?.(id);
+      });
+    });
+
     content.querySelectorAll(".day-memo__checkbox").forEach((checkbox) => {
       checkbox.addEventListener("change", (e) => {
         e.stopPropagation();

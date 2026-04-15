@@ -148,6 +148,12 @@ export function renderMarkdown(content: string): string {
     '<img src="$2" alt="$1" class="day-memo__image" loading="lazy">',
   );
 
+  // Memo reference links [text](memo-ref://{id}) — must be before external link processing
+  html = html.replace(
+    /\[([^\]]+)\]\(memo-ref:\/\/([^)\s]+)\)/g,
+    '<a href="#" class="day-memo__memo-ref" data-memo-ref="$2">$1</a>',
+  );
+
   // Asset file links [name](assets/...) — must be before external link processing
   html = html.replace(
     /\[([^\]]+)\]\((assets\/[^)]+)\)/g,
