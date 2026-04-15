@@ -70,7 +70,7 @@
 }
 
 .day-memo__sidebar-section-header {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--day-memo-secondary-color);
     text-transform: uppercase;
@@ -92,13 +92,13 @@
 }
 
 .day-memo__stat-value {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 700;
     color: var(--b3-theme-on-surface);
 }
 
 .day-memo__stat-label {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--day-memo-secondary-color);
 }
 
@@ -114,21 +114,21 @@
 }
 
 .day-memo__calendar-title {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     color: var(--b3-theme-on-surface);
 }
 
 .day-memo__calendar-nav {
     padding: 2px 8px;
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1;
     min-height: unset;
 }
 
 .day-memo__calendar-today {
     padding: 2px 8px;
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1;
     min-height: unset;
     border-radius: 10px;
@@ -143,7 +143,7 @@
 
 .day-memo__calendar-weekday {
     text-align: center;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--day-memo-secondary-color);
     padding: 2px 0;
@@ -213,7 +213,7 @@
 }
 
 .day-memo__calendar-day {
-    font-size: 13px;
+    font-size: 14px;
     color: var(--b3-theme-on-surface);
     line-height: 1;
 }
@@ -234,14 +234,14 @@
     background: var(--b3-theme-primary-lightest);
     color: var(--b3-theme-primary);
     border-radius: 12px;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .day-memo__active-date-clear {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 10px;
+    font-size: 11px;
     color: var(--b3-theme-primary);
     padding: 0 2px;
 
@@ -266,7 +266,7 @@
     border: 1px solid var(--b3-border-color);
     border-radius: 8px;
     padding: 12px 14px;
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1.5;
     background: var(--b3-theme-surface);
     color: var(--b3-theme-on-surface);
@@ -353,7 +353,7 @@
 
 .day-memo__editor-save,
 .day-memo__editor-cancel {
-    font-size: 14px;
+    font-size: 15px;
     padding: 4px 16px;
     border-radius: 6px;
 }
@@ -375,7 +375,7 @@
     padding: 4px 12px;
     border: none;
     border-radius: 14px;
-    font-size: 13px;
+    font-size: 15px;
     cursor: pointer;
     background: var(--b3-theme-surface);
     color: var(--day-memo-secondary-color);
@@ -398,7 +398,7 @@
 .day-memo__search-input {
     width: 100%;
     padding: 6px 28px 6px 10px;
-    font-size: 14px;
+    font-size: 15px;
     border-radius: 6px;
     border: 1px solid var(--b3-border-color);
     box-sizing: border-box;
@@ -410,7 +410,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 14px;
     color: var(--day-memo-secondary-color);
     padding: 2px 4px;
     border-radius: 50%;
@@ -428,14 +428,14 @@
     background: var(--b3-theme-primary-lightest);
     color: var(--b3-theme-primary);
     border-radius: 12px;
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .day-memo__active-tag-clear {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 10px;
+    font-size: 12px;
     color: var(--b3-theme-primary);
     padding: 0 2px;
 
@@ -452,7 +452,7 @@
 }
 
 .day-memo__tag-list-header {
-    font-size: 14px;
+    font-size: 17px;
     font-weight: 600;
     color: var(--b3-theme-on-surface);
     letter-spacing: 0.3px;
@@ -472,7 +472,7 @@
     padding: 3px 8px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 15px;
     color: var(--day-memo-secondary-color);
     transition: background 0.15s;
 
@@ -493,7 +493,7 @@
 }
 
 .day-memo__tag-tree-toggle {
-    font-size: 9px;
+    font-size: 11px;
     width: 14px;
     text-align: center;
     flex-shrink: 0;
@@ -515,7 +515,7 @@
 }
 
 .day-memo__tag-tree-count {
-    font-size: 11px;
+    font-size: 13px;
     opacity: 0.5;
     flex-shrink: 0;
 }
@@ -525,7 +525,7 @@
 }
 
 .day-memo__date-header {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     color: var(--day-memo-secondary-color);
     padding: 12px 0 6px;
@@ -541,7 +541,7 @@
     padding: 40px 20px;
     text-align: center;
     color: var(--day-memo-secondary-color);
-    font-size: 15px;
+    font-size: 17px;
 }
 
 .day-memo__item {
@@ -578,14 +578,14 @@
 }
 
 .day-memo__item-time {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--day-memo-secondary-color);
 }
 
 .day-memo__item-badges {
     display: flex;
     gap: 4px;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .day-memo__badge--reminder {
@@ -594,7 +594,7 @@
 }
 
 .day-memo__item-content {
-    font-size: 15px;
+    font-size: 17px;
     line-height: 1.6;
     color: var(--b3-theme-on-background);
     word-break: break-word;
@@ -648,12 +648,12 @@
     border-radius: 6px;
     color: var(--b3-theme-on-surface);
     text-decoration: none;
-    font-size: 14px;
+    font-size: 15px;
     transition: border-color 0.15s;
 
     &::before {
         content: "\1F4CE";
-        font-size: 14px;
+        font-size: 15px;
     }
 
     &:hover {
@@ -678,7 +678,7 @@
     border: 1px solid rgba(var(--b3-theme-error-rgb, 244, 67, 54), 0.3);
     border-radius: 6px;
     padding: 10px 12px;
-    font-size: 13px;
+    font-size: 14px;
     font-family: var(--b3-font-family-code);
     color: var(--b3-theme-error);
     white-space: pre-wrap;
@@ -701,7 +701,7 @@
     padding: 10px 12px;
     margin: 6px 0;
     overflow-x: auto;
-    font-size: 13px;
+    font-size: 14px;
     font-family: var(--b3-font-family-code);
     line-height: 1.4;
 
@@ -765,7 +765,7 @@
     cursor: pointer;
     padding: 2px 6px;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: 15px;
     transition: background 0.15s;
 
     &:hover {
@@ -793,7 +793,7 @@
 
 .day-memo__review-btn {
     width: 100%;
-    font-size: 14px;
+    font-size: 15px;
     padding: 6px 12px;
     border-radius: 6px;
     cursor: pointer;
@@ -817,12 +817,12 @@
 }
 
 .day-memo__review-card-time {
-    font-size: 13px;
+    font-size: 14px;
     color: var(--day-memo-secondary-color);
 }
 
 .day-memo__review-counter {
-    font-size: 13px;
+    font-size: 14px;
     color: var(--day-memo-secondary-color);
     font-weight: 500;
 }
@@ -834,7 +834,7 @@
     max-height: 400px;
     padding: 16px;
     margin: 0;
-    font-size: 15px;
+    font-size: 17px;
     line-height: 1.6;
     resize: vertical;
     box-sizing: border-box;
@@ -845,7 +845,7 @@
 
 .day-memo__review-card-body {
     padding: 16px;
-    font-size: 15px;
+    font-size: 17px;
     line-height: 1.6;
     color: var(--b3-theme-on-background);
     word-break: break-word;
@@ -881,7 +881,7 @@
         padding: 10px 12px;
         margin: 6px 0;
         overflow-x: auto;
-        font-size: 13px;
+        font-size: 14px;
         font-family: var(--b3-font-family-code);
     }
 }
@@ -890,7 +890,7 @@
     padding: 40px 20px;
     text-align: center;
     color: var(--day-memo-secondary-color);
-    font-size: 15px;
+    font-size: 17px;
 }
 
 /* Annotation banner in editor */
@@ -904,7 +904,7 @@
     border: 1px solid var(--b3-theme-primary-lighter, var(--b3-border-color));
     border-left: 3px solid var(--b3-theme-primary);
     border-radius: 4px;
-    font-size: 13px;
+    font-size: 14px;
     color: var(--day-memo-secondary-color);
     line-height: 1.4;
     overflow: hidden;
@@ -933,7 +933,7 @@
     border: none;
     cursor: pointer;
     color: var(--day-memo-secondary-color);
-    font-size: 14px;
+    font-size: 15px;
     padding: 0 4px;
     line-height: 1;
 
@@ -956,7 +956,7 @@
     align-items: flex-start;
     gap: 4px;
     padding: 3px 0;
-    font-size: 13px;
+    font-size: 14px;
     text-decoration: none;
     cursor: pointer;
     transition: color 0.15s;
@@ -968,7 +968,7 @@
 }
 
 .day-memo__annotation-link-icon {
-    font-size: 12px;
+    font-size: 13px;
     display: flex;
     align-items: center;
 }
@@ -1039,14 +1039,14 @@
 }
 
 .day-memo__setting-section-title {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     color: var(--b3-theme-on-surface);
     margin-bottom: 4px;
 }
 
 .day-memo__setting-section-desc {
-    font-size: 13px;
+    font-size: 14px;
     color: var(--day-memo-secondary-color);
     margin-bottom: 4px;
 }
@@ -1075,7 +1075,7 @@
 .day-memo__template-dropdown-empty {
     padding: 16px;
     text-align: center;
-    font-size: 13px;
+    font-size: 14px;
     color: var(--day-memo-secondary-color);
 }
 
@@ -1098,13 +1098,13 @@
 }
 
 .day-memo__template-dropdown-name {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
     color: var(--b3-theme-on-surface);
 }
 
 .day-memo__template-dropdown-preview {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--day-memo-secondary-color);
     white-space: nowrap;
     overflow: hidden;
