@@ -44,6 +44,7 @@ export function showReviewDialog(
                     <span class="day-memo__review-counter"></span>
                 </div>
                 <div class="day-memo__review-card-body"></div>
+                <div class="day-memo__review-card-annotations"></div>
                 <textarea class="day-memo__review-card-editor b3-text-field" style="display:none;"></textarea>
             </div>
         </div>
@@ -70,6 +71,9 @@ export function showReviewDialog(
   const bodyEl = dialog.element.querySelector(
     ".day-memo__review-card-body",
   ) as HTMLElement;
+  const annotationsEl = dialog.element.querySelector(
+    ".day-memo__review-card-annotations",
+  ) as HTMLElement;
   const editorEl = dialog.element.querySelector(
     ".day-memo__review-card-editor",
   ) as HTMLTextAreaElement;
@@ -94,6 +98,7 @@ export function showReviewDialog(
     const memo = memos[currentIndex];
     editorEl.value = memo.content;
     bodyEl.style.display = "none";
+    annotationsEl.style.display = "none";
     editorEl.style.display = "";
     editorEl.style.height = "auto";
     editorEl.style.height = Math.max(editorEl.scrollHeight, 120) + "px";
@@ -132,6 +137,27 @@ export function showReviewDialog(
       .replace("{total}", String(memos.length));
     bodyEl.innerHTML = renderMarkdown(memo.content);
     renderMermaidBlocks(bodyEl);
+
+    annotationsEl.innerHTML = "";
+    const annotationIds = memo.annotations || [];
+    if (annotationIds.length > 0) {
+      const header = document.createElement("div");
+      header.className = "day-memo__review-annotations-header";
+      header.textContent = `💬 ${i18n.annotations || "Annotations"} (${annotationIds.length})`;
+      annotationsEl.appendChild(header);
+      for (const aid of annotationIds) {
+        const a = store.getMemo(aid);
+        if (!a) continue;
+        const item = document.createElement("div");
+        item.className = "day-memo__review-annotation-item";
+        item.innerHTML = renderMarkdown(a.content);
+        renderMermaidBlocks(item);
+        annotationsEl.appendChild(item);
+      }
+      annotationsEl.style.display = "";
+    } else {
+      annotationsEl.style.display = "none";
+    }
 
     prevBtn.disabled = currentIndex === 0;
     nextOneBtn.disabled = currentIndex === memos.length - 1;
