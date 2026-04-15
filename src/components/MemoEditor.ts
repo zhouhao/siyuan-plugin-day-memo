@@ -400,6 +400,11 @@ export class MemoEditor {
       return;
     }
     const query = match[1];
+    if (query.length < 1) {
+      this.mentionPopup.hide();
+      this.mentionAnchor = caret - query.length - 1;
+      return;
+    }
     this.mentionAnchor = caret - query.length - 1;
     this.mentionPopup.setExcludeId(
       this.editingMemo?.id || this.annotatingMemo?.id || null,
