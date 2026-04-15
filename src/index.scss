@@ -328,6 +328,8 @@
 
     svg {
         display: block;
+        fill: none;
+        stroke: currentColor;
     }
 }
 
