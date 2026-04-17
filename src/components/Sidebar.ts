@@ -5,6 +5,14 @@ import { TagList } from "./TagList";
 import { showReviewDialog } from "./ReviewDialog";
 import { showImageGalleryDialog } from "./ImageGalleryDialog";
 
+const IMAGE_REGEX = /!\[[^\]]*\]\([^)]+\)/;
+
+function hasAnyImage(store: MemoDataStore): boolean {
+  return store
+    .getAllMemos()
+    .some((m) => !m.deleted && IMAGE_REGEX.test(m.content));
+}
+
 export class Sidebar {
   private container: HTMLElement;
   private store: MemoDataStore;
@@ -107,11 +115,13 @@ export class Sidebar {
       showReviewDialog(this.store, this.i18n);
     });
     const galleryBtn = document.createElement("button");
-    galleryBtn.className = "day-memo__review-btn b3-button b3-button--outline";
+    galleryBtn.className =
+      "day-memo__review-btn day-memo__gallery-btn b3-button b3-button--outline";
     galleryBtn.textContent = this.i18n.gallery || "Gallery";
     galleryBtn.addEventListener("click", () => {
       showImageGalleryDialog(this.store, this.i18n, this.onNavigateToMemo);
     });
+    galleryBtn.style.display = hasAnyImage(this.store) ? "" : "none";
 
     reviewSection.appendChild(reviewBtn);
     reviewSection.appendChild(galleryBtn);
@@ -121,6 +131,12 @@ export class Sidebar {
   }
 
   private updateStats(): void {
+    const galleryBtn = this.container.querySelector<HTMLElement>(
+      ".day-memo__gallery-btn",
+    );
+    if (galleryBtn)
+      galleryBtn.style.display = hasAnyImage(this.store) ? "" : "none";
+
     const statsEl = this.container.querySelector(".day-memo__sidebar-stats");
     if (!statsEl) return;
     const total = this.store.getTotalCount();
