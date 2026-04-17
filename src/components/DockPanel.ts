@@ -11,7 +11,9 @@ import {
   handleAddToDailyNote,
   handleSendToFlomo,
   navigateToMemo,
+  extractMemoImages,
 } from "./panelActions";
+import { Lightbox } from "./Lightbox";
 
 export class DockPanel {
   private rootElement: HTMLElement;
@@ -23,6 +25,7 @@ export class DockPanel {
   private filterBar: FilterBar;
   private tagList: TagList;
   private memoList: MemoList;
+  private lightbox: Lightbox;
 
   constructor(
     rootElement: HTMLElement,
@@ -79,6 +82,10 @@ export class DockPanel {
 
     this.filterBar = new FilterBar(filterContainer, this.store, this.i18n);
 
+    this.lightbox = new Lightbox(this.i18n, {
+      onNavigateToMemo: (memoId) => navigateToMemo(memoId, listContainer),
+    });
+
     const callbacks = {
       onEdit: (memo: Memo) => this.editor.startEdit(memo),
       onDelete: (memo: Memo) => this.handleDelete(memo),
@@ -106,6 +113,11 @@ export class DockPanel {
       onAnnotate: (memo: Memo) => this.editor.startAnnotation(memo),
       onNavigateToMemo: (memoId: string) =>
         navigateToMemo(memoId, listContainer),
+      onImageClick: (memoId: string, imageUrl: string) => {
+        const images = extractMemoImages(memoId, this.store);
+        const idx = images.findIndex((img) => img.url === imageUrl);
+        this.lightbox.open(images, Math.max(idx, 0));
+      },
     };
 
     this.tagList = new TagList(tagContainer, this.store, this.i18n, (tag) => {
@@ -144,6 +156,7 @@ export class DockPanel {
   }
 
   destroy(): void {
+    this.lightbox?.destroy();
     this.editor?.destroy();
     this.filterBar?.destroy();
     this.tagList?.destroy();

@@ -11,7 +11,9 @@ import {
   handleAddToDailyNote,
   handleSendToFlomo,
   navigateToMemo,
+  extractMemoImages,
 } from "./panelActions";
+import { Lightbox } from "./Lightbox";
 
 export class TabPanel {
   private rootElement: HTMLElement;
@@ -22,6 +24,7 @@ export class TabPanel {
   private editor: MemoEditor;
   private filterBar: FilterBar;
   private memoList: MemoList;
+  private lightbox: Lightbox;
 
   constructor(
     rootElement: HTMLElement,
@@ -59,6 +62,7 @@ export class TabPanel {
         this.store.setSelectedDate(date);
         this.filterBar.updateDateFilter(date);
       },
+      (memoId) => navigateToMemo(memoId, listContainer),
     );
 
     const editorContainer = document.createElement("div");
@@ -75,6 +79,10 @@ export class TabPanel {
     this.editor = new MemoEditor(editorContainer, this.store, this.i18n);
 
     this.filterBar = new FilterBar(filterContainer, this.store, this.i18n);
+
+    this.lightbox = new Lightbox(this.i18n, {
+      onNavigateToMemo: (memoId) => navigateToMemo(memoId, listContainer),
+    });
 
     const callbacks = {
       onEdit: (memo: Memo) => this.editor.startEdit(memo),
@@ -102,6 +110,11 @@ export class TabPanel {
       onAnnotate: (memo: Memo) => this.editor.startAnnotation(memo),
       onNavigateToMemo: (memoId: string) =>
         navigateToMemo(memoId, listContainer),
+      onImageClick: (memoId: string, imageUrl: string) => {
+        const images = extractMemoImages(memoId, this.store);
+        const idx = images.findIndex((img) => img.url === imageUrl);
+        this.lightbox.open(images, Math.max(idx, 0));
+      },
     };
 
     this.memoList = new MemoList(
@@ -113,6 +126,7 @@ export class TabPanel {
   }
 
   destroy(): void {
+    this.lightbox?.destroy();
     this.sidebar?.destroy();
     this.editor?.destroy();
     this.filterBar?.destroy();

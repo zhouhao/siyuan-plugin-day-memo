@@ -2,6 +2,9 @@ import { confirm, showMessage } from "siyuan";
 import { MemoDataStore } from "../store";
 import { Memo } from "../types";
 import { addToDailyNote, sendToFlomo } from "../api";
+import { LightboxImage } from "./Lightbox";
+
+const IMAGE_REGEX = /!\[([^\]]*)\]\(([^)]+)\)/g;
 
 export function handleDelete(
   memo: Memo,
@@ -55,6 +58,21 @@ export async function handleSendToFlomo(
   } catch {
     showMessage(i18n.flomoSentFailed);
   }
+}
+
+export function extractMemoImages(
+  memoId: string,
+  store: MemoDataStore,
+): LightboxImage[] {
+  const memo = store.getMemo(memoId);
+  if (!memo) return [];
+  const images: LightboxImage[] = [];
+  let match: RegExpExecArray | null;
+  IMAGE_REGEX.lastIndex = 0;
+  while ((match = IMAGE_REGEX.exec(memo.content)) !== null) {
+    images.push({ url: match[2], memoId: memo.id, alt: match[1] });
+  }
+  return images;
 }
 
 export function navigateToMemo(

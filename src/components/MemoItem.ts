@@ -21,6 +21,7 @@ export interface MemoItemCallbacks {
   onAnnotate?: (memo: Memo) => void;
   onSendToFlomo?: (memo: Memo) => void;
   onNavigateToMemo?: (memoId: string) => void;
+  onImageClick?: (memoId: string, imageUrl: string) => void;
 }
 
 export class MemoItem {
@@ -96,6 +97,14 @@ export class MemoItem {
         e.stopPropagation();
         const tag = (tagEl as HTMLElement).dataset.tag;
         if (tag) this.callbacks.onTagClick(tag);
+      });
+    });
+
+    content.querySelectorAll(".day-memo__image").forEach((imgEl) => {
+      imgEl.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const url = (imgEl as HTMLImageElement).src;
+        if (url) this.callbacks.onImageClick?.(this.memo.id, url);
       });
     });
 

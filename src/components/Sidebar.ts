@@ -3,6 +3,7 @@ import { debounce } from "../utils";
 import { Heatmap } from "./Heatmap";
 import { TagList } from "./TagList";
 import { showReviewDialog } from "./ReviewDialog";
+import { showImageGalleryDialog } from "./ImageGalleryDialog";
 
 export class Sidebar {
   private container: HTMLElement;
@@ -13,6 +14,7 @@ export class Sidebar {
   private unsubscribe: (() => void) | null = null;
   private onTagSelect: (tag: string | null) => void;
   private onDateClick: (date: string | null) => void;
+  private onNavigateToMemo: ((memoId: string) => void) | undefined;
 
   constructor(
     container: HTMLElement,
@@ -20,12 +22,14 @@ export class Sidebar {
     i18n: Record<string, string>,
     onTagSelect: (tag: string | null) => void,
     onDateClick: (date: string | null) => void,
+    onNavigateToMemo?: (memoId: string) => void,
   ) {
     this.container = container;
     this.store = store;
     this.i18n = i18n;
     this.onTagSelect = onTagSelect;
     this.onDateClick = onDateClick;
+    this.onNavigateToMemo = onNavigateToMemo;
     this.render();
     this.unsubscribe = this.store.subscribe(() => this.updateStats());
   }
@@ -102,7 +106,15 @@ export class Sidebar {
     reviewBtn.addEventListener("click", () => {
       showReviewDialog(this.store, this.i18n);
     });
+    const galleryBtn = document.createElement("button");
+    galleryBtn.className = "day-memo__review-btn b3-button b3-button--outline";
+    galleryBtn.textContent = this.i18n.gallery || "Gallery";
+    galleryBtn.addEventListener("click", () => {
+      showImageGalleryDialog(this.store, this.i18n, this.onNavigateToMemo);
+    });
+
     reviewSection.appendChild(reviewBtn);
+    reviewSection.appendChild(galleryBtn);
     this.container.appendChild(reviewSection);
 
     this.updateStats();
