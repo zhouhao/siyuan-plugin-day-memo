@@ -1,6 +1,6 @@
 {
   "name": "siyuan-plugin-day-memo",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "A Memos-like quick note-taking plugin for SiYuan",
   "main": "./src/index.ts",
   "scripts": {

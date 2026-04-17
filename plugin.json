@@ -2,7 +2,7 @@
   "name": "siyuan-plugin-day-memo",
   "author": "Hao Zhou",
   "url": "https://github.com/zhouhao/siyuan-plugin-day-memo",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "minAppVersion": "3.3.0",
   "backends": ["all"],
   "frontends": ["all"],
