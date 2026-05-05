@@ -26,6 +26,7 @@ export class DockPanel {
   private tagList: TagList;
   private memoList: MemoList;
   private lightbox: Lightbox;
+  private unsubscribeCount: (() => void) | null = null;
 
   constructor(
     rootElement: HTMLElement,
@@ -132,7 +133,7 @@ export class DockPanel {
       callbacks,
     );
 
-    this.store.subscribe(() => this.updateCount());
+    this.unsubscribeCount = this.store.subscribe(() => this.updateCount());
     this.updateCount();
   }
 
@@ -156,6 +157,7 @@ export class DockPanel {
   }
 
   destroy(): void {
+    this.unsubscribeCount?.();
     this.lightbox?.destroy();
     this.editor?.destroy();
     this.filterBar?.destroy();

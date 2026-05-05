@@ -80,7 +80,7 @@ export function navigateToMemo(
   listContainer: HTMLElement,
 ): void {
   const el = listContainer.querySelector(
-    `[data-memo-id="${memoId}"]`,
+    `[data-memo-id="${CSS.escape(memoId)}"]`,
   ) as HTMLElement;
   if (el) {
     el.scrollIntoView({ behavior: "smooth", block: "center" });

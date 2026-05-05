@@ -116,7 +116,7 @@ export function renderMarkdown(content: string): string {
   // Extract code blocks BEFORE escaping — preserves raw content for mermaid, prevents <br> injection
   const codeBlocks: string[] = [];
   let stripped = content.replace(
-    /```(\w*)\n([\s\S]*?)```/g,
+    /```(\w*)\n?([\s\S]*?)```/g,
     (_match, lang, code) => {
       const idx = codeBlocks.length;
       if (lang === "mermaid") {
@@ -166,7 +166,7 @@ export function renderMarkdown(content: string): string {
   );
 
   html = html.replace(
-    /(?<!")(?<!=)(https?:\/\/[^\s<]+)/g,
+    /(?<![="'>])(https?:\/\/[^\s<"]+)/g,
     '<a href="$1" target="_blank" rel="noopener noreferrer" class="day-memo__link">$1</a>',
   );
 
@@ -385,15 +385,15 @@ export function escapeHtml(text: string): string {
 /**
  * Debounce a function call.
  */
-export function debounce<T extends (...args: unknown[]) => void>(
-  fn: T,
+export function debounce<A extends unknown[]>(
+  fn: (...args: A) => void,
   delay: number,
-): T {
+): (...args: A) => void {
   let timer: ReturnType<typeof setTimeout>;
-  return ((...args: unknown[]) => {
+  return (...args: A) => {
     clearTimeout(timer);
     timer = setTimeout(() => fn(...args), delay);
-  }) as T;
+  };
 }
 
 /**
@@ -428,9 +428,14 @@ function ensureMermaid(): Promise<void> {
       "protyleMermaidScript",
     ) as HTMLScriptElement;
     if (existing) {
+      let attempts = 0;
       const check = () => {
         if (window.mermaid) {
           resolve();
+          return;
+        }
+        if (++attempts > 100) {
+          reject(new Error("[DayMemo] Mermaid load timeout"));
           return;
         }
         setTimeout(check, 50);

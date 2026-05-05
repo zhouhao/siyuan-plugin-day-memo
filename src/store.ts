@@ -59,7 +59,7 @@ export class MemoDataStore {
     }
     for (const m of local) {
       const existing = merged.get(m.id);
-      if (!existing || m.updatedAt >= existing.updatedAt) {
+      if (!existing || m.updatedAt > existing.updatedAt) {
         merged.set(m.id, m);
       }
     }
@@ -85,6 +85,13 @@ export class MemoDataStore {
 
   private async persist(): Promise<void> {
     await this.plugin.saveData(STORAGE_MEMOS, this.store);
+  }
+
+  private persistSafe(): void {
+    this.persist().catch(() => {
+      // Persist failure is non-fatal; in-memory state stays correct.
+      // The next successful write will include the latest data.
+    });
   }
 
   private notify(): void {
@@ -113,7 +120,7 @@ export class MemoDataStore {
       ...this.store,
       memos: [memo, ...this.store.memos],
     };
-    this.persist();
+    this.persistSafe();
     this.notify();
     return memo;
   }
@@ -144,7 +151,7 @@ export class MemoDataStore {
         ...this.store.memos.map((m) => (m.id === parentId ? updatedParent : m)),
       ],
     };
-    this.persist();
+    this.persistSafe();
     this.notify();
     return annotation;
   }
@@ -158,7 +165,7 @@ export class MemoDataStore {
       ),
       updatedAt: now,
     }));
-    this.persist();
+    this.persistSafe();
     this.notify();
   }
 
@@ -170,7 +177,7 @@ export class MemoDataStore {
       updatedAt: Date.now(),
     }));
     if (!result) return null;
-    this.persist();
+    this.persistSafe();
     this.notify();
     return result;
   }
@@ -211,7 +218,7 @@ export class MemoDataStore {
       .filter((m) => !m.deleted);
 
     this.store = { ...this.store, memos };
-    this.persist();
+    this.persistSafe();
     this.notify();
     return true;
   }
@@ -223,7 +230,7 @@ export class MemoDataStore {
       updatedAt: Date.now(),
     }));
     if (!result) return null;
-    this.persist();
+    this.persistSafe();
     this.notify();
     return result;
   }
@@ -235,7 +242,7 @@ export class MemoDataStore {
       updatedAt: Date.now(),
     }));
     if (!result) return null;
-    this.persist();
+    this.persistSafe();
     this.notify();
     return result;
   }
@@ -247,7 +254,7 @@ export class MemoDataStore {
       updatedAt: Date.now(),
     }));
     if (!result) return null;
-    this.persist();
+    this.persistSafe();
     this.notify();
     return result;
   }
@@ -258,7 +265,7 @@ export class MemoDataStore {
       return { ...rest, updatedAt: Date.now() };
     });
     if (!result) return null;
-    this.persist();
+    this.persistSafe();
     this.notify();
     return result;
   }
@@ -483,7 +490,7 @@ export class MemoDataStore {
       ...this.store,
       memos: [memo, ...this.store.memos],
     };
-    this.persist();
+    this.persistSafe();
     this.notify();
     return memo;
   }

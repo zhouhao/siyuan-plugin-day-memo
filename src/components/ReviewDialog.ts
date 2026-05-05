@@ -115,7 +115,8 @@ export function showReviewDialog(
       if (content) {
         const memo = memos[currentIndex];
         store.updateMemo(memo.id, content);
-        memo.content = content;
+        const updated = store.getMemo(memo.id);
+        if (updated) memos[currentIndex] = updated;
         showMessage(i18n.memoUpdated || "Memo updated");
       }
     }

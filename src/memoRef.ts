@@ -8,7 +8,10 @@ export function makeMemoRefToken(memo: Memo): string {
   return `[@${safe}](memo-ref://${memo.id})`;
 }
 
-export function makeRefPreview(content: string): string {
+export function makeRefPreview(
+  content: string,
+  maxLen = PREVIEW_MAX_LEN,
+): string {
   const stripped = content
     .replace(/```[\s\S]*?```/g, "[code]")
     .replace(/!\[[^\]]*\]\([^)]*\)/g, "[image]")
@@ -16,7 +19,5 @@ export function makeRefPreview(content: string): string {
     .replace(/[*_~`#>]/g, "")
     .replace(/\s+/g, " ")
     .trim();
-  return stripped.length > PREVIEW_MAX_LEN
-    ? stripped.slice(0, PREVIEW_MAX_LEN) + "…"
-    : stripped;
+  return stripped.length > maxLen ? stripped.slice(0, maxLen) + "…" : stripped;
 }

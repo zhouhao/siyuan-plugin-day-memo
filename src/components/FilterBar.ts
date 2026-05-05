@@ -2,104 +2,102 @@ import { MemoDataStore } from "../store";
 import { MemoFilter } from "../types";
 
 export class FilterBar {
-    private container: HTMLElement;
-    private store: MemoDataStore;
-    private i18n: Record<string, string>;
+  private container: HTMLElement;
+  private store: MemoDataStore;
+  private i18n: Record<string, string>;
 
-    constructor(
-        container: HTMLElement,
-        store: MemoDataStore,
-        i18n: Record<string, string>,
-    ) {
-        this.container = container;
-        this.store = store;
-        this.i18n = i18n;
-        this.render();
+  constructor(
+    container: HTMLElement,
+    store: MemoDataStore,
+    i18n: Record<string, string>,
+  ) {
+    this.container = container;
+    this.store = store;
+    this.i18n = i18n;
+    this.render();
+  }
+
+  private render(): void {
+    this.container.innerHTML = "";
+    this.container.className = "day-memo__filter-bar";
+
+    const tabs = document.createElement("div");
+    tabs.className = "day-memo__filter-tabs";
+
+    const filters: Array<{ key: MemoFilter; label: string }> = [
+      { key: "all", label: this.i18n.allMemos },
+      { key: "pinned", label: this.i18n.pinned },
+      { key: "archived", label: this.i18n.archived },
+    ];
+
+    const currentFilter = this.store.getFilter();
+
+    for (const f of filters) {
+      const btn = document.createElement("button");
+      btn.className = "day-memo__filter-tab";
+      if (currentFilter.filter === f.key) {
+        btn.classList.add("day-memo__filter-tab--active");
+      }
+      btn.textContent = f.label;
+      btn.addEventListener("click", () => {
+        this.store.setFilter(f.key);
+        this.updateActiveTab(f.key);
+      });
+      btn.dataset.filter = f.key;
+      tabs.appendChild(btn);
     }
 
-    private render(): void {
-        this.container.innerHTML = "";
-        this.container.className = "day-memo__filter-bar";
+    this.container.appendChild(tabs);
+  }
 
-        const tabs = document.createElement("div");
-        tabs.className = "day-memo__filter-tabs";
+  private updateActiveTab(activeFilter: MemoFilter): void {
+    const tabs = this.container.querySelectorAll(".day-memo__filter-tab");
+    tabs.forEach((tab) => {
+      const el = tab as HTMLElement;
+      el.classList.toggle(
+        "day-memo__filter-tab--active",
+        el.dataset.filter === activeFilter,
+      );
+    });
+  }
 
-        const filters: Array<{ key: MemoFilter; label: string }> = [
-            { key: "all", label: this.i18n.allMemos },
-            { key: "pinned", label: this.i18n.pinned },
-            { key: "archived", label: this.i18n.archived },
-        ];
+  updateDateFilter(date: string | null): void {
+    const existing = this.container.querySelector(".day-memo__active-date");
+    if (existing) existing.remove();
 
-        const currentFilter = this.store.getFilter();
-
-        for (const f of filters) {
-            const btn = document.createElement("button");
-            btn.className = "day-memo__filter-tab";
-            if (currentFilter.filter === f.key) {
-                btn.classList.add("day-memo__filter-tab--active");
-            }
-            btn.textContent = f.label;
-            btn.addEventListener("click", () => {
-                this.store.setFilter(f.key);
-                this.updateActiveTab(f.key);
-            });
-            btn.dataset.filter = f.key;
-            tabs.appendChild(btn);
-        }
-
-        this.container.appendChild(tabs);
-    }
-
-    private updateActiveTab(activeFilter: MemoFilter): void {
-        const tabs = this.container.querySelectorAll(".day-memo__filter-tab");
-        tabs.forEach((tab) => {
-            const el = tab as HTMLElement;
-            el.classList.toggle(
-                "day-memo__filter-tab--active",
-                el.dataset.filter === activeFilter,
-            );
+    if (date) {
+      const dateBadge = document.createElement("div");
+      dateBadge.className = "day-memo__active-date";
+      dateBadge.innerHTML = `<span>📅 ${date}</span><button class="day-memo__active-date-clear">✕</button>`;
+      dateBadge
+        .querySelector(".day-memo__active-date-clear")
+        ?.addEventListener("click", () => {
+          this.store.setSelectedDate(null);
+          dateBadge.remove();
         });
+      this.container.appendChild(dateBadge);
     }
+  }
 
-    updateDateFilter(date: string | null): void {
-        const existing = this.container.querySelector(".day-memo__active-date");
-        if (existing) existing.remove();
+  updateTagFilter(tag: string | null): void {
+    const existing = this.container.querySelector(".day-memo__active-tag");
+    if (existing) existing.remove();
 
-        if (date) {
-            const dateBadge = document.createElement("div");
-            dateBadge.className = "day-memo__active-date";
-            dateBadge.innerHTML = `<span>📅 ${date}</span><button class="day-memo__active-date-clear">✕</button>`;
-            dateBadge.querySelector(".day-memo__active-date-clear")!.addEventListener(
-                "click",
-                () => {
-                    this.store.setSelectedDate(null);
-                    dateBadge.remove();
-                },
-            );
-            this.container.appendChild(dateBadge);
-        }
+    if (tag) {
+      const tagBadge = document.createElement("div");
+      tagBadge.className = "day-memo__active-tag";
+      tagBadge.innerHTML = `<span>#${tag}</span><button class="day-memo__active-tag-clear">✕</button>`;
+      tagBadge
+        .querySelector(".day-memo__active-tag-clear")
+        ?.addEventListener("click", () => {
+          this.store.setSelectedTag(null);
+          tagBadge.remove();
+        });
+      this.container.appendChild(tagBadge);
     }
+  }
 
-    updateTagFilter(tag: string | null): void {
-        const existing = this.container.querySelector(".day-memo__active-tag");
-        if (existing) existing.remove();
-
-        if (tag) {
-            const tagBadge = document.createElement("div");
-            tagBadge.className = "day-memo__active-tag";
-            tagBadge.innerHTML = `<span>#${tag}</span><button class="day-memo__active-tag-clear">✕</button>`;
-            tagBadge.querySelector(".day-memo__active-tag-clear")!.addEventListener(
-                "click",
-                () => {
-                    this.store.setSelectedTag(null);
-                    tagBadge.remove();
-                },
-            );
-            this.container.appendChild(tagBadge);
-        }
-    }
-
-    destroy(): void {
-        this.container.innerHTML = "";
-    }
+  destroy(): void {
+    this.container.innerHTML = "";
+  }
 }

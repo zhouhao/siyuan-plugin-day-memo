@@ -25,6 +25,7 @@ import { DockPanel } from "./components/DockPanel";
 export default class DayMemoPlugin extends Plugin {
   private store: MemoDataStore;
   private isMobile: boolean;
+  private storeReady: Promise<void> = Promise.resolve();
   private tabPanel: TabPanel | null = null;
   private dockPanel: DockPanel | null = null;
   private reminderService: ReminderService | null = null;
@@ -41,8 +42,10 @@ export default class DayMemoPlugin extends Plugin {
 </symbol>`);
 
     this.store = new MemoDataStore(this);
-    this.store.loadSettings();
-    this.store.load().then(() => {
+    this.storeReady = Promise.all([
+      this.store.loadSettings(),
+      this.store.load(),
+    ]).then(() => {
       this.reminderService = new ReminderService(this.store, this.i18n);
       this.tagTriggerService = new TagTriggerService(
         this,
@@ -56,7 +59,7 @@ export default class DayMemoPlugin extends Plugin {
       type: TAB_TYPE,
       init() {
         const tabEl = (this as { element: Element }).element as HTMLElement;
-        plugin.store.load().then(() => {
+        plugin.storeReady.then(() => {
           plugin.tabPanel = new TabPanel(tabEl, plugin.store, plugin.i18n);
         });
       },
@@ -77,7 +80,7 @@ export default class DayMemoPlugin extends Plugin {
       type: DOCK_TYPE,
       init() {
         const dockEl = (this as { element: Element }).element as HTMLElement;
-        plugin.store.load().then(() => {
+        plugin.storeReady.then(() => {
           plugin.dockPanel = new DockPanel(
             dockEl,
             plugin.store,
@@ -116,6 +119,7 @@ export default class DayMemoPlugin extends Plugin {
     this.reminderService?.destroy();
     this.tagTriggerService?.destroy();
     this.tabPanel?.destroy();
+    this.dockPanel?.destroy();
   }
 
   openSetting(): void {

@@ -1,8 +1,8 @@
 import { Memo } from "../types";
 import { MemoDataStore } from "../store";
+import { makeRefPreview } from "../memoRef";
 
 const MAX_RESULTS = 8;
-const PREVIEW_MAX_LEN = 30;
 
 export interface MentionPopupCallbacks {
   onSelect: (memo: Memo) => void;
@@ -114,7 +114,7 @@ export class MentionPopup {
       if (idx === this.selectedIndex) {
         item.classList.add("day-memo__mention-item--active");
       }
-      const preview = makePreview(memo.content);
+      const preview = makeRefPreview(memo.content, 30);
       item.textContent = preview || memo.id;
       item.addEventListener("mousedown", (e) => {
         e.preventDefault();
@@ -153,19 +153,6 @@ export class MentionPopup {
   destroy(): void {
     this.el.remove();
   }
-}
-
-function makePreview(content: string): string {
-  const stripped = content
-    .replace(/```[\s\S]*?```/g, "[code]")
-    .replace(/!\[[^\]]*\]\([^)]*\)/g, "[image]")
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-    .replace(/[*_~`#>]/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-  return stripped.length > PREVIEW_MAX_LEN
-    ? stripped.slice(0, PREVIEW_MAX_LEN) + "…"
-    : stripped;
 }
 
 // Minimal caret position via mirror div — based on textarea-caret-position by Jonathan Ong
@@ -215,9 +202,8 @@ function getCaretCoordinates(
   style.position = "absolute";
   style.visibility = "hidden";
   MIRROR_PROPS.forEach((prop) => {
-    (style as any)[prop] = computed.getPropertyValue(
-      prop.replace(/([A-Z])/g, "-$1").toLowerCase(),
-    );
+    const cssProperty = prop.replace(/([A-Z])/g, "-$1").toLowerCase();
+    style.setProperty(cssProperty, computed.getPropertyValue(cssProperty));
   });
   div.textContent = el.value.substring(0, position);
   const span = document.createElement("span");

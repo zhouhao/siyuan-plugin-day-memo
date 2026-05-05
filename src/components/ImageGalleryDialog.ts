@@ -39,7 +39,7 @@ export function showImageGalleryDialog(
   const images = extractAllImages(store);
 
   if (images.length === 0) {
-    new Dialog({
+    const emptyDialog = new Dialog({
       title: i18n.gallery || "Gallery",
       content: `<div class="b3-dialog__content">
         <div class="day-memo__review-empty">${i18n.galleryEmpty || "No images yet."}</div>
@@ -48,13 +48,10 @@ export function showImageGalleryDialog(
         <button class="b3-button b3-button--cancel">${i18n.reviewClose || "Close"}</button>
       </div>`,
       width: "520px",
-    }).element
-      .querySelector(".b3-button--cancel")!
-      .addEventListener("click", function () {
-        (this as HTMLElement).closest(".b3-dialog--open")
-          ?.querySelector<HTMLElement>(".b3-dialog__close")
-          ?.click();
-      });
+    });
+    emptyDialog.element
+      .querySelector(".b3-button--cancel")
+      ?.addEventListener("click", () => emptyDialog.destroy());
     return;
   }
 
