@@ -36,6 +36,9 @@ async function reuploadAsset(assetPath: string): Promise<string | null> {
   }
 }
 
+// Idempotency: after migration, paths start with PLUGIN_ASSETS_PREFIX which
+// does not match OLD_ASSET_RE, so re-running always exits early at the
+// collectOldAssetPaths check — safe to run multiple times.
 async function run(
   store: MemoDataStore,
   i18n: Record<string, string>,
@@ -77,6 +80,10 @@ async function run(
   }
 
   if (migratedCount > 0) {
+    // Flush memo content changes to disk before the runner records this
+    // migration as applied, so a crash between the two saves can't leave
+    // stale /assets/ paths in storage while migration-state marks 001 done.
+    await store.persistNow();
     await pushMsg(
       (
         i18n.assetsMigrated ||

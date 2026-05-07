@@ -87,6 +87,10 @@ export class MemoDataStore {
     await this.plugin.saveData(STORAGE_MEMOS, this.store);
   }
 
+  async persistNow(): Promise<void> {
+    await this.persist();
+  }
+
   private persistSafe(): void {
     this.persist().catch(() => {
       // Persist failure is non-fatal; in-memory state stays correct.
