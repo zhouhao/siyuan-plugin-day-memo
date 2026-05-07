@@ -117,5 +117,7 @@
   "exportAllMarkdown": "Export All as Markdown",
   "exportAllMarkdownDesc": "Download all memos as a single Markdown file",
   "exportSuccess": "Exported {count} memos",
-  "exportEmpty": "No memos to export"
+  "exportEmpty": "No memos to export",
+  "migratingAssets": "DayMemo: migrating {count} file(s) to safe storage...",
+  "assetsMigrated": "DayMemo: migration complete — {count} memo(s) updated."
 }

@@ -117,5 +117,7 @@
   "exportAllMarkdown": "导出全部为 Markdown",
   "exportAllMarkdownDesc": "将所有便签下载为一个 Markdown 文件",
   "exportSuccess": "已导出 {count} 条便签",
-  "exportEmpty": "没有可导出的便签"
+  "exportEmpty": "没有可导出的便签",
+  "migratingAssets": "DayMemo：正在迁移 {count} 个文件到安全存储...",
+  "assetsMigrated": "DayMemo：迁移完成，已更新 {count} 条便签。"
 }

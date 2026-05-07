@@ -19,6 +19,7 @@ import { generateId, formatDate } from "./utils";
 import { MemoDataStore } from "./store";
 import { ReminderService } from "./ReminderService";
 import { TagTriggerService } from "./TagTriggerService";
+import { runMigrations } from "./migrations";
 import { TabPanel } from "./components/TabPanel";
 import { DockPanel } from "./components/DockPanel";
 
@@ -52,6 +53,10 @@ export default class DayMemoPlugin extends Plugin {
         this.store,
         this.i18n,
       );
+      // Run pending migrations in the background after UI is ready
+      setTimeout(() => {
+        runMigrations(this, this.store, this.i18n).catch(() => {});
+      }, 2000);
     });
 
     const plugin = this;
