@@ -6,6 +6,7 @@ import {
   openTab,
   Setting,
 } from "siyuan";
+import { pushErrMsg } from "./api";
 import "./index.scss";
 
 import {
@@ -53,10 +54,6 @@ export default class DayMemoPlugin extends Plugin {
         this.store,
         this.i18n,
       );
-      // Run pending migrations in the background after UI is ready
-      setTimeout(() => {
-        runMigrations(this, this.store, this.i18n).catch(() => {});
-      }, 2000);
     });
 
     const plugin = this;
@@ -117,6 +114,14 @@ export default class DayMemoPlugin extends Plugin {
       callback: () => {
         this.openDayMemoTab();
       },
+    });
+
+    // Run pending migrations after layout and store are both ready
+    this.storeReady.then(() => {
+      runMigrations(this, this.store, this.i18n).catch((err: unknown) => {
+        const msg = err instanceof Error ? err.message : String(err);
+        pushErrMsg(`DayMemo migration error: ${msg}`);
+      });
     });
   }
 

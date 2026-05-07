@@ -31,8 +31,9 @@ export async function runMigrations(
     if (applied.has(migration.id)) continue;
     try {
       await migration.run(store, i18n);
-    } catch {
+    } catch (err) {
       // Non-fatal: skip failed migration, retry next startup
+      console.error(`[DayMemo] Migration "${migration.id}" failed:`, err);
       continue;
     }
     applied.add(migration.id);
