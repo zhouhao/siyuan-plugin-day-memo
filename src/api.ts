@@ -171,7 +171,8 @@ export async function sendToFlomo(
 }
 
 /**
- * Upload asset files to SiYuan's assets directory.
+ * Upload asset files to the plugin's own storage directory so they are not
+ * affected by SiYuan's "delete unreferenced assets" cleanup operation.
  * Uses /api/asset/upload (multipart/form-data).
  * Returns a map of original filename → uploaded asset path.
  */
@@ -179,7 +180,7 @@ export async function uploadAsset(
   files: File[],
 ): Promise<Record<string, string>> {
   const form = new FormData();
-  form.append("assetsDirPath", "/assets/");
+  form.append("assetsDirPath", "/storage/petal/siyuan-plugin-day-memo/assets/");
   for (const file of files) {
     form.append("file[]", file);
   }
