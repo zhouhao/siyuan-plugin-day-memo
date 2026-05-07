@@ -21,6 +21,7 @@ import { MemoDataStore } from "./store";
 import { ReminderService } from "./ReminderService";
 import { TagTriggerService } from "./TagTriggerService";
 import { runMigrations } from "./migrations";
+import { verifyAndRestoreAssets } from "./asset-recovery";
 import { TabPanel } from "./components/TabPanel";
 import { DockPanel } from "./components/DockPanel";
 
@@ -116,13 +117,27 @@ export default class DayMemoPlugin extends Plugin {
       },
     });
 
-    // Run pending migrations after layout and store are both ready
-    this.storeReady.then(() => {
-      runMigrations(this, this.store, this.i18n).catch((err: unknown) => {
-        const msg = err instanceof Error ? err.message : String(err);
-        pushErrMsg(`DayMemo migration error: ${msg}`);
+    // Run migrations + asset verification after layout and store are ready.
+    console.log("[DayMemo] onLayoutReady — scheduling startup tasks");
+    this.storeReady
+      .then(async () => {
+        console.log("[DayMemo] storeReady resolved — running migrations");
+        try {
+          await runMigrations(this, this.store, this.i18n);
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : String(err);
+          console.error("[DayMemo] Migration error:", err);
+          pushErrMsg(`DayMemo migration error: ${msg}`);
+        }
+        try {
+          await verifyAndRestoreAssets(this.store, this.i18n);
+        } catch (err) {
+          console.error("[DayMemo] Asset verification error:", err);
+        }
+      })
+      .catch((err) => {
+        console.error("[DayMemo] storeReady rejected:", err);
       });
-    });
   }
 
   onunload(): void {

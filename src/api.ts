@@ -171,8 +171,11 @@ export async function sendToFlomo(
 }
 
 /**
- * Upload asset files to the plugin's own storage directory so they are not
- * affected by SiYuan's "delete unreferenced assets" cleanup operation.
+ * Upload asset files to SiYuan's assets directory.
+ * NOTE: We must use /assets/ here because SiYuan's HTTP server only serves
+ * static files from data/assets/. Files in data/storage/petal/... cannot be
+ * rendered as <img src>. The "delete unreferenced assets" issue (#31) is
+ * handled separately by a backup-and-restore migration.
  * Uses /api/asset/upload (multipart/form-data).
  * Returns a map of original filename → uploaded asset path.
  */
@@ -180,7 +183,7 @@ export async function uploadAsset(
   files: File[],
 ): Promise<Record<string, string>> {
   const form = new FormData();
-  form.append("assetsDirPath", "/storage/petal/siyuan-plugin-day-memo/assets/");
+  form.append("assetsDirPath", "/assets/");
   for (const file of files) {
     form.append("file[]", file);
   }
@@ -194,4 +197,66 @@ export async function uploadAsset(
     throw new Error(result.msg || "Upload failed");
   }
   return result.data.succMap as Record<string, string>;
+}
+
+/**
+ * Generic file API helpers — used to back up assets to plugin storage and
+ * restore them when SiYuan's "delete unreferenced assets" wipes data/assets/.
+ */
+
+export const ASSETS_BACKUP_DIR =
+  "/data/storage/petal/siyuan-plugin-day-memo/assets-backup/";
+export const ASSETS_DIR = "/data/assets/";
+
+export interface DirEntry {
+  name: string;
+  isDir: boolean;
+  updated?: number;
+}
+
+export async function readDir(path: string): Promise<DirEntry[]> {
+  try {
+    const data = (await request("/api/file/readDir", { path })) as DirEntry[];
+    return data || [];
+  } catch {
+    return [];
+  }
+}
+
+export async function putFile(path: string, file: File | Blob): Promise<void> {
+  const form = new FormData();
+  form.append("path", path);
+  form.append("isDir", "false");
+  form.append("modTime", String(Date.now()));
+  form.append("file", file);
+  const response = await fetch("/api/file/putFile", {
+    method: "POST",
+    body: form,
+  });
+  if (!response.ok) {
+    throw new Error(`putFile failed: ${response.status}`);
+  }
+  const result = await response.json();
+  if (result.code !== 0) {
+    throw new Error(result.msg || "putFile failed");
+  }
+}
+
+export async function getFile(path: string): Promise<Blob | null> {
+  const response = await fetch(
+    `/api/file/getFile?path=${encodeURIComponent(path)}`,
+  );
+  if (!response.ok) return null;
+  return await response.blob();
+}
+
+/**
+ * Save a copy of an uploaded asset to plugin storage so it can be restored
+ * if SiYuan's cleanup later deletes the original from data/assets/.
+ */
+export async function backupAsset(
+  file: File | Blob,
+  filename: string,
+): Promise<void> {
+  await putFile(`${ASSETS_BACKUP_DIR}${filename}`, file);
 }

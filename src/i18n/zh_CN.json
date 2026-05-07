@@ -118,6 +118,9 @@
   "exportAllMarkdownDesc": "将所有便签下载为一个 Markdown 文件",
   "exportSuccess": "已导出 {count} 条便签",
   "exportEmpty": "没有可导出的便签",
-  "migratingAssets": "DayMemo：正在迁移 {count} 个文件到安全存储...",
-  "assetsMigrated": "DayMemo：迁移完成，已更新 {count} 条便签。"
+  "recoveringAssets": "DayMemo：正在修复 {count} 个损坏的图片...",
+  "assetsRecovered": "DayMemo：已修复 {count} 条便签中的图片。",
+  "restoringAssets": "DayMemo：正在从备份恢复 {count} 个丢失的图片...",
+  "assetsRestored": "DayMemo：已恢复 {count} 个图片。",
+  "assetsUnrecoverable": "DayMemo：{count} 个图片无备份，无法恢复。"
 }

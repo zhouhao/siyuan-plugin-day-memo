@@ -1,6 +1,6 @@
 import { MemoDataStore } from "../store";
 import { Memo, MemoTemplate } from "../types";
-import { uploadAsset, pushErrMsg } from "../api";
+import { uploadAsset, backupAsset, pushErrMsg } from "../api";
 import { MentionPopup } from "./MentionPopup";
 import { makeMemoRefToken } from "../memoRef";
 
@@ -354,6 +354,19 @@ export class MemoEditor {
       const succMap = await uploadAsset(files);
       const insertParts: string[] = [];
       for (const [originalName, assetPath] of Object.entries(succMap)) {
+        // Mirror the uploaded file into plugin storage as a backup so it can
+        // be restored if SiYuan's "delete unreferenced assets" later wipes it
+        // from data/assets/. Fire-and-forget; never block the editor on this.
+        const renamedFilename = assetPath.split("/").pop();
+        const sourceFile = files.find((f) => f.name === originalName);
+        if (renamedFilename && sourceFile) {
+          backupAsset(sourceFile, renamedFilename).catch((err) => {
+            console.warn(
+              `[DayMemo] Failed to back up ${renamedFilename}:`,
+              err,
+            );
+          });
+        }
         if (mode === "image") {
           const alt = originalName.replace(/\.[^.]+$/, "");
           insertParts.push(`![${alt}](${assetPath})`);

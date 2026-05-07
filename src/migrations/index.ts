@@ -1,6 +1,6 @@
 import type { Plugin } from "siyuan";
 import { MemoDataStore } from "../store";
-import { migration001 } from "./001-migrate-assets-to-plugin-storage";
+import { migration001 } from "./001-recover-storage-petal-paths";
 
 export interface Migration {
   id: string;
@@ -23,12 +23,22 @@ export async function runMigrations(
   store: MemoDataStore,
   i18n: Record<string, string>,
 ): Promise<void> {
+  console.log("[DayMemo] runMigrations called");
   const raw = await plugin.loadData(STORAGE_KEY);
   const state: MigrationState = raw || { applied: [] };
   const applied = new Set(state.applied);
+  console.log(
+    `[DayMemo] Already-applied migrations: ${JSON.stringify(state.applied)}`,
+  );
 
   for (const migration of MIGRATIONS) {
-    if (applied.has(migration.id)) continue;
+    if (applied.has(migration.id)) {
+      console.log(
+        `[DayMemo] Skipping already-applied migration ${migration.id}`,
+      );
+      continue;
+    }
+    console.log(`[DayMemo] Running migration ${migration.id}`);
     try {
       await migration.run(store, i18n);
     } catch (err) {
@@ -39,5 +49,6 @@ export async function runMigrations(
     applied.add(migration.id);
     state.applied = Array.from(applied);
     await plugin.saveData(STORAGE_KEY, state);
+    console.log(`[DayMemo] Migration ${migration.id} completed and recorded`);
   }
 }
