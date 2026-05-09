@@ -118,8 +118,6 @@
   "exportAllMarkdownDesc": "Download all memos as a single Markdown file",
   "exportSuccess": "Exported {count} memos",
   "exportEmpty": "No memos to export",
-  "recoveringAssets": "DayMemo: recovering {count} broken image(s)...",
-  "assetsRecovered": "DayMemo: recovered images in {count} memo(s).",
   "restoringAssets": "DayMemo: restoring {count} missing image(s) from backup...",
   "assetsRestored": "DayMemo: restored {count} image(s).",
   "assetsUnrecoverable": "DayMemo: {count} image(s) could not be restored (no backup)."
