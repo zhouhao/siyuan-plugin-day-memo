@@ -11,7 +11,7 @@ A lightweight, [Memos](https://github.com/usememos/memos)-inspired quick note-ta
 - **Markdown Support** — Bold, italic, code, links, images, and more — rendered inline
 - **Interactive Checklist** — Use `- [ ]` and `- [x]` syntax for task lists; checkboxes are clickable and toggle state is saved automatically
 - **Mermaid Diagrams** — Fenced code blocks with ` ```mermaid ` are rendered as diagrams (flowcharts, sequence diagrams, etc.) using SiYuan's built-in Mermaid — zero extra dependencies
-- **Image & Attachment Upload** — Upload images (button, paste, drag-drop) and arbitrary file attachments (zip, pdf, etc.) directly into memos; stored in SiYuan's `data/assets/` and synced automatically
+- **Image & Attachment Upload** — Upload images (button, paste, drag-drop) and arbitrary file attachments (zip, pdf, etc.) directly into memos; stored in SiYuan's `data/assets/` and synced automatically. Every uploaded file is also mirrored to the plugin's own storage as a backup, so SiYuan's "delete unreferenced assets" cleanup can no longer permanently lose your memo images — missing files are automatically restored from backup on the next plugin load
 - **Multi-Level Tag System** — Use `#tag` or `#parent/child/grandchild` syntax (Flomo-style) to organize memos; tags are displayed as a collapsible tree in the sidebar with expand/collapse toggles; clicking a parent tag filters all its child tags too
 - **Calendar View** — Real month calendar with `‹` `›` navigation, "Today" button to jump back, heatmap coloring by memo density, and click-to-filter by date
 - **Timeline View** — Memos grouped by date, newest first
@@ -107,10 +107,13 @@ Open plugin settings (click the gear icon on the DayMemo plugin card in SiYuan's
 
 - Memos: `data/storage/petal/siyuan-plugin-day-memo/memos-data`
 - Settings: `data/storage/petal/siyuan-plugin-day-memo/settings`
+- Asset backups: `data/storage/petal/siyuan-plugin-day-memo/assets-backup/`
 
-Both are automatically included in SiYuan's cloud sync.
+All three are automatically included in SiYuan's cloud sync.
 
-Uploaded images and attachments are stored in SiYuan's standard `data/assets/` directory, also included in cloud sync.
+Uploaded images and attachments are stored in SiYuan's standard `data/assets/` directory (also synced) so SiYuan's HTTP server can render them inline.
+
+**Cleanup resilience**: SiYuan's "delete unreferenced assets" tool only scans `.sy` documents for asset references and is unaware of memos stored in plugin data — left unchecked, running it would permanently delete your memo images. To prevent this, every uploaded file is mirrored into the plugin's own `assets-backup/` directory. On every plugin startup, missing files in `data/assets/` that are referenced by any memo are automatically restored from the backup. The first time you load this version, any pre-existing memo assets are also backfilled to the backup directory.
 
 **Multi-device safety**: When loading data, the plugin performs a timestamp-based merge — for each memo, the version with the newer `updatedAt` wins. Deletes use soft-delete (tombstone) flags so they propagate correctly across devices.
 
