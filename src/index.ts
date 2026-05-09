@@ -21,7 +21,7 @@ import { MemoDataStore } from "./store";
 import { ReminderService } from "./ReminderService";
 import { TagTriggerService } from "./TagTriggerService";
 import { runMigrations } from "./migrations";
-import { verifyAndRestoreAssets } from "./asset-recovery";
+import { verifyAndRestoreAssets, backfillAssetBackups } from "./asset-recovery";
 import { TabPanel } from "./components/TabPanel";
 import { DockPanel } from "./components/DockPanel";
 
@@ -128,6 +128,11 @@ export default class DayMemoPlugin extends Plugin {
           const msg = err instanceof Error ? err.message : String(err);
           console.error("[DayMemo] Migration error:", err);
           pushErrMsg(`DayMemo migration error: ${msg}`);
+        }
+        try {
+          await backfillAssetBackups(this.store);
+        } catch (err) {
+          console.error("[DayMemo] Asset backfill error:", err);
         }
         try {
           await verifyAndRestoreAssets(this.store, this.i18n);
