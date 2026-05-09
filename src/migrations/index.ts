@@ -2,6 +2,7 @@ import type { Plugin } from "siyuan";
 import { MemoDataStore } from "../store";
 import { migration001 } from "./001-recover-storage-petal-paths";
 import { migration002 } from "./002-recover-storage-petal-paths-retry";
+import { migration003 } from "./003-recover-storage-petal-paths-retry-2";
 
 export interface Migration {
   id: string;
@@ -17,6 +18,7 @@ const STORAGE_KEY = "migration-state";
 const MIGRATIONS: Migration[] = [
   migration001,
   migration002,
+  migration003,
   // Add future migrations here in order
 ];
 

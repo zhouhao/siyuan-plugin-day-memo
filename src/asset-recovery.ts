@@ -10,7 +10,8 @@ import {
 import { MemoDataStore } from "./store";
 
 // Match `(assets/...)` or `(/assets/...)` inside markdown link syntax.
-const ASSET_REF_RE = /\((\/?assets\/([^)\s]+))\)/g;
+// `[^)]+` (not `[^)\s]+`) so filenames containing spaces still match.
+const ASSET_REF_RE = /\((\/?assets\/([^)]+))\)/g;
 
 function collectReferencedAssets(contents: string[]): Set<string> {
   const filenames = new Set<string>();
@@ -18,7 +19,10 @@ function collectReferencedAssets(contents: string[]): Set<string> {
     const re = new RegExp(ASSET_REF_RE.source, "g");
     let m: RegExpExecArray | null;
     while ((m = re.exec(content)) !== null) {
-      filenames.add(m[2]);
+      // m[2] is everything after `assets/`; take the last path segment so
+      // that subdirectories under data/assets/ are handled correctly.
+      const filename = m[2].split("/").pop();
+      if (filename) filenames.add(filename);
     }
   }
   return filenames;

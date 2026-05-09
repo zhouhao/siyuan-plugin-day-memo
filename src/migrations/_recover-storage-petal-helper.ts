@@ -10,8 +10,11 @@ import { MemoDataStore } from "../store";
 // Used by both migration 001 and 002; 002 exists to re-run on installs
 // where 001 was recorded as applied under the original buggy implementation
 // (which used GET /api/file/getFile and silently failed on every fetch).
+// Allow optional leading slash (SiYuan returns paths without one) and
+// permit spaces inside filenames (the only thing that terminates a markdown
+// link path is the closing `)`).
 const BROKEN_PATH_RE =
-  /\((\/storage\/petal\/siyuan-plugin-day-memo\/assets\/[^)\s]+)\)/g;
+  /\((\/?storage\/petal\/siyuan-plugin-day-memo\/assets\/[^)]+)\)/g;
 
 function collectBrokenPaths(contents: string[]): Set<string> {
   const paths = new Set<string>();
@@ -27,9 +30,13 @@ function collectBrokenPaths(contents: string[]): Set<string> {
 
 async function recoverAsset(brokenPath: string): Promise<string | null> {
   try {
-    const blob = await getFile(`/data${brokenPath}`);
+    // Normalize: brokenPath may or may not have a leading slash.
+    const normalized = brokenPath.startsWith("/")
+      ? brokenPath
+      : `/${brokenPath}`;
+    const blob = await getFile(`/data${normalized}`);
     if (!blob) return null;
-    const filename = brokenPath.split("/").pop()!;
+    const filename = normalized.split("/").pop()!;
     const file = new File([blob], filename, {
       type: blob.type || "application/octet-stream",
     });
