@@ -243,10 +243,20 @@ export async function putFile(path: string, file: File | Blob): Promise<void> {
 }
 
 export async function getFile(path: string): Promise<Blob | null> {
-  const response = await fetch(
-    `/api/file/getFile?path=${encodeURIComponent(path)}`,
-  );
+  // SiYuan's /api/file/getFile is POST with a JSON body, not GET with a
+  // query parameter. On success it streams the raw file bytes; on error it
+  // returns a JSON envelope, so we must check Content-Type before treating
+  // the response as a Blob.
+  const response = await fetch("/api/file/getFile", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ path }),
+  });
   if (!response.ok) return null;
+  const contentType = response.headers.get("content-type") || "";
+  if (contentType.includes("application/json")) {
+    return null;
+  }
   return await response.blob();
 }
 
