@@ -156,6 +156,19 @@ export default class DayMemoPlugin extends Plugin {
     useCurrentDateInput.type = "checkbox";
     useCurrentDateInput.checked = !!currentSettings.useCurrentDateForDailyNote;
 
+    const attributionEnabledInput = document.createElement("input");
+    attributionEnabledInput.className = "b3-switch fn__flex-center";
+    attributionEnabledInput.type = "checkbox";
+    attributionEnabledInput.checked =
+      currentSettings.dailyNoteAttributionEnabled !== false;
+
+    const attributionTextInput = document.createElement("input");
+    attributionTextInput.className = "b3-text-field";
+    attributionTextInput.style.width = "300px";
+    attributionTextInput.placeholder =
+      this.i18n.settingDailyNoteAttributionTextPlaceholder;
+    attributionTextInput.value = currentSettings.dailyNoteAttributionText || "";
+
     const enableRulesInput = document.createElement("input");
     enableRulesInput.className = "b3-switch fn__flex-center";
     enableRulesInput.type = "checkbox";
@@ -355,6 +368,8 @@ export default class DayMemoPlugin extends Plugin {
           tagTriggerEnabled: tagTriggerEnabledInput.checked,
           triggerTag:
             triggerTagInput.value.trim().replace(/^#/, "") || "to-memo",
+          dailyNoteAttributionEnabled: attributionEnabledInput.checked,
+          dailyNoteAttributionText: attributionTextInput.value.trim(),
           flomoSyncEnabled: flomoSyncEnabledInput.checked,
           flomoWebhookUrl: flomoWebhookUrlInput.value.trim(),
         };
@@ -375,6 +390,20 @@ export default class DayMemoPlugin extends Plugin {
       description: this.i18n.settingUseCurrentDateDesc,
       direction: "row",
       actionElement: useCurrentDateInput,
+    });
+
+    setting.addItem({
+      title: this.i18n.settingDailyNoteAttribution,
+      description: this.i18n.settingDailyNoteAttributionDesc,
+      direction: "row",
+      actionElement: attributionEnabledInput,
+    });
+
+    setting.addItem({
+      title: this.i18n.settingDailyNoteAttributionText,
+      description: this.i18n.settingDailyNoteAttributionTextDesc,
+      direction: "row",
+      actionElement: attributionTextInput,
     });
 
     setting.addItem({

@@ -28,10 +28,14 @@ export async function handleAddToDailyNote(
     const dateToUse = settings.useCurrentDateForDailyNote
       ? Date.now()
       : memo.createdAt;
+    const attributionEnabled = settings.dailyNoteAttributionEnabled !== false;
+    const attribution = attributionEnabled
+      ? settings.dailyNoteAttributionText || i18n.fromDayMemo
+      : "";
     await addToDailyNote(
       memo.content,
       dateToUse,
-      i18n.fromDayMemo,
+      attribution,
       template,
       settings.enableReplacementRules,
       settings.replacementRules,

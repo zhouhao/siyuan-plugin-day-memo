@@ -144,7 +144,9 @@ export async function addToDailyNote(
   }
 
   processedMemoContent = convertTagsToSiYuanFormat(processedMemoContent);
-  const content = `> ${sourceLabel}\n\n${processedMemoContent}`;
+  const content = sourceLabel
+    ? `> ${sourceLabel}\n\n${processedMemoContent}`
+    : processedMemoContent;
   await appendBlock(docId, content);
 }
 

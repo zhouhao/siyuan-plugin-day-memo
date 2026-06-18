@@ -79,6 +79,10 @@ Open plugin settings (click the gear icon on the DayMemo plugin card in SiYuan's
 
 - **Use Current Date for Daily Note** — When enabled, uses the current system date when adding a memo to Daily Note; when disabled (default), uses the memo's creation date.
 
+- **Show Attribution Block** — When enabled (default), an attribution blockquote is inserted above the memo content when adding to Daily Note. Disable this to insert the memo content only, with no attribution header.
+
+- **Attribution Text** — Custom text for the attribution blockquote. Leave empty to use the default ("From DayMemo"). Only applies when **Show Attribution Block** is enabled.
+
 - **Enable Regex Replacement** — Toggle switch to enable/disable regex replacement rules when adding memos to Daily Note.
 
 - **Replacement Rules** — A list of regex find-and-replace pairs applied (in order) to memo content before appending to Daily Note. Each rule has:

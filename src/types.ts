@@ -51,6 +51,8 @@ export interface PluginSettings {
   enableReplacementRules?: boolean;
   replacementRules?: ReplacementRule[];
   useCurrentDateForDailyNote?: boolean;
+  dailyNoteAttributionEnabled?: boolean;
+  dailyNoteAttributionText?: string;
   templates?: MemoTemplate[];
   tagTriggerEnabled?: boolean;
   triggerTag?: string;
