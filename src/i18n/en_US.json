@@ -77,7 +77,7 @@
   "settingUseCurrentDate": "Use Current Date for Daily Note",
   "settingUseCurrentDateDesc": "When enabled, uses the current system date; when disabled, uses the memo's creation date",
   "settingDailyNoteAttribution": "Show Attribution Block",
-  "settingDailyNoteAttributionDesc": "When enabled, adds an attribution blockquote above the memo content when adding to Daily Note",
+  "settingDailyNoteAttributionDesc": "Show an attribution blockquote above the content inside the Daily Note super block. The card style and plugin badge remain visible when disabled.",
   "settingDailyNoteAttributionText": "Attribution Text",
   "settingDailyNoteAttributionTextDesc": "Custom text for the attribution block. Leave empty to use the default.",
   "settingDailyNoteAttributionTextPlaceholder": "e.g. From DayMemo",

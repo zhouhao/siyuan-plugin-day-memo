@@ -17,7 +17,7 @@ A lightweight, [Memos](https://github.com/usememos/memos)-inspired quick note-ta
 - **Timeline View** — Memos grouped by date, newest first
 - **Search** — Full-text search across all memos in the sidebar
 - **Filter Tabs** — Switch between All / Pinned / Archived views
-- **Add to Daily Note** — One-click to append any memo into SiYuan's Daily Note for the memo's creation date, with source attribution; supports custom path templates with rich date variables (see Settings below)
+- **Add to Daily Note** — Append any memo into SiYuan's Daily Note for the memo's creation date. Each insertion wraps the attribution and full content in one vertical super block, with a theme-colored left border, tinted background, and DayMemo badge in light and dark themes; supports custom path templates with rich date variables (see Settings below)
 - **Regex Replacement Rules** — Define custom regex find-and-replace rules (in Settings) that are automatically applied to memo content before it's added to Daily Note — e.g., convert `#task ` lines into `- [ ] ` checklist items
 - **Right-Click Context Menu** — Right-click any memo for quick actions: edit, pin, archive, add to daily note, set reminder, copy content, delete
 - **Reminders** — Set a reminder on any memo via the right-click menu; a datetime picker dialog defaults to 10 minutes from now; when the time arrives, you get both a SiYuan in-app notification and a browser system notification
@@ -79,7 +79,7 @@ Open plugin settings (click the gear icon on the DayMemo plugin card in SiYuan's
 
 - **Use Current Date for Daily Note** — When enabled, uses the current system date when adding a memo to Daily Note; when disabled (default), uses the memo's creation date.
 
-- **Show Attribution Block** — When enabled (default), an attribution blockquote is inserted above the memo content when adding to Daily Note. Disable this to insert the memo content only, with no attribution header.
+- **Show Attribution Block** — When enabled (default), an attribution blockquote appears above the content inside the Daily Note super block. Disabling it hides that text while keeping the card and plugin badge. The new style applies to memos inserted after updating; existing diary entries are unchanged. Card styling requires the plugin to be enabled.
 
 - **Attribution Text** — Custom text for the attribution blockquote. Leave empty to use the default ("From DayMemo"). Only applies when **Show Attribution Block** is enabled.
 

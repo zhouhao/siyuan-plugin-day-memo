@@ -1,3 +1,35 @@
+// Persisted attributes keep diary cards identifiable after reloads and sync.
+.protyle-wysiwyg [data-type="NodeSuperBlock"][custom-day-memo="true"],
+.b3-typography [data-type="NodeSuperBlock"][custom-day-memo="true"] {
+    box-sizing: border-box;
+    margin: 12px 0;
+    padding: 12px 14px;
+    border: 1px solid var(--b3-theme-primary-lighter);
+    border-left: 4px solid var(--b3-theme-primary);
+    border-radius: 8px;
+    background-color: var(--b3-theme-primary-lightest);
+
+    &::before {
+        content: "▤ " attr(custom-day-memo-label);
+        display: block;
+        align-self: flex-start;
+        width: fit-content;
+        max-width: 100%;
+        box-sizing: border-box;
+        margin: 0 0 8px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        background-color: var(--b3-theme-primary-lighter);
+        color: var(--b3-theme-primary);
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.6;
+        overflow-wrap: anywhere;
+        pointer-events: none;
+        user-select: none;
+    }
+}
+
 .day-memo__tab {
     display: flex;
     width: 100%;

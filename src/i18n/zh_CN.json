@@ -73,7 +73,7 @@
   "settingDailyNotePathPlaceholder": "例如 /Daily Note/{{now | date \"2006/01\"}}/第{{now | ISOWeek}}周/{{now | date \"2006-01-02\"}}-周{{now | WeekdayCN}}",
   "settingsSaved": "设置已保存",
   "settingDailyNoteAttribution": "显示来源引用块",
-  "settingDailyNoteAttributionDesc": "启用后，添加到今日笔记时会在内容上方插入来源引用块",
+  "settingDailyNoteAttributionDesc": "启用后，在日记超级块内的正文上方显示来源引用文字；关闭后仍保留卡片样式和插件角标",
   "settingDailyNoteAttributionText": "来源文字",
   "settingDailyNoteAttributionTextDesc": "自定义来源引用块的文字。留空则使用默认文字。",
   "settingDailyNoteAttributionTextPlaceholder": "例如：来自「日记便签」",

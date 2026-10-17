@@ -39,6 +39,7 @@ export async function handleAddToDailyNote(
       template,
       settings.enableReplacementRules,
       settings.replacementRules,
+      i18n.pluginName,
     );
     showMessage(i18n.addedToDailyNote);
   } catch {

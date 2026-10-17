@@ -1,5 +1,5 @@
 import { fetchPost } from "siyuan";
-import { renderDailyNotePath, convertTagsToSiYuanFormat } from "./utils";
+import { renderDailyNotePath, convertTagsToSiYuanFormat, escapeHtml } from "./utils";
 
 /**
  * Wrapper for SiYuan kernel API calls.
@@ -81,13 +81,31 @@ export async function createDocWithMd(
 
 export async function appendBlock(
   parentID: string,
-  markdown: string,
+  data: string,
+  dataType: "markdown" | "dom" = "markdown",
 ): Promise<void> {
   await request("/api/block/appendBlock", {
-    data: markdown,
-    dataType: "markdown",
+    data,
+    dataType,
     parentID,
   });
+}
+
+/**
+ * Parse the memo before wrapping it so literal super-block delimiters and
+ * unfinished Markdown fences cannot escape or swallow the outer container.
+ * Custom attributes survive document reloads and identify only our inserts.
+ */
+function createDailyNoteSuperBlock(markdown: string, pluginName: string): string {
+  const lute = window.Lute.New();
+  lute.SetProtyleWYSIWYG(true);
+  lute.SetKramdownIAL(true);
+  lute.SetSuperBlock(true);
+  lute.SetTag(true);
+  lute.SetBlockRef(true);
+  const content = lute.Md2BlockDOM(markdown) || lute.Md2BlockDOM("\u200b");
+
+  return `<div data-node-id="${window.Lute.NewNodeID()}" data-type="NodeSuperBlock" data-sb-layout="row" class="sb" custom-day-memo="true" custom-day-memo-label="${escapeHtml(pluginName)}">${content}<div class="protyle-attr" contenteditable="false"></div></div>`;
 }
 
 export async function addToDailyNote(
@@ -97,6 +115,7 @@ export async function addToDailyNote(
   customPathTemplate?: string,
   enableReplacementRules?: boolean,
   replacementRules?: import("./types").ReplacementRule[],
+  pluginName = "DayMemo",
 ): Promise<void> {
   const notebooks = await lsNotebooks();
   const openNotebooks = notebooks.filter((nb) => !nb.closed);
@@ -147,7 +166,7 @@ export async function addToDailyNote(
   const content = sourceLabel
     ? `> ${sourceLabel}\n\n${processedMemoContent}`
     : processedMemoContent;
-  await appendBlock(docId, content);
+  await appendBlock(docId, createDailyNoteSuperBlock(content, pluginName), "dom");
 }
 
 /**
